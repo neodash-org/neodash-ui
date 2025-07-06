@@ -51,10 +51,14 @@ jobs:
       - name: Build app
         run: pnpm build
 
+      - name: Set Sentry release
+        run: echo "SENTRY_RELEASE=$(pnpm exec sentry-cli releases propose-version)" >> $GITHUB_ENV
+
       - name: Upload source maps to Sentry
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        run: pnpm exec sentry-cli sourcemaps upload --org igorms --project neodash .next
+          SENTRY_RELEASE: ${{ env.SENTRY_RELEASE }}
+        run: pnpm exec sentry-cli sourcemaps upload --org igorms --project neodash --release $SENTRY_RELEASE .next
 
       # - name: Deploy (optional)
       #   run: echo "Add your deployment step here"
