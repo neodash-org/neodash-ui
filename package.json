@@ -14,7 +14,8 @@
     "type-check": "tsc --noEmit",
     "playwright:test": "playwright test",
     "playwright:ui": "playwright test --ui",
-    "check": "pnpm lint && pnpm type-check && pnpm test"
+    "check": "pnpm lint && pnpm type-check && pnpm test",
+    "prepush": "pnpm coverage && pnpm playwright:test"
   },
   "dependencies": {
     "@sentry/nextjs": "^9.34.0",

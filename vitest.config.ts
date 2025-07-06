@@ -8,9 +8,7 @@ export default defineConfig({
     exclude: ['e2e', 'node_modules', 'src/types', 'src/styles'],
     coverage: {
       provider: 'v8',
-      reportsDirectory: './coverage',
-      reporter: ['text', 'html', 'lcov'],
-      exclude: ['src/types', 'src/styles', 'src/**/__tests__/**'],
+      exclude: ['node_modules/', '.next/', 'e2e/', '**/*.test.*', '**/*.spec.*'],
     },
   },
 });
