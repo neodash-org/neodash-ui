@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm type-check
+
+      - name: Run unit/integration tests
+        run: pnpm test
+
+      - name: Run E2E tests
+        run: pnpm playwright:test
+
+      - name: Generate coverage report
+        run: pnpm coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/lcov.info
+
+      - name: Build app
+        run: pnpm build
+
+      - name: Set Sentry release
+        run: echo "SENTRY_RELEASE=$(pnpm exec sentry-cli releases propose-version)" >> $GITHUB_ENV
+
+      - name: Upload source maps to Sentry
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_RELEASE: ${{ env.SENTRY_RELEASE }}
+        run: pnpm exec sentry-cli sourcemaps upload --org igorms --project neodash --release $SENTRY_RELEASE .next
+
+      # - name: Deploy (optional)
+      #   run: echo "Add your deployment step here"
