@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useSidebar } from '../hooks/useSidebar';
+import { useSidebar } from '@/hooks';
 
 const AppSidebar = () => {
   const pathname = usePathname();
@@ -56,7 +56,7 @@ const AppSidebar = () => {
         {!isCollapsed && (
           <Link
             href="/"
-            className="text-2xl font-bold tracking-widest text-main select-none font-[var(--font-cyberpunk)] mb-4"
+            className="text-2xl font-bold tracking-widest text-white select-none font-[var(--font-cyberpunk)] mb-4"
           >
             NEODASH
           </Link>
@@ -80,7 +80,7 @@ const AppSidebar = () => {
               href={item.href}
               className={`neodash-nav-link text-center transition-all duration-300 relative ${
                 isCollapsed ? 'collapsed' : ''
-              } ${isActive ? 'active text-neon-pink' : 'text-main hover:text-neon-cyan'}`}
+              } ${isActive ? 'active text-neon-pink' : 'text-white hover:text-neon-cyan'}`}
               title={isCollapsed ? item.label : undefined}
             >
               {/* Active indicator for collapsed state */}

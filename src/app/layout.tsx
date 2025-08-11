@@ -2,12 +2,13 @@
 
 import React from 'react';
 import './globals.css';
-import AppSidebar from '../components/AppSidebar';
-import Header from '../components/Header';
-import { useSidebar } from '../hooks/useSidebar';
+import { AppSidebar, Header } from '@/components';
+import { ThemeDebug } from '@/components/ThemeDebug';
+import { useSidebar, useTheme } from '@/hooks';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const { isCollapsed } = useSidebar();
+  const theme = useTheme(); // Initialize theme system
 
   return (
     <html lang="en">
@@ -19,7 +20,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <title>Neodash Dashboard</title>
       </head>
-      <body className="bg-bg-main text-main min-h-screen font-[var(--font-sans)]">
+      <body
+        className={`bg-bg-main text-main min-h-screen font-[var(--font-sans)] ${theme.theme}-mode`}
+      >
         <div className="flex min-h-screen max-h-screen overflow-hidden">
           <AppSidebar />
           {/* Main Content Area */}
@@ -32,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main className="flex-1 overflow-y-auto max-h-[calc(100vh-80px)]">{children}</main>
           </div>
         </div>
+        <ThemeDebug />
       </body>
     </html>
   );

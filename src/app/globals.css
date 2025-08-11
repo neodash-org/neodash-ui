@@ -2,36 +2,37 @@
 @tailwind utilities;
 
 @theme {
-  /* Dark theme (default) */
+  /* Fonts */
+  --font-sans: 'Mona Sans', sans-serif;
+  --font-cyberpunk: Orbitron, Rajdhani, sans-serif;
+
+  /* Custom Colors */
+  --color-neon-pink: #ff3cac;
+  --color-neon-cyan: #00fff0;
+  --color-neon-yellow: #fff700;
+  --color-neon-green: #39ff14;
+  --color-primary: #00fff0;
+  --color-secondary: #ff3cac;
+  --color-success: #39ff14;
+  --color-warning: #fff700;
+
+  /* Background Colors */
   --color-bg-main: #0a0a0f;
   --color-bg-sidebar: #101018;
   --color-bg-card: #14141e;
+
+  /* Text Colors */
   --color-text-main: #f4f4fa;
   --color-text-white-50: #d9ecff;
-  --color-neon-pink: #ff3cac;
-  --color-neon-pink-88: #ff3cac88;
-  --color-neon-cyan: #00fff0;
-  --color-neon-cyan-88: #00fff088;
-  --color-neon-yellow: #fff700;
-  --color-neon-green: #39ff14;
-  --font-sans: 'Mona Sans', sans-serif;
-  --font-cyberpunk: Orbitron, Rajdhani, sans-serif;
+  --color-text-muted: #64748b;
+
+  /* Border Colors */
+  --color-border-light: rgba(255, 255, 255, 0.1);
+  --color-border-medium: rgba(255, 255, 255, 0.2);
+  --color-border-strong: rgba(255, 255, 255, 0.3);
 }
 
-/* Light theme */
-:root.light-mode {
-  --color-bg-main: #ffffff;
-  --color-bg-sidebar: #f8fafc;
-  --color-bg-card: #f1f5f9;
-  --color-text-main: #0f172a;
-  --color-text-white-50: #475569;
-  --color-neon-pink: #dc2626;
-  --color-neon-pink-88: #dc262688;
-  --color-neon-cyan: #0284c7;
-  --color-neon-cyan-88: #0284c788;
-  --color-neon-yellow: #d97706;
-  --color-neon-green: #059669;
-}
+/* CSS Variables are now managed by the theme system */
 
 @layer utilities {
   .flex-center {
@@ -113,6 +114,8 @@ main {
   border-right-color: #e2e8f0;
   box-shadow: 0 0 24px rgba(2, 132, 199, 0.15);
 }
+
+/* CSS classes are now handled by Tailwind CSS */
 
 /* Light theme sidebar improvements */
 :root.light-mode .bg-bg-sidebar {

@@ -2,11 +2,12 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import { useDarkMode } from '../hooks/useDarkMode';
+import { useTheme } from '@/hooks';
+import { Input } from '@/design-system';
 
 const Header = () => {
   const pathname = usePathname();
-  const { isDark, toggleDarkMode } = useDarkMode();
+  const { isDark, toggleTheme } = useTheme();
 
   // Get page title from pathname
   const getPageTitle = (path: string) => {
@@ -35,16 +36,18 @@ const Header = () => {
         {title}
       </h1>
       {/* Search Bar */}
-      <input
+      <Input
         type="text"
         placeholder="Search..."
-        className="bg-bg-card/70 border border-neon-cyan rounded-full text-main text-base px-6 py-2 outline-none shadow-[0_0_8px_#00fff0] font-[var(--font-sans)] min-w-[220px] max-w-[320px] flex-1 mr-6 placeholder:text-gray-400"
+        variant="search"
+        size="md"
+        className="rounded-full min-w-[220px] max-w-[320px] flex-1 mr-6"
       />
       {/* Actions */}
       <div className="flex items-center gap-4">
         {/* Dark Mode Toggle */}
         <button
-          onClick={toggleDarkMode}
+          onClick={toggleTheme}
           className={`relative bg-bg-card/70 border border-white/10 rounded-full w-12 h-7 flex items-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95 ${
             isDark ? 'justify-end' : 'justify-start'
           }`}
