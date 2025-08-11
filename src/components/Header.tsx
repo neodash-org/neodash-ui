@@ -38,7 +38,7 @@ const Header = () => {
       <input
         type="text"
         placeholder="Search..."
-        className="bg-bg-card/70 border border-neon-cyan rounded-full text-white text-base px-6 py-2 outline-none shadow-[0_0_8px_#00fff0] font-[var(--font-sans)] min-w-[220px] max-w-[320px] flex-1 mr-6 placeholder:text-gray-400"
+        className="bg-bg-card/70 border border-neon-cyan rounded-full text-main text-base px-6 py-2 outline-none shadow-[0_0_8px_#00fff0] font-[var(--font-sans)] min-w-[220px] max-w-[320px] flex-1 mr-6 placeholder:text-gray-400"
       />
       {/* Actions */}
       <div className="flex items-center gap-4">

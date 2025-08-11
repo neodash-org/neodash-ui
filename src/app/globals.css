@@ -20,17 +20,17 @@
 
 /* Light theme */
 :root.light-mode {
-  --color-bg-main: #f8fafc;
-  --color-bg-sidebar: #ffffff;
+  --color-bg-main: #ffffff;
+  --color-bg-sidebar: #f8fafc;
   --color-bg-card: #f1f5f9;
   --color-text-main: #0f172a;
-  --color-text-white-50: #334155;
-  --color-neon-pink: #e11d48;
-  --color-neon-pink-88: #e11d4888;
-  --color-neon-cyan: #0891b2;
-  --color-neon-cyan-88: #0891b288;
-  --color-neon-yellow: #ca8a04;
-  --color-neon-green: #16a34a;
+  --color-text-white-50: #475569;
+  --color-neon-pink: #dc2626;
+  --color-neon-pink-88: #dc262688;
+  --color-neon-cyan: #0284c7;
+  --color-neon-cyan-88: #0284c788;
+  --color-neon-yellow: #d97706;
+  --color-neon-green: #059669;
 }
 
 @layer utilities {
@@ -106,4 +106,211 @@ aside {
 /* Main content transition */
 main {
   transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light theme specific improvements */
+:root.light-mode aside {
+  border-right-color: #e2e8f0;
+  box-shadow: 0 0 24px rgba(2, 132, 199, 0.15);
+}
+
+/* Light theme sidebar improvements */
+:root.light-mode .bg-bg-sidebar {
+  background-color: #f1f5f9;
+}
+
+:root.light-mode .neodash-nav-link {
+  color: #475569;
+}
+
+:root.light-mode .neodash-nav-link:hover {
+  color: #0284c7;
+}
+
+:root.light-mode .neodash-nav-link.active {
+  color: #dc2626;
+}
+
+:root.light-mode .neodash-nav-link.active::after {
+  background: linear-gradient(to right, #dc2626, #0284c7);
+}
+
+/* Light theme header improvements */
+:root.light-mode h1 {
+  color: #dc2626;
+  text-shadow: 0 0 8px rgba(220, 38, 38, 0.4);
+  filter: none;
+}
+
+/* Override the dual-color drop-shadow in light mode */
+:root.light-mode
+  h1.drop-shadow-\[0_0_8px_var\(--color-neon-pink\)\,0_0_16px_var\(--color-neon-cyan\)\] {
+  filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4));
+}
+
+/* Light theme card improvements */
+:root.light-mode .bg-bg-card {
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Light theme search bar improvements */
+:root.light-mode input[type='text'] {
+  border-color: #cbd5e1;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #1e293b;
+}
+
+/* Override all input text colors in light mode */
+:root.light-mode input {
+  color: #1e293b !important;
+}
+
+:root.light-mode input[type='text']::placeholder {
+  color: #64748b;
+}
+
+/* Override all placeholder colors in light mode */
+:root.light-mode ::placeholder {
+  color: #64748b !important;
+}
+
+/* Light theme button improvements */
+:root.light-mode button {
+  color: #1e293b;
+}
+
+/* Light theme header improvements */
+:root.light-mode .bg-bg-main {
+  background-color: #f8fafc;
+}
+
+:root.light-mode .bg-gradient-to-r {
+  color: white;
+}
+
+/* Light theme toggle improvements */
+:root.light-mode .border-white\/10 {
+  border-color: rgba(203, 213, 225, 0.5);
+}
+
+/* Light theme notification icon improvements */
+:root.light-mode .text-neon-cyan {
+  color: #0284c7;
+}
+
+:root.light-mode .bg-neon-cyan\/10 {
+  background-color: rgba(2, 132, 199, 0.1);
+}
+
+/* Light theme text improvements for all content */
+:root.light-mode .text-gray-400 {
+  color: #64748b;
+}
+
+:root.light-mode .text-gray-500 {
+  color: #475569;
+}
+
+:root.light-mode .text-gray-600 {
+  color: #374151;
+}
+
+:root.light-mode .text-gray-700 {
+  color: #1f2937;
+}
+
+/* Light theme card and section improvements */
+:root.light-mode .bg-bg-card\/70 {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e2e8f0;
+}
+
+:root.light-mode .bg-bg-card\/50 {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid #e2e8f0;
+}
+
+/* Light theme form improvements */
+:root.light-mode label {
+  color: #374151;
+}
+
+:root.light-mode .text-sm {
+  color: #475569;
+}
+
+/* Light theme toggle improvements */
+:root.light-mode .bg-white\/10 {
+  background-color: rgba(203, 213, 225, 0.3);
+}
+
+/* Light theme border improvements */
+:root.light-mode .border-white\/5 {
+  border-color: rgba(203, 213, 225, 0.5);
+}
+
+:root.light-mode .border-white\/10 {
+  border-color: rgba(203, 213, 225, 0.7);
+}
+
+/* Light theme comprehensive improvements */
+:root.light-mode {
+  /* Text colors - better contrast */
+  --color-text-main: #0f172a;
+  --color-text-white-50: #475569;
+
+  /* Neon colors - more visible */
+  --color-neon-pink: #dc2626;
+  --color-neon-cyan: #0284c7;
+  --color-neon-yellow: #d97706;
+  --color-neon-green: #059669;
+
+  /* Backgrounds - cleaner */
+  --color-bg-main: #ffffff;
+  --color-bg-sidebar: #f8fafc;
+  --color-bg-card: #f1f5f9;
+}
+
+/* Light theme specific overrides */
+:root.light-mode .text-white,
+:root.light-mode .text-white\/70,
+:root.light-mode .text-white\/60,
+:root.light-mode .text-white\/50 {
+  color: var(--color-text-main);
+}
+
+:root.light-mode .bg-white\/5,
+:root.light-mode .bg-white\/10,
+:root.light-mode .bg-white\/20 {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: #e2e8f0;
+}
+
+:root.light-mode input,
+:root.light-mode select {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: #cbd5e1;
+  color: var(--color-text-main);
+}
+
+/* Light theme focus states */
+:root.light-mode input:focus,
+:root.light-mode select:focus {
+  border-color: var(--color-neon-cyan);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+}
+
+/* Light theme placeholders */
+:root.light-mode ::placeholder {
+  color: #64748b;
+}
+
+/* Ensure gradient buttons have readable text in both themes */
+:root.light-mode .bg-gradient-to-r {
+  color: white;
+}
+
+:root.light-mode .bg-gradient-to-br {
+  color: white;
 }
