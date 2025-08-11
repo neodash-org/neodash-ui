@@ -1,0 +1,52 @@
+<svg width="16" height="16" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background glow effect -->
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff3cac;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00fff0;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="techGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00fff0;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#ff3cac;stop-opacity:0.6" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main "N" shape with tech elements -->
+  <path d="M8 8 L8 40 L16 40 L16 24 L32 40 L40 40 L40 8 L32 8 L32 24 L16 8 Z" 
+        fill="url(#neonGradient)" 
+        filter="url(#glow)"
+        stroke="url(#techGradient)" 
+        stroke-width="1.5"/>
+  
+  <!-- Tech circuit elements -->
+  <circle cx="12" cy="12" r="2" fill="#00fff0" opacity="0.8"/>
+  <circle cx="36" cy="12" r="2" fill="#ff3cac" opacity="0.8"/>
+  <circle cx="12" cy="36" r="2" fill="#00fff0" opacity="0.8"/>
+  <circle cx="36" cy="36" r="2" fill="#ff3cac" opacity="0.8"/>
+  
+  <!-- Connection lines -->
+  <line x1="12" y1="12" x2="36" y2="12" stroke="url(#techGradient)" stroke-width="1" opacity="0.6"/>
+  <line x1="12" y1="36" x2="36" y2="36" stroke="url(#techGradient)" stroke-width="1" opacity="0.6"/>
+  <line x1="12" y1="12" x2="12" y2="36" stroke="url(#techGradient)" stroke-width="1" opacity="0.6"/>
+  <line x1="36" y1="12" x2="36" y2="36" stroke="url(#techGradient)" stroke-width="1" opacity="0.6"/>
+  
+  <!-- Data nodes -->
+  <circle cx="24" cy="16" r="1.5" fill="#00fff0" opacity="0.6"/>
+  <circle cx="24" cy="24" r="1.5" fill="#ff3cac" opacity="0.6"/>
+  <circle cx="24" cy="32" r="1.5" fill="#00fff0" opacity="0.6"/>
+  
+  <!-- Corner tech accents -->
+  <path d="M6 6 L10 6 L10 10 L6 10 Z" fill="none" stroke="#00fff0" stroke-width="1" opacity="0.7"/>
+  <path d="M38 6 L42 6 L42 10 L38 10 Z" fill="none" stroke="#ff3cac" stroke-width="1" opacity="0.7"/>
+  <path d="M6 38 L10 38 L10 10 L6 10 Z" fill="none" stroke="#00fff0" stroke-width="1" opacity="0.7"/>
+  <path d="M38 38 L42 38 L42 42 L38 42 Z" fill="none" stroke="#ff3cac" stroke-width="1" opacity="0.7"/>
+</svg>

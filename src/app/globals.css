@@ -1,26 +1,109 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Dark theme (default) */
+  --color-bg-main: #0a0a0f;
+  --color-bg-sidebar: #101018;
+  --color-bg-card: #14141e;
+  --color-text-main: #f4f4fa;
+  --color-text-white-50: #d9ecff;
+  --color-neon-pink: #ff3cac;
+  --color-neon-pink-88: #ff3cac88;
+  --color-neon-cyan: #00fff0;
+  --color-neon-cyan-88: #00fff088;
+  --color-neon-yellow: #fff700;
+  --color-neon-green: #39ff14;
+  --font-sans: 'Mona Sans', sans-serif;
+  --font-cyberpunk: Orbitron, Rajdhani, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Light theme */
+:root.light-mode {
+  --color-bg-main: #f8fafc;
+  --color-bg-sidebar: #ffffff;
+  --color-bg-card: #f1f5f9;
+  --color-text-main: #0f172a;
+  --color-text-white-50: #334155;
+  --color-neon-pink: #e11d48;
+  --color-neon-pink-88: #e11d4888;
+  --color-neon-cyan: #0891b2;
+  --color-neon-cyan-88: #0891b288;
+  --color-neon-yellow: #ca8a04;
+  --color-neon-green: #16a34a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer utilities {
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+  .flex-col-center {
+    @apply flex flex-col justify-center items-center;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Cyberpunk Sidebar Link Animation */
+  .neodash-nav-link {
+    @apply relative font-bold text-lg transition-all duration-200 ease-in-out;
+  }
+
+  .neodash-nav-link::after {
+    content: '';
+    @apply block h-[3px] w-0 bg-gradient-to-r from-neon-pink to-neon-cyan rounded transition-all duration-400 mt-1;
+  }
+
+  .neodash-nav-link.active::after {
+    width: 100%;
+  }
+
+  .neodash-nav-link:hover::after {
+    width: 100%;
+  }
+
+  /* Collapsed sidebar specific styles */
+  .neodash-nav-link.collapsed {
+    @apply justify-center px-2 py-3 text-center;
+  }
+
+  .neodash-nav-link.collapsed::after {
+    @apply hidden;
+  }
+
+  .neodash-nav-link.collapsed:hover {
+    @apply scale-110;
+  }
+
+  /* Card Animation */
+  @keyframes cardIn {
+    from {
+      opacity: 0;
+      transform: translateY(24px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  .neodash-card {
+    animation: cardIn 0.5s cubic-bezier(0.6, 0.2, 0.4, 1) both;
+  }
+}
+
+/* Smooth theme transitions */
+* {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+/* Sidebar transition improvements */
+aside {
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Main content transition */
+main {
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
