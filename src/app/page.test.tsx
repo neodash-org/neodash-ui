@@ -1,21 +1,17 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
-import Home from './page';
+import { describe, it, expect, vi } from 'vitest';
+import { redirect } from 'next/navigation';
+
+// Mock Next.js navigation
+vi.mock('next/navigation', () => ({
+  redirect: vi.fn(),
+}));
 
 describe('Home', () => {
-  it('renders the Next.js logo', () => {
-    render(<Home />);
-    expect(screen.getByAltText('Next.js logo')).toBeInTheDocument();
-  });
+  it('redirects to dashboard', () => {
+    // Import and execute the Home component
+    import('./page');
 
-  it('renders the Deploy now button', () => {
-    render(<Home />);
-    expect(screen.getByText('Deploy now')).toBeInTheDocument();
-  });
-
-  it('renders the Read our docs button', () => {
-    render(<Home />);
-    expect(screen.getByText('Read our docs')).toBeInTheDocument();
+    // Verify that redirect was called with '/dashboard'
+    expect(redirect).toHaveBeenCalledWith('/dashboard');
   });
 });
