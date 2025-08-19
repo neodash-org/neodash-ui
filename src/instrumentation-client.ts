@@ -3,6 +3,7 @@
 // https://docs.sentry.io/platforms/javascript/guides/nextjs/
 
 import * as Sentry from '@sentry/nextjs';
+import posthog from 'posthog-js';
 
 Sentry.init({
   dsn: 'https://b41221e2924989c56d3493e8200f5346@o4509609481928704.ingest.de.sentry.io/4509609614049360',
@@ -26,3 +27,8 @@ Sentry.init({
 });
 
 export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
+
+posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
+  api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+  defaults: '2025-05-24',
+});

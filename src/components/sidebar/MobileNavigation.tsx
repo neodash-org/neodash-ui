@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { navItems } from '@/utils/navigationData';
+import { usePostHog } from '@/hooks';
 
 interface MobileNavigationProps {
   onItemClick: () => void;
@@ -11,6 +12,7 @@ interface MobileNavigationProps {
 
 const MobileNavigation: React.FC<MobileNavigationProps> = ({ onItemClick }) => {
   const pathname = usePathname();
+  const { trackNavigation } = usePostHog();
 
   return (
     <nav className="flex flex-col p-6">
@@ -20,7 +22,15 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ onItemClick }) => {
           <Link
             key={item.href}
             href={item.href}
-            onClick={onItemClick}
+            onClick={() => {
+              if (!isActive) {
+                trackNavigation(pathname, item.href, {
+                  navigation_type: 'mobile_menu',
+                  item_label: item.label,
+                });
+              }
+              onItemClick();
+            }}
             className={`flex items-center gap-4 py-3 transition-all duration-300 ${
               isActive ? 'text-neon-cyan' : 'text-white hover:text-neon-cyan'
             }`}

@@ -5,6 +5,7 @@ import MobileHeader from './MobileHeader';
 import MobileNavigation from './MobileNavigation';
 import ThemeToggle from './ThemeToggle';
 import MobileFooter from './MobileFooter';
+import { usePostHog } from '@/hooks';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -12,6 +13,8 @@ interface MobileMenuProps {
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
+  const { trackFeatureUsage } = usePostHog();
+
   if (!isOpen) return null;
 
   return (
@@ -20,7 +23,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
       <div
         data-testid="mobile-menu-overlay"
         className="md:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-[200]"
-        onClick={onClose}
+        onClick={() => {
+          trackFeatureUsage('mobile_menu', 'closed', { method: 'backdrop_click' });
+          onClose();
+        }}
       />
 
       {/* Mobile Menu */}
