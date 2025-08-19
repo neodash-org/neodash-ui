@@ -35,21 +35,23 @@ export default function TestThemePage() {
         <div className="p-4 bg-bg-main border border-border-light rounded-lg">
           <h3 className="text-main font-bold">CSS Variables Debug:</h3>
           <pre className="text-main text-sm mt-2">
-            {JSON.stringify(
-              {
-                '--color-bg-main': getComputedStyle(document.documentElement).getPropertyValue(
-                  '--color-bg-main',
-                ),
-                '--color-text-main': getComputedStyle(document.documentElement).getPropertyValue(
-                  '--color-text-main',
-                ),
-                '--color-primary': getComputedStyle(document.documentElement).getPropertyValue(
-                  '--color-primary',
-                ),
-              },
-              null,
-              2,
-            )}
+            {typeof window !== 'undefined'
+              ? JSON.stringify(
+                  {
+                    '--color-bg-main': getComputedStyle(document.documentElement).getPropertyValue(
+                      '--color-bg-main',
+                    ),
+                    '--color-text-main': getComputedStyle(
+                      document.documentElement,
+                    ).getPropertyValue('--color-text-main'),
+                    '--color-primary': getComputedStyle(document.documentElement).getPropertyValue(
+                      '--color-primary',
+                    ),
+                  },
+                  null,
+                  2,
+                )
+              : 'Loading...'}
           </pre>
         </div>
       </div>
