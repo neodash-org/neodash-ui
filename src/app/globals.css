@@ -7,7 +7,7 @@
 @theme {
   /* Fonts */
   --font-sans: 'Mona Sans', sans-serif;
-  --font-cyberpunk: Orbitron, Rajdhani, sans-serif;
+  --font-cyberpunk: var(--font-orbitron), var(--font-rajdhani), sans-serif;
 
   /* Custom Colors */
   --color-neon-pink: #ff3cac;

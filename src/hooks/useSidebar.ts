@@ -18,7 +18,10 @@ export const useSidebar = () => {
     localStorage.setItem('neodash-sidebar-collapsed', isCollapsed.toString());
   }, [isCollapsed]);
 
-  const toggleSidebar = () => setIsCollapsed(!isCollapsed);
+  const toggleSidebar = () => {
+    console.log('Toggle sidebar clicked, current state:', isCollapsed);
+    setIsCollapsed(!isCollapsed);
+  };
 
   return { isCollapsed, toggleSidebar };
 };

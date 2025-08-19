@@ -1,22 +1,33 @@
 'use client';
 
 import React from 'react';
+import { Orbitron, Rajdhani } from 'next/font/google';
 import './globals.css';
 import { AppSidebar, Header, PageTitle } from '@/components';
-import { useSidebar, useTheme, useMobileMenu } from '@/hooks';
+import { useTheme, useMobileMenu } from '@/hooks';
+
+// Load fonts using Next.js font optimization
+const orbitron = Orbitron({
+  subsets: ['latin'],
+  weight: '700',
+  variable: '--font-cyberpunk',
+  display: 'swap',
+});
+
+const rajdhani = Rajdhani({
+  subsets: ['latin'],
+  weight: '700',
+  variable: '--font-rajdhani',
+  display: 'swap',
+});
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const { isCollapsed } = useSidebar();
   const theme = useTheme(); // Initialize theme system
   const { isMobileMenuOpen, toggleMobileMenu, closeMobileMenu } = useMobileMenu();
 
   return (
-    <html lang="en">
+    <html lang="en" className={`${orbitron.variable} ${rajdhani.variable}`}>
       <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@700&display=swap"
-          rel="stylesheet"
-        />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <title>Neodash Dashboard</title>
       </head>
@@ -26,11 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="flex min-h-screen max-h-screen overflow-hidden">
           <AppSidebar isMobileMenuOpen={isMobileMenuOpen} onMobileMenuClose={closeMobileMenu} />
           {/* Main Content Area */}
-          <div
-            className={`flex-1 flex flex-col min-h-screen max-h-screen transition-all duration-300 ease-in-out ${
-              isCollapsed ? 'ml-0' : 'ml-0'
-            }`}
-          >
+          <div className="flex-1 flex flex-col min-h-screen max-h-screen transition-all duration-300 ease-in-out">
             <Header onMobileMenuToggle={toggleMobileMenu} isMobileMenuOpen={isMobileMenuOpen} />
             <main className="flex-1 overflow-y-auto">
               {/* PageTitle - Only visible on mobile, inside scrollable area */}

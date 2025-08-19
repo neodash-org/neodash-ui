@@ -1,9 +1,11 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useTheme } from '@/hooks';
 import { Moon, Sun, Bell } from 'lucide-react';
+import { getPageTitle } from '@/utils/pageTitle';
 
 interface HeaderProps {
   onMobileMenuToggle: () => void;
@@ -14,24 +16,6 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
   const pathname = usePathname();
   const { isDark, toggleTheme } = useTheme();
 
-  // Get page title from pathname
-  const getPageTitle = (path: string) => {
-    switch (path) {
-      case '/dashboard':
-        return 'Dashboard';
-      case '/portfolio':
-        return 'Portfolio';
-      case '/analytics':
-        return 'Analytics';
-      case '/settings':
-        return 'Settings';
-      case '/bridge':
-        return 'Bridge';
-      default:
-        return 'Dashboard';
-    }
-  };
-
   const title = getPageTitle(pathname);
 
   return (
@@ -40,11 +24,11 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
       <div className="flex items-center gap-4">
         {/* NEODASH Logo - Only visible on mobile */}
         <div className="md:hidden w-8 h-8">
-          <img src="/neodash-icon.svg" alt="NEODASH" className="w-8 h-8" />
+          <Image src="/neodash-icon.svg" alt="NEODASH" width={32} height={32} />
         </div>
 
         {/* Route Title - Only visible on desktop */}
-        <h1 className="hidden md:block text-neon-pink font-bold text-2xl md:text-3xl tracking-widest drop-shadow-[0_0_8px_var(--color-neon-pink),0_0_16px_var(--color-neon-cyan)] font-[var(--font-cyberpunk)]">
+        <h1 className="hidden md:block text-neon-pink text-2xl md:text-3xl tracking-widest drop-shadow-[0_0_8px_var(--color-neon-pink),0_0_16px_var(--color-neon-cyan)] font-[var(--font-cyberpunk)]">
           {title}
         </h1>
       </div>
@@ -70,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
         </div>
 
         {/* Connect Wallet */}
-        <button className="bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-full font-bold font-[var(--font-cyberpunk)] text-sm md:text-base px-4 md:px-6 py-2 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] cursor-pointer tracking-wide transition hover:scale-105">
+        <button className="bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-full font-[var(--font-cyberpunk)] text-sm md:text-base px-4 md:px-6 py-2 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] cursor-pointer tracking-wide transition hover:scale-105">
           Connect Wallet
         </button>
 
