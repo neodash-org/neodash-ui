@@ -1,111 +1,189 @@
 # Design System - Neodash Dashboard
 
+## ⚡️ Cyberpunk Theme
+
+- **Default Mode:** Dark mode ON by default
+- **Style:** Neon accents, deep black backgrounds, glowing effects, glassmorphism, gradients, and sharp edges
+- **Inspiration:** Cyberpunk 2077, synthwave, futuristic UIs
+
 ## 🎨 Color Palette
 
-### Primary Colors
+### Primary Neon Colors
+
 ```
-🟣 Primary Purple: #6366f1
-🟣 Primary Purple Dark: #4f46e5
-🟣 Primary Purple Light: #8b5cf6
-🔵 Secondary Blue: #3b82f6
-🔵 Secondary Blue Dark: #1d4ed8
-🔵 Secondary Blue Light: #60a5fa
+💖 Neon Pink: #ff3cac
+💜 Neon Purple: #7847e0
+💙 Neon Cyan: #00eaff
+💚 Acid Green: #39ff14
+💛 Electric Yellow: #ffe500
+🟦 Electric Blue: #00f0ff
 ```
 
 ### Background Colors
+
 ```
-⚫ Background Primary: #0f0f23
-⚫ Background Secondary: #1a1a2e
-⚫ Background Tertiary: #2d2d44
-⚫ Background Card: #1e1e3f
-⚫ Background Overlay: rgba(15, 15, 35, 0.8)
+⚫ Black: #0a0a0f
+⚫ Deep Purple: #1a0033
+⚫ Glass Card: rgba(20, 20, 40, 0.7) (glassmorphism)
 ```
 
 ### Text Colors
+
 ```
-⚪ Text Primary: #ffffff
-⚪ Text Secondary: #a0a0a0
-⚪ Text Tertiary: #6b7280
-⚪ Text Disabled: #4b5563
+⚪ Neon White: #f4faff
+⚪ Neon Blue: #00eaff
+⚪ Neon Pink: #ff3cac
 ```
 
 ### Status Colors
-```
-🟢 Success: #10b981
-🟢 Success Light: #34d399
-🔴 Error: #ef4444
-🔴 Error Light: #f87171
-🟡 Warning: #f59e0b
-🟡 Warning Light: #fbbf24
-🔵 Info: #3b82f6
-🔵 Info Light: #60a5fa
-```
 
-### Chain-Specific Colors
 ```
-🟣 Ethereum: #627eea
-🟣 Solana: #9945ff
-🟣 Polygon: #8247e5
-🟣 Arbitrum: #28a0f0
-🟣 Optimism: #ff0420
-🟣 Base: #0052ff
-🟡 Bitcoin: #f7931a
-🔵 USDC: #2775ca
+🟢 Success: #39ff14
+🔴 Error: #ff1744
+🟡 Warning: #ffe500
+🔵 Info: #00eaff
 ```
 
 ## 📝 Typography
 
 ### Font Families
+
 ```css
---font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+--font-primary: 'Orbitron', 'Rajdhani', 'Audiowide', 'Inter', sans-serif;
 --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
---font-display: 'Inter', sans-serif;
+--font-display: 'Orbitron', 'Rajdhani', 'Audiowide', sans-serif;
 ```
 
-### Font Sizes
+### Font Styles
+
+- Headings: Uppercase, bold, letter-spacing: 0.05em
+- Body: Regular, high contrast
+
+## 🧱 Component Library (Cyberpunk Examples)
+
+### Buttons
+
+#### Neon Button
+
 ```css
---text-xs: 0.75rem;    /* 12px */
---text-sm: 0.875rem;   /* 14px */
---text-base: 1rem;     /* 16px */
---text-lg: 1.125rem;   /* 18px */
---text-xl: 1.25rem;    /* 20px */
---text-2xl: 1.5rem;    /* 24px */
---text-3xl: 1.875rem;  /* 30px */
---text-4xl: 2.25rem;   /* 36px */
+.btn-neon {
+  background: linear-gradient(90deg, #ff3cac 0%, #7847e0 100%);
+  color: #f4faff;
+  border: 2px solid #00eaff;
+  border-radius: 10px;
+  font-family: 'Orbitron', 'Rajdhani', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  box-shadow:
+    0 0 12px #00eaff,
+    0 0 24px #ff3cac;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-neon:hover {
+  background: linear-gradient(90deg, #00eaff 0%, #ff3cac 100%);
+  box-shadow:
+    0 0 24px #00eaff,
+    0 0 48px #ff3cac;
+  border-color: #ff3cac;
+}
 ```
 
-### Font Weights
+### Cards
+
+#### Glassmorphic Neon Card
+
 ```css
---font-light: 300;
---font-normal: 400;
---font-medium: 500;
---font-semibold: 600;
---font-bold: 700;
+.card-cyberpunk {
+  background: rgba(20, 20, 40, 0.7);
+  border: 2px solid #00eaff;
+  border-radius: 16px;
+  box-shadow:
+    0 0 32px #00eaff44,
+    0 0 8px #ff3cac44;
+  backdrop-filter: blur(12px);
+  color: #f4faff;
+  padding: 32px;
+  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-cyberpunk:hover {
+  box-shadow:
+    0 0 48px #ff3cac99,
+    0 0 24px #00eaff99;
+  border-color: #ff3cac;
+}
 ```
 
-### Line Heights
+### Navigation
+
+#### Top Navigation
+
 ```css
---leading-tight: 1.25;
---leading-normal: 1.5;
---leading-relaxed: 1.75;
+.nav-cyberpunk {
+  background: rgba(10, 10, 24, 0.95);
+  border-bottom: 2px solid #00eaff;
+  box-shadow: 0 2px 24px #00eaff44;
+  font-family: 'Orbitron', 'Rajdhani', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
 ```
+
+## 🎭 Effects & Animations
+
+### Glow Effects
+
+```css
+.glow-pink {
+  box-shadow:
+    0 0 16px #ff3cac,
+    0 0 32px #ff3cac44;
+}
+.glow-cyan {
+  box-shadow:
+    0 0 16px #00eaff,
+    0 0 32px #00eaff44;
+}
+```
+
+### Glassmorphism
+
+```css
+.glass {
+  background: rgba(20, 20, 40, 0.7);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+}
+```
+
+## 📱 Responsive & Accessibility
+
+- Maintain high contrast for neon on dark backgrounds
+- All interactive elements must have visible focus (neon border or glow)
+- Responsive breakpoints as before
+
+---
+
+# (The rest of the file remains as reference for spacing, breakpoints, and accessibility)
 
 ## 📏 Spacing System
 
 ### Base Spacing (8px grid)
+
 ```css
---space-1: 0.25rem;   /* 4px */
---space-2: 0.5rem;    /* 8px */
---space-3: 0.75rem;   /* 12px */
---space-4: 1rem;      /* 16px */
---space-5: 1.25rem;   /* 20px */
---space-6: 1.5rem;    /* 24px */
---space-8: 2rem;      /* 32px */
---space-10: 2.5rem;   /* 40px */
---space-12: 3rem;     /* 48px */
---space-16: 4rem;     /* 64px */
---space-20: 5rem;     /* 80px */
---space-24: 6rem;     /* 96px */
+--space-1: 0.25rem; /* 4px */
+--space-2: 0.5rem; /* 8px */
+--space-3: 0.75rem; /* 12px */
+--space-4: 1rem; /* 16px */
+--space-5: 1.25rem; /* 20px */
+--space-6: 1.5rem; /* 24px */
+--space-8: 2rem; /* 32px */
+--space-10: 2.5rem; /* 40px */
+--space-12: 3rem; /* 48px */
+--space-16: 4rem; /* 64px */
+--space-20: 5rem; /* 80px */
+--space-24: 6rem; /* 96px */
 ```
 
 ## 🧱 Component Library
@@ -113,6 +191,7 @@
 ### Buttons
 
 #### Primary Button
+
 ```css
 .btn-primary {
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
@@ -131,6 +210,7 @@
 ```
 
 #### Secondary Button
+
 ```css
 .btn-secondary {
   background: transparent;
@@ -149,6 +229,7 @@
 ```
 
 #### Ghost Button
+
 ```css
 .btn-ghost {
   background: transparent;
@@ -169,6 +250,7 @@
 ### Cards
 
 #### Default Card
+
 ```css
 .card {
   background: #1e1e3f;
@@ -185,6 +267,7 @@
 ```
 
 #### Interactive Card
+
 ```css
 .card-interactive {
   background: #1e1e3f;
@@ -205,6 +288,7 @@
 ### Input Fields
 
 #### Text Input
+
 ```css
 .input {
   background: #1a1a2e;
@@ -228,6 +312,7 @@
 ```
 
 #### Select Dropdown
+
 ```css
 .select {
   background: #1a1a2e;
@@ -250,6 +335,7 @@
 ### Navigation
 
 #### Top Navigation
+
 ```css
 .nav-top {
   background: rgba(15, 15, 35, 0.95);
@@ -263,6 +349,7 @@
 ```
 
 #### Bottom Navigation (Mobile)
+
 ```css
 .nav-bottom {
   background: rgba(15, 15, 35, 0.95);
@@ -280,6 +367,7 @@
 ## 🎭 Interactive States
 
 ### Loading States
+
 ```css
 .skeleton {
   background: linear-gradient(90deg, #1a1a2e 25%, #2d2d44 50%, #1a1a2e 75%);
@@ -288,12 +376,17 @@
 }
 
 @keyframes loading {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 ```
 
 ### Hover Effects
+
 ```css
 .hover-lift {
   transition: transform 0.2s ease;
@@ -313,6 +406,7 @@
 ```
 
 ### Focus States
+
 ```css
 .focus-ring {
   transition: box-shadow 0.2s ease;
@@ -376,6 +470,7 @@
 ## 🎯 Accessibility
 
 ### Focus Indicators
+
 ```css
 .focus-visible {
   outline: 2px solid #6366f1;
@@ -384,11 +479,13 @@
 ```
 
 ### Color Contrast
+
 - **Primary text**: 4.5:1 minimum contrast ratio
 - **Secondary text**: 3:1 minimum contrast ratio
 - **Interactive elements**: 3:1 minimum contrast ratio
 
 ### Screen Reader Support
+
 ```css
 .sr-only {
   position: absolute;
@@ -401,4 +498,4 @@
   white-space: nowrap;
   border: 0;
 }
-``` 
+```

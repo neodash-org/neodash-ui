@@ -1,26 +1,438 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant dark (&:is(.dark *));
+@tailwind utilities;
+
+@theme {
+  /* Fonts */
+  --font-sans: 'Mona Sans', sans-serif;
+  --font-cyberpunk: var(--font-orbitron), var(--font-rajdhani), sans-serif;
+
+  /* Custom Colors */
+  --color-neon-pink: #ff3cac;
+  --color-neon-cyan: #00fff0;
+  --color-neon-yellow: #fff700;
+  --color-neon-green: #39ff14;
+  --color-primary: #00fff0;
+  --color-secondary: #ff3cac;
+  --color-success: #39ff14;
+  --color-warning: #fff700;
+
+  /* Background Colors */
+  --color-bg-main: #0a0a0f;
+  --color-bg-sidebar: #101018;
+  --color-bg-card: #14141e;
+
+  /* Text Colors */
+  --color-text-main: #f4f4fa;
+  --color-text-white-50: #d9ecff;
+  --color-text-muted: #64748b;
+
+  /* Border Colors */
+  --color-border-light: rgba(255, 255, 255, 0.1);
+  --color-border-medium: rgba(255, 255, 255, 0.2);
+  --color-border-strong: rgba(255, 255, 255, 0.3);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* CSS Variables are now managed by the theme system */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer utilities {
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+  .flex-col-center {
+    @apply flex flex-col justify-center items-center;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Cyberpunk Sidebar Link Animation */
+  .neodash-nav-link {
+    @apply relative font-bold text-lg transition-all duration-200 ease-in-out;
+  }
+
+  .neodash-nav-link::after {
+    content: '';
+    @apply block h-[3px] w-0 bg-gradient-to-r from-neon-pink to-neon-cyan rounded transition-all duration-400 mt-1;
+  }
+
+  .neodash-nav-link.active::after {
+    width: 100%;
+  }
+
+  .neodash-nav-link:hover::after {
+    width: 100%;
+  }
+
+  /* Collapsed sidebar specific styles */
+  .neodash-nav-link.collapsed {
+    @apply justify-center px-2 py-3 text-center;
+  }
+
+  .neodash-nav-link.collapsed::after {
+    @apply hidden;
+  }
+
+  .neodash-nav-link.collapsed:hover {
+    @apply scale-110;
+  }
+
+  /* Card Animation */
+  @keyframes cardIn {
+    from {
+      opacity: 0;
+      transform: translateY(24px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  .neodash-card {
+    animation: cardIn 0.5s cubic-bezier(0.6, 0.2, 0.4, 1) both;
+  }
+}
+
+/* Smooth theme transitions */
+* {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+/* Sidebar transition improvements */
+aside {
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Main content transition */
+main {
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light theme specific improvements */
+:root.light-mode aside {
+  border-right-color: #e2e8f0;
+  box-shadow: 0 0 24px rgba(2, 132, 199, 0.15);
+}
+
+/* CSS classes are now handled by Tailwind CSS */
+
+/* Light theme sidebar improvements */
+:root.light-mode .bg-bg-sidebar {
+  background-color: #f1f5f9;
+}
+
+:root.light-mode .neodash-nav-link {
+  color: #475569;
+}
+
+:root.light-mode .neodash-nav-link:hover {
+  color: #0284c7;
+}
+
+:root.light-mode .neodash-nav-link.active {
+  color: #dc2626;
+}
+
+:root.light-mode .neodash-nav-link.active::after {
+  background: linear-gradient(to right, #dc2626, #0284c7);
+}
+
+/* Light theme header improvements */
+:root.light-mode h1 {
+  color: #dc2626;
+  text-shadow: 0 0 8px rgba(220, 38, 38, 0.4);
+  filter: none;
+}
+
+/* Override the dual-color drop-shadow in light mode */
+:root.light-mode
+  h1.drop-shadow-\[0_0_8px_var\(--color-neon-pink\)\,0_0_16px_var\(--color-neon-cyan\)\] {
+  filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4));
+}
+
+/* Light theme card improvements */
+:root.light-mode .bg-bg-card {
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Light theme search bar improvements */
+:root.light-mode input[type='text'] {
+  border-color: #cbd5e1;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #1e293b;
+}
+
+/* Override all input text colors in light mode */
+:root.light-mode input {
+  color: #1e293b !important;
+}
+
+:root.light-mode input[type='text']::placeholder {
+  color: #64748b;
+}
+
+/* Override all placeholder colors in light mode */
+:root.light-mode ::placeholder {
+  color: #64748b !important;
+}
+
+/* Light theme button improvements */
+:root.light-mode button {
+  color: #1e293b;
+}
+
+/* Light theme header improvements */
+:root.light-mode .bg-bg-main {
+  background-color: #f8fafc;
+}
+
+:root.light-mode .bg-gradient-to-r {
+  color: white;
+}
+
+/* Light theme toggle improvements */
+:root.light-mode .border-white\/10 {
+  border-color: rgba(203, 213, 225, 0.5);
+}
+
+/* Light theme notification icon improvements */
+:root.light-mode .text-neon-cyan {
+  color: #0284c7;
+}
+
+:root.light-mode .bg-neon-cyan\/10 {
+  background-color: rgba(2, 132, 199, 0.1);
+}
+
+/* Light theme text improvements for all content */
+:root.light-mode .text-gray-400 {
+  color: #64748b;
+}
+
+:root.light-mode .text-gray-500 {
+  color: #475569;
+}
+
+:root.light-mode .text-gray-600 {
+  color: #374151;
+}
+
+:root.light-mode .text-gray-700 {
+  color: #1f2937;
+}
+
+/* Light theme card and section improvements */
+:root.light-mode .bg-bg-card\/70 {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e2e8f0;
+}
+
+:root.light-mode .bg-bg-card\/50 {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid #e2e8f0;
+}
+
+/* Light theme form improvements */
+:root.light-mode label {
+  color: #374151;
+}
+
+:root.light-mode .text-sm {
+  color: #475569;
+}
+
+/* Light theme toggle improvements */
+:root.light-mode .bg-white\/10 {
+  background-color: rgba(203, 213, 225, 0.3);
+}
+
+/* Light theme border improvements */
+:root.light-mode .border-white\/5 {
+  border-color: rgba(203, 213, 225, 0.5);
+}
+
+:root.light-mode .border-white\/10 {
+  border-color: rgba(203, 213, 225, 0.7);
+}
+
+/* Light theme comprehensive improvements */
+:root.light-mode {
+  /* Text colors - better contrast */
+  --color-text-main: #0f172a;
+  --color-text-white-50: #475569;
+
+  /* Neon colors - more visible */
+  --color-neon-pink: #dc2626;
+  --color-neon-cyan: #0284c7;
+  --color-neon-yellow: #d97706;
+  --color-neon-green: #059669;
+
+  /* Backgrounds - cleaner */
+  --color-bg-main: #ffffff;
+  --color-bg-sidebar: #f8fafc;
+  --color-bg-card: #f1f5f9;
+}
+
+/* Light theme specific overrides */
+:root.light-mode .text-white,
+:root.light-mode .text-white\/70,
+:root.light-mode .text-white\/60,
+:root.light-mode .text-white\/50 {
+  color: var(--color-text-main);
+}
+
+:root.light-mode .bg-white\/5,
+:root.light-mode .bg-white\/10,
+:root.light-mode .bg-white\/20 {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: #e2e8f0;
+}
+
+:root.light-mode input,
+:root.light-mode select {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: #cbd5e1;
+  color: var(--color-text-main);
+}
+
+/* Light theme focus states */
+:root.light-mode input:focus,
+:root.light-mode select:focus {
+  border-color: var(--color-neon-cyan);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+}
+
+/* Light theme placeholders */
+:root.light-mode ::placeholder {
+  color: #64748b;
+}
+
+/* Ensure gradient buttons have readable text in both themes */
+:root.light-mode .bg-gradient-to-r {
+  color: white;
+}
+
+:root.light-mode .bg-gradient-to-br {
+  color: white;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.625rem;
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

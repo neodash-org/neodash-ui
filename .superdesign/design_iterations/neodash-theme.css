@@ -1,0 +1,277 @@
+/* Neodash Cyberpunk Theme */
+:root {
+  --background: #0a0a0f;
+  --card-bg: rgba(20, 20, 30, 0.7);
+  --card-blur: blur(12px);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --foreground: #f4f4fa;
+  --primary: #ff3cac;
+  --secondary: #784ba0;
+  --accent-cyan: #00fff0;
+  --accent-green: #39ff14;
+  --accent-yellow: #fff700;
+  --nav-link: #fff700;
+  --nav-link-active: #ff3cac;
+  --shadow-neon: 0 0 8px #ff3cac, 0 0 16px #00fff0;
+  --shadow-card: 0 4px 32px 0 #00fff088;
+  --font-sans: 'Orbitron', 'Rajdhani', 'Segoe UI', 'Arial', sans-serif;
+  --radius: 1.2rem;
+  --spacing: 1.2rem;
+}
+
+body.neodash-bg {
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+  font-family: var(--font-sans) !important;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.neodash-appbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 2vw;
+  background: linear-gradient(90deg, #0a0a0f 80%, #ff3cac22 100%);
+  box-shadow: var(--shadow-neon);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 64px;
+  border-bottom: 1.5px solid var(--glass-border);
+  backdrop-filter: blur(8px);
+}
+
+.neodash-logo {
+  font-family: 'Orbitron', 'Rajdhani', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--primary);
+  text-shadow:
+    0 0 8px var(--primary),
+    0 0 16px var(--accent-cyan);
+  user-select: none;
+}
+
+.neodash-nav {
+  display: flex;
+  gap: 2vw;
+}
+
+.neodash-nav-link {
+  color: var(--nav-link);
+  font-size: 1.1rem;
+  font-family: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  position: relative;
+  padding: 0.25rem 0.5rem;
+  transition:
+    color 0.2s,
+    text-shadow 0.2s,
+    transform 0.2s;
+}
+.neodash-nav-link.active,
+.neodash-nav-link:focus {
+  color: var(--nav-link-active);
+}
+.neodash-nav-link::after {
+  content: '';
+  display: block;
+  height: 3px;
+  width: 0;
+  background: linear-gradient(90deg, var(--primary), var(--accent-cyan));
+  border-radius: 2px;
+  transition: width 0.4s;
+  margin-top: 2px;
+}
+.neodash-nav-link.active::after,
+.neodash-nav-link:focus::after {
+  width: 100%;
+}
+.neodash-nav-link:hover {
+  color: var(--primary);
+  text-shadow: var(--shadow-neon);
+  transform: scale(1.08);
+}
+
+.neodash-dark-toggle {
+  background: rgba(20, 20, 30, 0.7);
+  border: 1.5px solid var(--glass-border);
+  border-radius: 999px;
+  width: 48px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 0 8px #00fff0;
+  transition: box-shadow 0.2s;
+}
+.neodash-dark-toggle:active {
+  box-shadow: 0 0 16px #ff3cac;
+  transform: scale(0.92);
+}
+.neodash-toggle-thumb {
+  display: block;
+  width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, var(--primary), var(--accent-cyan));
+  border-radius: 50%;
+  box-shadow:
+    0 0 8px var(--primary),
+    0 0 16px var(--accent-cyan);
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
+  transform: translateX(0);
+}
+/* (Add JS for toggle if needed) */
+
+.neodash-main {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2vw;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.neodash-cards {
+  display: flex;
+  gap: 2vw;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.neodash-card {
+  flex: 1 1 220px;
+  min-width: 180px;
+  max-width: 320px;
+  background: var(--card-bg);
+  border: 1.5px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: var(--card-blur);
+  color: var(--foreground);
+  padding: 1.5rem 1.2rem;
+  font-size: 1.2rem;
+  font-family: inherit;
+  margin-bottom: 1rem;
+  position: relative;
+  overflow: hidden;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
+  text-shadow: 0 0 4px var(--accent-cyan);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  animation: cardIn 0.5s cubic-bezier(0.6, 0.2, 0.4, 1) both;
+}
+.neodash-card:hover,
+.neodash-card:focus {
+  box-shadow:
+    0 0 24px var(--primary),
+    0 0 32px var(--accent-cyan);
+  transform: scale(1.03);
+  outline: 2px solid var(--primary);
+}
+.placeholder {
+  color: var(--accent-yellow);
+  font-size: 1.5rem;
+  font-family: inherit;
+  margin-top: 0.5rem;
+  text-shadow: 0 0 8px var(--accent-yellow);
+}
+
+.neodash-chart-section {
+  background: var(--card-bg);
+  border: 1.5px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: var(--card-blur);
+  padding: 2rem 1.2rem;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.6s cubic-bezier(0.6, 0.2, 0.4, 1) both;
+}
+.neodash-chart-placeholder {
+  color: var(--accent-cyan);
+  font-size: 1.2rem;
+  text-shadow: 0 0 8px var(--accent-cyan);
+}
+
+.neodash-table-section {
+  background: var(--card-bg);
+  border: 1.5px solid var(--glass-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: var(--card-blur);
+  padding: 1.2rem;
+  min-height: 160px;
+  animation: fadeIn 0.6s 0.2s cubic-bezier(0.6, 0.2, 0.4, 1) both;
+}
+.neodash-table-placeholder {
+  color: var(--accent-green);
+  font-size: 1.1rem;
+  text-shadow: 0 0 8px var(--accent-green);
+}
+
+@media (max-width: 900px) {
+  .neodash-cards {
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+  .neodash-main {
+    padding: 0 1vw;
+  }
+}
+@media (max-width: 600px) {
+  .neodash-appbar {
+    flex-direction: column;
+    height: auto;
+    gap: 0.5rem;
+    padding: 0.5rem 1vw;
+  }
+  .neodash-nav {
+    gap: 1vw;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .neodash-main {
+    margin: 1rem auto;
+    gap: 1.2rem;
+  }
+  .neodash-card {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}

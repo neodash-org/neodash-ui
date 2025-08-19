@@ -2,7 +2,11 @@ import { withSentryConfig } from '@sentry/nextjs';
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: process.env.NEXT_PUBLIC_STATIC_EXPORT === 'true' ? 'export' : undefined,
+  trailingSlash: process.env.NEXT_PUBLIC_STATIC_EXPORT === 'true',
+  images: {
+    unoptimized: process.env.NEXT_PUBLIC_STATIC_EXPORT === 'true',
+  },
 };
 
 export default withSentryConfig(nextConfig, {
