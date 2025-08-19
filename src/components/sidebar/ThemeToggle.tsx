@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useTheme } from '@/hooks';
+import { useTheme, usePostHog } from '@/hooks';
 import { Moon, Sun } from 'lucide-react';
 
 interface ThemeToggleProps {
@@ -16,6 +16,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
   'data-testid': testId,
 }) => {
   const { isDark, toggleTheme } = useTheme();
+  const { trackThemeChange } = usePostHog();
 
   const sizeClasses = {
     sm: 'w-8 h-8',
@@ -37,7 +38,11 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
         </span>
       )}
       <button
-        onClick={toggleTheme}
+        onClick={() => {
+          const newTheme = isDark ? 'light' : 'dark';
+          trackThemeChange(isDark ? 'dark' : 'light', newTheme);
+          toggleTheme();
+        }}
         className={`relative ${sizeClasses[size]} bg-bg-card/70 border border-white/10 rounded-full flex items-center justify-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95`}
         aria-label="Toggle dark mode"
         data-testid="theme-toggle-button"

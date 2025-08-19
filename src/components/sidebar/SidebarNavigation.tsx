@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { navItems } from '@/utils/navigationData';
+import { usePostHog } from '@/hooks';
 
 interface SidebarNavigationProps {
   isCollapsed: boolean;
@@ -11,6 +12,7 @@ interface SidebarNavigationProps {
 
 const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ isCollapsed }) => {
   const pathname = usePathname();
+  const { trackNavigation } = usePostHog();
 
   return (
     <nav
@@ -27,6 +29,14 @@ const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ isCollapsed }) =>
           >
             <Link
               href={item.href}
+              onClick={() => {
+                if (!isActive) {
+                  trackNavigation(pathname, item.href, {
+                    navigation_type: 'sidebar',
+                    item_label: item.label,
+                  });
+                }
+              }}
               className={`neodash-nav-link text-center transition-all duration-300 relative ${
                 isCollapsed ? 'collapsed' : ''
               } ${isActive ? 'active text-neon-cyan' : 'text-white hover:text-neon-cyan'}`}
