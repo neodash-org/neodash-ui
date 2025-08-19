@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSidebar, useTheme } from '@/hooks';
+import { Moon, Sun } from 'lucide-react';
 
 interface AppSidebarProps {
   isMobileMenuOpen: boolean;
@@ -83,22 +84,26 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ isMobileMenuOpen, onMobileMenuC
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
-              <Link
+              <div
                 key={item.href}
-                href={item.href}
-                className={`neodash-nav-link text-center transition-all duration-300 relative ${
-                  isCollapsed ? 'collapsed' : ''
-                } ${isActive ? 'active text-neon-cyan' : 'text-white hover:text-neon-cyan'}`}
-                title={isCollapsed ? item.label : undefined}
+                className={`${isCollapsed ? 'flex justify-center' : 'flex items-center'}`}
               >
-                {/* Active indicator for collapsed state */}
-                {isCollapsed && isActive && (
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-px bg-neon-cyan shadow-[0_0_4px_var(--color-neon-cyan)]"></div>
-                )}
+                <Link
+                  href={item.href}
+                  className={`neodash-nav-link text-center transition-all duration-300 relative ${
+                    isCollapsed ? 'collapsed' : ''
+                  } ${isActive ? 'active text-neon-cyan' : 'text-white hover:text-neon-cyan'}`}
+                  title={isCollapsed ? item.label : undefined}
+                >
+                  {/* Active indicator for collapsed state */}
+                  {isCollapsed && isActive && (
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-8 h-px bg-neon-cyan shadow-[0_0_4px_var(--color-neon-cyan)]"></div>
+                  )}
 
-                <span className={`${isCollapsed ? 'mr-0' : 'mr-2'}`}>{item.icon}</span>
-                {!isCollapsed && item.label}
-              </Link>
+                  <span className={`${isCollapsed ? 'mr-0' : 'mr-2'}`}>{item.icon}</span>
+                  {!isCollapsed && item.label}
+                </Link>
+              </div>
             );
           })}
         </nav>
@@ -176,20 +181,17 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ isMobileMenuOpen, onMobileMenuC
                 <span className="text-white font-medium">Theme</span>
                 <button
                   onClick={toggleTheme}
-                  className={`relative bg-bg-card/70 border border-white/10 rounded-full w-12 h-7 flex items-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95 ${
-                    isDark ? 'justify-start' : 'justify-end'
-                  }`}
+                  className="relative w-12 h-12 bg-bg-card/70 border border-white/10 rounded-full flex items-center justify-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95"
                   aria-label="Toggle dark mode"
                 >
-                  <span
-                    className={`block w-6 h-6 bg-gradient-to-br from-neon-pink to-neon-cyan rounded-full shadow-[0_0_8px_var(--color-neon-pink),0_0_16px_var(--color-neon-cyan)] transition-all duration-300 ${
-                      isDark ? 'translate-x-5' : 'translate-x-0'
-                    }`}
-                  />
+                  {isDark ? (
+                    // Moon icon for dark mode
+                    <Moon className="w-6 h-6 text-neon-cyan" />
+                  ) : (
+                    // Sun icon for light mode
+                    <Sun className="w-6 h-6 text-neon-yellow" />
+                  )}
                 </button>
-              </div>
-              <div className="text-center text-xs text-white/60 mt-2">
-                {isDark ? 'Dark Mode' : 'Light Mode'}
               </div>
             </div>
 

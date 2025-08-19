@@ -3,6 +3,7 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { useTheme } from '@/hooks';
+import { Moon, Sun, Bell } from 'lucide-react';
 
 interface HeaderProps {
   onMobileMenuToggle: () => void;
@@ -50,24 +51,22 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
 
       {/* Right side: Actions */}
       <div className="flex items-center gap-2 md:gap-4">
-        {/* Dark Mode Toggle */}
+        {/* Dark Mode Toggle - Using Lucide icons */}
         <button
           onClick={toggleTheme}
-          className={`relative bg-bg-card/70 border border-white/10 rounded-full w-10 h-6 md:w-12 md:h-7 flex items-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95 ${
-            isDark ? 'justify-start' : 'justify-end'
-          }`}
+          className="w-8 h-8 md:w-8 md:h-8 bg-bg-card/70 border border-white/10 rounded-full flex items-center justify-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95"
           aria-label="Toggle dark mode"
         >
-          <span
-            className={`block w-5 h-5 md:w-6 md:h-6 bg-gradient-to-br from-neon-pink to-neon-cyan rounded-full shadow-[0_0_8px_var(--color-neon-pink),0_0_16px_var(--color-neon-cyan)] transition-all duration-300 ${
-              isDark ? 'translate-x-5' : 'translate-x-0'
-            }`}
-          />
+          {isDark ? (
+            <Moon className="w-4 h-4 md:w-4 md:h-4 text-neon-cyan" />
+          ) : (
+            <Sun className="w-4 h-4 md:w-4 md:h-4 text-neon-yellow" />
+          )}
         </button>
 
-        {/* Notification Icon - Hidden on mobile */}
-        <div className="hidden md:flex w-8 h-8 rounded-full bg-neon-cyan/10 items-center justify-center text-neon-cyan text-lg shadow-[0_0_8px_var(--color-neon-cyan)] cursor-pointer hover:scale-110 transition-transform">
-          🔔
+        {/* Notification Icon - Visible on both mobile and desktop */}
+        <div className="flex w-8 h-8 rounded-full bg-neon-cyan/10 items-center justify-center text-neon-cyan shadow-[0_0_8px_var(--color-neon-cyan)] cursor-pointer hover:scale-110 transition-transform">
+          <Bell className="w-4 h-4 text-neon-cyan" />
         </div>
 
         {/* Connect Wallet */}

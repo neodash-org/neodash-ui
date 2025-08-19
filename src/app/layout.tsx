@@ -32,11 +32,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             }`}
           >
             <Header onMobileMenuToggle={toggleMobileMenu} isMobileMenuOpen={isMobileMenuOpen} />
-            {/* PageTitle - Only visible on mobile */}
-            <div className="md:hidden">
-              <PageTitle />
-            </div>
-            <main className="flex-1 overflow-y-auto max-h-[calc(100vh-80px)]">{children}</main>
+            <main className="flex-1 overflow-y-auto">
+              {/* PageTitle - Only visible on mobile, inside scrollable area */}
+              <div className="md:hidden">
+                <PageTitle />
+              </div>
+              {children}
+            </main>
           </div>
         </div>
       </body>
