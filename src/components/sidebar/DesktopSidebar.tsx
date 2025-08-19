@@ -16,6 +16,8 @@ const DesktopSidebar: React.FC = () => {
       className={`hidden md:flex bg-bg-sidebar border-r border-white/10 shadow-[0_0_24px_#00fff044] flex-col items-center py-8 z-[101] transition-all duration-300 ease-in-out group overflow-hidden ${
         isCollapsed ? 'w-16' : 'w-[190px]'
       }`}
+      data-testid="desktop-sidebar"
+      data-collapsed={isCollapsed}
     >
       <SidebarHeader isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} />
       <SidebarNavigation isCollapsed={isCollapsed} />

@@ -4,7 +4,10 @@
  * @returns The formatted page title
  */
 export const getPageTitle = (path: string): string => {
-  switch (path) {
+  // Remove trailing slash for consistent comparison
+  const cleanPath = path.replace(/\/$/, '');
+
+  switch (cleanPath) {
     case '/dashboard':
       return 'Dashboard';
     case '/portfolio':

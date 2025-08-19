@@ -17,6 +17,7 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ onClose }) => {
       </div>
       <button
         onClick={onClose}
+        data-testid="mobile-menu-close"
         className="w-8 h-8 bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300"
         aria-label="Close mobile menu"
       >

@@ -38,6 +38,7 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
         {/* Dark Mode Toggle - Using Lucide icons */}
         <button
           onClick={toggleTheme}
+          data-testid="theme-toggle"
           className="w-8 h-8 md:w-8 md:h-8 bg-bg-card/70 border border-white/10 rounded-full flex items-center justify-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95"
           aria-label="Toggle dark mode"
         >
@@ -49,7 +50,10 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
         </button>
 
         {/* Notification Icon - Visible on both mobile and desktop */}
-        <div className="flex w-8 h-8 rounded-full bg-neon-cyan/10 items-center justify-center text-neon-cyan shadow-[0_0_8px_var(--color-neon-cyan)] cursor-pointer hover:scale-110 transition-transform">
+        <div
+          data-testid="notification-icon"
+          className="flex w-8 h-8 rounded-full bg-neon-cyan/10 items-center justify-center text-neon-cyan shadow-[0_0_8px_var(--color-neon-cyan)] cursor-pointer hover:scale-110 transition-transform"
+        >
           <Bell className="w-4 h-4 text-neon-cyan" />
         </div>
 
@@ -61,6 +65,7 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
         {/* Mobile Menu Button - Only visible on mobile, positioned on the right */}
         <button
           onClick={onMobileMenuToggle}
+          data-testid="mobile-menu-button"
           className="md:hidden w-10 h-10 bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 hover:scale-105"
           aria-label="Toggle mobile menu"
         >
