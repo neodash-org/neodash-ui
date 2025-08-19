@@ -62,6 +62,8 @@ jobs:
 
       - name: Build app
         run: pnpm build
+        env:
+          NEXT_PUBLIC_STATIC_EXPORT: true
 
       - name: Verify build output
         run: |
