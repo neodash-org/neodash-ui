@@ -26,7 +26,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
       
       # Install pnpm FIRST (before trying to use it)
       - name: Install pnpm
