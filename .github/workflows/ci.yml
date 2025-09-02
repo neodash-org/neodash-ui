@@ -75,18 +75,6 @@ jobs:
           name: codecov-umbrella
           fail_ci_if_error: false
       
-      # Start dev server for E2E tests
-      - name: Start dev server for E2E tests
-        run: pnpm dev &
-        env:
-          NEXT_PUBLIC_POSTHOG_KEY: ${{ secrets.NEXT_PUBLIC_POSTHOG_KEY }}
-          NEXT_PUBLIC_POSTHOG_HOST: ${{ secrets.NEXT_PUBLIC_POSTHOG_HOST }}
-      
-      # Wait for dev server
-      - name: Wait for dev server
-        run: |
-          timeout 60 bash -c 'until curl -s http://localhost:3000 > /dev/null; do sleep 1; done'
-      
       # Run E2E tests
       - name: Run E2E tests
         run: pnpm playwright:test
