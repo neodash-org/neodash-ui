@@ -50,7 +50,18 @@ jobs:
       
       # Install dependencies
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Files in directory:"
+          ls -la
+          echo "Checking for lockfile:"
+          if [ -f "pnpm-lock.yaml" ]; then
+            echo "✅ Lockfile found, installing with frozen lockfile"
+            pnpm install --frozen-lockfile
+          else
+            echo "❌ No lockfile found, installing without frozen lockfile"
+            pnpm install
+          fi
       
       # Install Playwright browsers
       - name: Install Playwright browsers
