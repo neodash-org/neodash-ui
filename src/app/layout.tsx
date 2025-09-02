@@ -9,6 +9,9 @@ import { PostHogProvider } from '@/contexts';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { initializeErrorHandling } from '@/lib/errorHandling';
 
+// Initialize i18n
+import '@/lib/i18n';
+
 // Load fonts using Next.js font optimization
 const orbitron = Orbitron({
   subsets: ['latin'],

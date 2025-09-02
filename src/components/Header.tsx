@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useTheme, usePostHog } from '@/hooks';
 import { Moon, Sun, Bell } from 'lucide-react';
 import { getPageTitle } from '@/utils/pageTitle';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 interface HeaderProps {
   onMobileMenuToggle: () => void;
@@ -54,6 +55,9 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
             <Sun className="w-4 h-4 md:w-4 md:h-4 text-neon-yellow" />
           )}
         </button>
+
+        {/* Language Switcher */}
+        <LanguageSwitcher variant="dropdown" size="md" />
 
         {/* Notification Icon - Visible on both mobile and desktop */}
         <div
