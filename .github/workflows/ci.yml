@@ -8,7 +8,7 @@ on:
 
 env:
   NODE_VERSION: '20'
-  PNPM_VERSION: '8'
+  PNPM_VERSION: '10.15.0'
   CI: true
 
 jobs:
@@ -50,18 +50,7 @@ jobs:
       
       # Install dependencies
       - name: Install dependencies
-        run: |
-          echo "Current directory: $(pwd)"
-          echo "Files in directory:"
-          ls -la
-          echo "Checking for lockfile:"
-          if [ -f "pnpm-lock.yaml" ]; then
-            echo "✅ Lockfile found, installing with frozen lockfile"
-            pnpm install --frozen-lockfile
-          else
-            echo "❌ No lockfile found, installing without frozen lockfile"
-            pnpm install
-          fi
+        run: pnpm install
       
       # Install Playwright browsers
       - name: Install Playwright browsers
