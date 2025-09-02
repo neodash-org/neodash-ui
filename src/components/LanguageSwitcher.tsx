@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTranslation } from 'react-i18next';
-import { Globe } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 interface LanguageSwitcherProps {
   variant?: 'button' | 'dropdown';
@@ -16,6 +16,8 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 }) => {
   const { currentLanguage, changeLanguage, availableLanguages } = useLanguage();
   const { t } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const sizeClasses = {
     sm: 'w-8 h-8 text-sm',
@@ -29,30 +31,90 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     lg: 'w-6 h-6',
   };
 
+  const flagEmojis = {
+    en: '🇬🇧',
+    fr: '🇫🇷',
+  };
+
+  const languageNames = {
+    en: 'EN',
+    fr: 'FR',
+  };
+
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleLanguageChange = (language: 'en' | 'fr') => {
+    changeLanguage(language);
+    setIsOpen(false);
+  };
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      toggleDropdown();
+    } else if (event.key === 'Escape') {
+      setIsOpen(false);
+    }
+  };
+
   if (variant === 'dropdown') {
     return (
-      <div className="relative group">
+      <div className="relative" ref={dropdownRef}>
         <button
+          onClick={toggleDropdown}
+          onKeyDown={handleKeyDown}
           className={`${sizeClasses[size]} bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 hover:scale-105`}
           aria-label={t('settings.languageSelection')}
+          aria-expanded={isOpen}
+          aria-haspopup="listbox"
         >
-          <Globe className={iconSizes[size]} />
+          <span className="mr-1">{flagEmojis[currentLanguage as keyof typeof flagEmojis]}</span>
+          <ChevronDown
+            className={`${iconSizes[size]} transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          />
         </button>
 
         {/* Dropdown Menu */}
-        <div className="absolute right-0 top-full mt-2 bg-bg-card border border-white/10 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 min-w-[120px]">
-          {availableLanguages.map((lang) => (
-            <button
-              key={lang}
-              onClick={() => changeLanguage(lang)}
-              className={`w-full px-4 py-2 text-left hover:bg-white/5 transition-colors ${
-                currentLanguage === lang ? 'text-neon-cyan bg-neon-cyan/10' : 'text-white'
-              }`}
-            >
-              {t(`settings.${lang === 'en' ? 'english' : 'french'}`)}
-            </button>
-          ))}
-        </div>
+        {isOpen && (
+          <div
+            className="absolute right-0 top-full mt-2 bg-bg-card border border-white/10 rounded-lg shadow-lg z-50 min-w-[120px]"
+            role="listbox"
+            aria-label={t('settings.languageSelection')}
+          >
+            {availableLanguages.map((lang) => (
+              <button
+                key={lang}
+                onClick={() => handleLanguageChange(lang)}
+                className={`w-full px-4 py-3 text-left hover:bg-white/5 transition-colors flex items-center gap-3 ${
+                  currentLanguage === lang ? 'text-neon-cyan bg-neon-cyan/10' : 'text-white'
+                }`}
+                role="option"
+                aria-selected={currentLanguage === lang}
+              >
+                <span className="text-lg">{flagEmojis[lang as keyof typeof flagEmojis]}</span>
+                <span className="font-medium">
+                  {languageNames[lang as keyof typeof languageNames]}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     );
   }
@@ -65,7 +127,10 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
       aria-label={t('settings.languageSelection')}
       title={`${t('settings.languageSelection')}: ${t(`settings.${currentLanguage === 'en' ? 'english' : 'french'}`)}`}
     >
-      <span className="font-bold">{currentLanguage.toUpperCase()}</span>
+      <span className="mr-1">{flagEmojis[currentLanguage as keyof typeof flagEmojis]}</span>
+      <span className="font-bold">
+        {languageNames[currentLanguage as keyof typeof languageNames]}
+      </span>
     </button>
   );
 };
