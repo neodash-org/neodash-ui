@@ -1,91 +1,121 @@
-name: CI
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '10.15.0'
+  CI: true
 
 jobs:
-  build-and-test:
+  test-and-deploy:
+    name: Test, Build & Deploy
     runs-on: ubuntu-latest
-
+    
     steps:
+      # Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set up Node.js
+      
+      # Setup Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-
+          node-version: ${{ env.NODE_VERSION }}
+      
+      # Install pnpm
       - name: Install pnpm
-        run: npm install -g pnpm
-
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+      
+      # Setup pnpm cache
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+      
+      # Install dependencies
       - name: Install dependencies
         run: pnpm install
-
+      
+      # Install Playwright browsers
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps
-
-      - name: Lint
+        run: pnpm playwright install --with-deps
+      
+      # Lint code
+      - name: Lint code
         run: pnpm lint
-
+      
+      # Type check
       - name: Type check
         run: pnpm type-check
-
+      
+      # Run unit/integration tests
       - name: Run unit/integration tests
         run: pnpm test
-
-      - name: Start dev server for E2E tests
-        run: pnpm dev &
-        env:
-          CI: true
-
-      - name: Wait for dev server
-        run: |
-          sleep 15
-          curl -f http://localhost:3000 || exit 1
-
-      - name: Run E2E tests
-        run: pnpm playwright:test
-        env:
-          CI: true
-
+      
+      # Generate coverage report
       - name: Generate coverage report
         run: pnpm coverage
-
+      
+      # Upload coverage to Codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
-          files: ./coverage/lcov.info
-
-      - name: Build app
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+      
+      # Run E2E tests
+      - name: Run E2E tests
+        run: pnpm playwright:test
+        env:
+          NEXT_PUBLIC_POSTHOG_KEY: ${{ secrets.NEXT_PUBLIC_POSTHOG_KEY }}
+          NEXT_PUBLIC_POSTHOG_HOST: ${{ secrets.NEXT_PUBLIC_POSTHOG_HOST }}
+      
+      # Build application
+      - name: Build application
         run: pnpm build
         env:
-          NEXT_PUBLIC_STATIC_EXPORT: true
-
-      - name: Verify build output
-        run: |
-          ls -la out/
-          echo "Build verification complete"
-
-      - name: Upload Playwright report
-        uses: actions/upload-artifact@v4
-        if: always()
+          NEXT_PUBLIC_POSTHOG_KEY: ${{ secrets.NEXT_PUBLIC_POSTHOG_KEY }}
+          NEXT_PUBLIC_POSTHOG_HOST: ${{ secrets.NEXT_PUBLIC_POSTHOG_HOST }}
+          NEXT_PUBLIC_STATIC_EXPORT: 'true'
+      
+      # Deploy to Netlify (only on main branch)
+      - name: Deploy to Netlify
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: nwtgck/actions-netlify@v3.0
         with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 7
-
-      - name: Set Sentry release
-        run: echo "SENTRY_RELEASE=$(pnpm exec sentry-cli releases propose-version)" >> $GITHUB_ENV
-
-      - name: Upload source maps to Sentry
+          publish-dir: './out'
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy from GitHub Actions"
+          enable-pull-request-comment: false
         env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_RELEASE: ${{ env.SENTRY_RELEASE }}
-        run: pnpm exec sentry-cli sourcemaps upload --org igorms --project neodash --release $SENTRY_RELEASE .next
-
-      # - name: Deploy (optional)
-      #   run: echo "Add your deployment step here"
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1
+      
+      # Deploy preview (for PRs)
+      - name: Deploy preview
+        if: github.event_name == 'pull_request'
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './out'
+          production-branch: main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Deploy preview for PR #${{ github.event.number }}"
+          enable-pull-request-comment: false
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 1

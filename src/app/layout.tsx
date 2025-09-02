@@ -6,6 +6,8 @@ import './globals.css';
 import { AppSidebar, Header, PageTitle } from '@/components';
 import { useTheme, useMobileMenu } from '@/hooks';
 import { PostHogProvider } from '@/contexts';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import { initializeErrorHandling } from '@/lib/errorHandling';
 
 // Load fonts using Next.js font optimization
 const orbitron = Orbitron({
@@ -26,6 +28,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const theme = useTheme(); // Initialize theme system
   const { isMobileMenuOpen, toggleMobileMenu, closeMobileMenu } = useMobileMenu();
 
+  // Initialize global error handling
+  React.useEffect(() => {
+    initializeErrorHandling();
+  }, []);
+
   return (
     <html lang="en" className={`${orbitron.variable} ${rajdhani.variable}`}>
       <head>
@@ -35,22 +42,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body
         className={`bg-bg-main text-main min-h-screen font-[var(--font-sans)] ${theme.theme}-mode`}
       >
-        <PostHogProvider>
-          <div className="flex min-h-screen max-h-screen overflow-hidden">
-            <AppSidebar isMobileMenuOpen={isMobileMenuOpen} onMobileMenuClose={closeMobileMenu} />
-            {/* Main Content Area */}
-            <div className="flex-1 flex flex-col min-h-screen max-h-screen transition-all duration-300 ease-in-out">
-              <Header onMobileMenuToggle={toggleMobileMenu} isMobileMenuOpen={isMobileMenuOpen} />
-              <main className="flex-1 overflow-y-auto">
-                {/* PageTitle - Only visible on mobile, inside scrollable area */}
-                <div className="md:hidden">
-                  <PageTitle />
-                </div>
-                {children}
-              </main>
+        <ErrorBoundary>
+          <PostHogProvider>
+            <div className="flex min-h-screen max-h-screen overflow-hidden">
+              <AppSidebar isMobileMenuOpen={isMobileMenuOpen} onMobileMenuClose={closeMobileMenu} />
+              {/* Main Content Area */}
+              <div className="flex-1 flex flex-col min-h-screen max-h-screen transition-all duration-300 ease-in-out">
+                <Header onMobileMenuToggle={toggleMobileMenu} isMobileMenuOpen={isMobileMenuOpen} />
+                <main className="flex-1 overflow-y-auto">
+                  {/* PageTitle - Only visible on mobile, inside scrollable area */}
+                  <div className="md:hidden">
+                    <PageTitle />
+                  </div>
+                  {children}
+                </main>
+              </div>
             </div>
-          </div>
-        </PostHogProvider>
+          </PostHogProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface SidebarHeaderProps {
   isCollapsed: boolean;
@@ -11,44 +12,18 @@ interface SidebarHeaderProps {
 
 const SidebarHeader: React.FC<SidebarHeaderProps> = ({ isCollapsed, toggleSidebar }) => {
   return (
-    <div className="flex flex-col items-center mb-10 w-full" data-testid="sidebar-header">
-      {/* Toggle Button - Always visible and clickable */}
+    <div className="flex flex-col items-center mb-10 w-full group" data-testid="sidebar-header">
+      {/* Toggle Button - Only visible on hover for desktop */}
       <button
         onClick={toggleSidebar}
-        className="w-8 h-8 bg-neon-cyan/20 border border-neon-cyan/30 rounded-lg flex items-center justify-center text-neon-cyan hover:bg-neon-cyan/30 transition-all duration-300 hover:scale-110 mb-4"
+        className="w-8 h-8 bg-neon-cyan/20 border border-neon-cyan/30 rounded-lg flex items-center justify-center text-neon-cyan hover:bg-neon-cyan/30 transition-all duration-300 hover:scale-110 mb-4 opacity-0 group-hover:opacity-100"
         aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         data-testid="sidebar-toggle-button"
       >
         {isCollapsed ? (
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            data-testid="expand-icon"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M13 5l7 7-7 7M5 5l7 7-7 7"
-            />
-          </svg>
+          <ChevronRight className="w-4 h-4" data-testid="expand-icon" />
         ) : (
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            data-testid="collapse-icon"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M11 19l-7-7 7-7m8 14l-7-7 7-7"
-            />
-          </svg>
+          <ChevronLeft className="w-4 h-4" data-testid="collapse-icon" />
         )}
       </button>
 

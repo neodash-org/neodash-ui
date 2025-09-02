@@ -24,7 +24,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', children, ...props }, ref) => {
     return (
       <button
-        className={`rounded-full font-bold font-[var(--font-cyberpunk)] tracking-wide transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer ${buttonVariants.variant[variant]} ${buttonVariants.size[size]} ${className || ''}`}
+        className={`rounded-full font-[var(--font-cyberpunk)] tracking-wide transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer ${buttonVariants.variant[variant]} ${buttonVariants.size[size]} ${className || ''}`}
         ref={ref}
         {...props}
       >

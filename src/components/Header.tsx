@@ -44,6 +44,7 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
             toggleTheme();
           }}
           data-testid="theme-toggle"
+          data-theme={isDark ? 'dark' : 'light'}
           className="w-8 h-8 md:w-8 md:h-8 bg-bg-card/70 border border-white/10 rounded-full flex items-center justify-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95"
           aria-label="Toggle dark mode"
         >
