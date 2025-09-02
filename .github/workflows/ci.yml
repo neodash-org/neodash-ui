@@ -9,6 +9,7 @@ on:
 env:
   NODE_VERSION: '20'
   PNPM_VERSION: '8'
+  CI: true
 
 jobs:
   test-and-deploy:
@@ -27,11 +28,26 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
       
-      # Install pnpm
+      # Install pnpm FIRST (before trying to use it)
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
+      
+      # Get pnpm store directory
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      
+      # Setup pnpm cache
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
       
       # Install dependencies
       - name: Install dependencies
