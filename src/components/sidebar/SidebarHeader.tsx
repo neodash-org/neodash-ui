@@ -12,7 +12,7 @@ interface SidebarHeaderProps {
 
 const SidebarHeader: React.FC<SidebarHeaderProps> = ({ isCollapsed, toggleSidebar }) => {
   return (
-    <div className="flex flex-col items-center mb-10 w-full" data-testid="sidebar-header">
+    <div className="flex flex-col items-center mb-10 w-full group" data-testid="sidebar-header">
       {/* Toggle Button - Only visible on hover for desktop */}
       <button
         onClick={toggleSidebar}

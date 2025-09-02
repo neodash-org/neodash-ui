@@ -8,7 +8,7 @@ type AnalyticsProperties = Record<string, string | number | boolean | null | und
 export const Analytics = {
   // User identification
   identify: (userId: string, properties?: AnalyticsProperties) => {
-    posthog.identify(userId, properties);
+    posthog.identify(userId, properties || {});
   },
 
   // Page views
