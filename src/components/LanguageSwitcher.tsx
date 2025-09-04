@@ -7,11 +7,15 @@ import { useTranslation } from 'react-i18next';
 interface LanguageSwitcherProps {
   variant?: 'button' | 'dropdown';
   size?: 'sm' | 'md' | 'lg';
+  showGlow?: boolean;
+  showLabel?: boolean;
 }
 
 export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   variant = 'button',
   size = 'md',
+  showGlow = true,
+  showLabel = false,
 }) => {
   const { currentLanguage, changeLanguage, availableLanguages } = useLanguage();
   const { t, ready } = useTranslation();
@@ -19,9 +23,9 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const sizeClasses = {
-    sm: 'w-8 h-8 text-sm',
-    md: 'w-10 h-10 text-base',
-    lg: 'w-12 h-12 text-lg',
+    sm: 'w-8 h-8',
+    md: 'w-10 h-10',
+    lg: 'w-12 h-12',
   };
 
   const flagEmojis = {
@@ -101,12 +105,12 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         <button
           onClick={toggleDropdown}
           onKeyDown={handleKeyDown}
-          className={`${sizeClasses[size]} bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center cursor-pointer text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 hover:scale-105`}
+          className="w-8 h-8 bg-bg-card/70 border border-neon-cyan/30 rounded-full flex items-center justify-center cursor-pointer text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 hover:scale-105 shadow-[0_0_8px_var(--color-neon-cyan)]"
           aria-label={t('settings.languageSelection')}
           aria-expanded={isOpen}
           aria-haspopup="listbox"
         >
-          <span>{flagEmojis[currentLanguage as keyof typeof flagEmojis]}</span>
+          <span className="text-sm">{flagEmojis[currentLanguage as keyof typeof flagEmojis]}</span>
         </button>
 
         {/* Dropdown Menu */}
@@ -143,17 +147,21 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   const currentIndex = allLanguages.indexOf(currentLanguage as (typeof allLanguages)[number]);
   const nextLanguage = allLanguages[(currentIndex + 1) % allLanguages.length];
 
+  const buttonClasses = showGlow
+    ? `${sizeClasses[size]} bg-bg-card/70 border border-neon-cyan/30 rounded-full flex items-center justify-center cursor-pointer text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 hover:scale-105 shadow-[0_0_8px_var(--color-neon-cyan)]`
+    : `${sizeClasses[size]} bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center cursor-pointer text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 hover:scale-105`;
+
   return (
-    <button
-      onClick={() => changeLanguage(nextLanguage)}
-      className={`${sizeClasses[size]} bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center cursor-pointer text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 hover:scale-105`}
-      aria-label={t('settings.languageSelection')}
-      title={`${t('settings.languageSelection')}: ${t(`settings.${currentLanguage === 'en' ? 'english' : currentLanguage === 'fr' ? 'french' : currentLanguage === 'es' ? 'spanish' : currentLanguage === 'pt' ? 'portuguese' : currentLanguage === 'pt-BR' ? 'portugueseBrazil' : currentLanguage === 'ja' ? 'japanese' : currentLanguage === 'zh' ? 'chinese' : currentLanguage === 'de' ? 'german' : currentLanguage === 'it' ? 'italian' : 'russian'}`)}`}
-    >
-      <span className="mr-1">{flagEmojis[currentLanguage as keyof typeof flagEmojis]}</span>
-      <span className="font-bold">
-        {languageNames[currentLanguage as keyof typeof languageNames]}
-      </span>
-    </button>
+    <div className="flex items-center justify-between">
+      {showLabel && <span className="text-white font-medium">{t('settings.language')}</span>}
+      <button
+        onClick={() => changeLanguage(nextLanguage)}
+        className={buttonClasses}
+        aria-label={t('settings.languageSelection')}
+        title={`${t('settings.languageSelection')}: ${t(`settings.${currentLanguage === 'en' ? 'english' : currentLanguage === 'fr' ? 'french' : currentLanguage === 'es' ? 'spanish' : currentLanguage === 'pt' ? 'portuguese' : currentLanguage === 'pt-BR' ? 'portugueseBrazil' : currentLanguage === 'ja' ? 'japanese' : currentLanguage === 'zh' ? 'chinese' : currentLanguage === 'de' ? 'german' : currentLanguage === 'it' ? 'italian' : 'russian'}`)}`}
+      >
+        <span className="text-sm">{flagEmojis[currentLanguage as keyof typeof flagEmojis]}</span>
+      </button>
+    </div>
   );
 };
