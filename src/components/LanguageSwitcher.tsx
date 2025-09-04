@@ -107,6 +107,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
           onKeyDown={handleKeyDown}
           className="w-8 h-8 bg-bg-card/70 border border-neon-cyan/30 rounded-full flex items-center justify-center cursor-pointer text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 hover:scale-105 shadow-[0_0_8px_var(--color-neon-cyan)]"
           aria-label={t('settings.languageSelection')}
+          data-testid="language-switcher"
           aria-expanded={isOpen}
           aria-haspopup="listbox"
         >

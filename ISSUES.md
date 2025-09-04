@@ -101,9 +101,9 @@
 
 ### Issue #5: i18n Translation 🌍
 
-**Status:** IN PROGRESS 🔄  
-**Description:** Add internationalization support for global user base  
-**Requirements:**
+> **Status:** IN PROGRESS 🔄  
+> **Description:** Add internationalization support for global user base  
+> **Requirements:**
 
 - ✅ Install and configure i18next and react-i18next
 - ✅ Set up translation management system
