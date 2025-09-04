@@ -55,7 +55,7 @@ describe('SidebarHeader', () => {
 
     it('should have correct aria-label for collapse action', () => {
       const button = screen.getByTestId('sidebar-toggle-button');
-      expect(button).toHaveAttribute('aria-label', 'Collapse sidebar');
+      expect(button).toHaveAttribute('aria-label', 'actions.collapseSidebar');
     });
   });
 
@@ -81,7 +81,7 @@ describe('SidebarHeader', () => {
 
     it('should have correct aria-label for expand action', () => {
       const button = screen.getByTestId('sidebar-toggle-button');
-      expect(button).toHaveAttribute('aria-label', 'Expand sidebar');
+      expect(button).toHaveAttribute('aria-label', 'actions.expandSidebar');
     });
   });
 
@@ -94,7 +94,7 @@ describe('SidebarHeader', () => {
 
     it('should have proper aria-label', () => {
       render(<SidebarHeader isCollapsed={false} toggleSidebar={mockToggleSidebar} />);
-      const button = screen.getByRole('button', { name: /collapse sidebar/i });
+      const button = screen.getByRole('button', { name: /actions\.collapseSidebar/i });
       expect(button).toBeInTheDocument();
     });
   });

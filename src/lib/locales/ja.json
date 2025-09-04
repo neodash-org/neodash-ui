@@ -1,0 +1,84 @@
+{
+  "common": {
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "close": "閉じる"
+  },
+  "navigation": {
+    "dashboard": "ダッシュボード",
+    "portfolio": "ポートフォリオ",
+    "analytics": "分析",
+    "settings": "設定",
+    "bridge": "ブリッジ"
+  },
+  "dashboard": {
+    "title": "ダッシュボード",
+    "totalValue": "総価値",
+    "gainsLosses": "利益/損失",
+    "holdings": "保有",
+    "performanceChart": "パフォーマンスチャート",
+    "assetAllocation": "資産配分"
+  },
+  "portfolio": {
+    "title": "ポートフォリオ",
+    "totalBalance": "総残高",
+    "assets": "資産",
+    "transactions": "取引",
+    "history": "履歴"
+  },
+  "bridge": {
+    "title": "ブリッジ",
+    "from": "から",
+    "to": "へ",
+    "amount": "数量",
+    "connect": "接続",
+    "transfer": "転送"
+  },
+  "settings": {
+    "title": "設定",
+    "appearance": "外観",
+    "language": "言語",
+    "notifications": "通知",
+    "security": "セキュリティ",
+    "languageSelection": "言語選択",
+    "english": "英語",
+    "french": "フランス語",
+    "spanish": "スペイン語",
+    "portuguese": "ポルトガル語",
+    "portugueseBrazil": "ポルトガル語（ブラジル）",
+    "japanese": "日本語",
+    "chinese": "中国語",
+    "german": "ドイツ語",
+    "italian": "イタリア語",
+    "russian": "ロシア語"
+  },
+  "wallet": {
+    "connect": "ウォレット接続",
+    "disconnect": "切断",
+    "connected": "接続済み",
+    "balance": "残高"
+  },
+  "notifications": {
+    "title": "通知",
+    "markAllRead": "すべて既読にする",
+    "noNotifications": "通知なし"
+  },
+  "errors": {
+    "networkError": "ネットワークエラー",
+    "walletError": "ウォレットエラー",
+    "transactionFailed": "取引失敗",
+    "insufficientFunds": "残高不足"
+  },
+  "actions": {
+    "expandSidebar": "サイドバーを展開",
+    "collapseSidebar": "サイドバーを折りたたむ",
+    "toggleTheme": "テーマを切り替え",
+    "refresh": "更新"
+  }
+}

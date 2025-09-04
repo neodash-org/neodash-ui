@@ -1,7 +1,10 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { usePostHog } from '@/hooks';
+import { useTranslation } from 'react-i18next';
+import { Bell } from 'lucide-react';
 
 interface MobileHeaderProps {
   onClose: () => void;
@@ -9,31 +12,58 @@ interface MobileHeaderProps {
 
 const MobileHeader: React.FC<MobileHeaderProps> = ({ onClose }) => {
   const { trackFeatureUsage } = usePostHog();
+  const { t } = useTranslation();
+
   return (
-    <div className="flex items-center justify-between p-6 border-b border-white/10">
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 bg-gradient-to-br from-neon-cyan to-neon-pink rounded-lg flex items-center justify-center">
-          <span className="text-white text-sm">N</span>
+    <div className="p-5 border-b border-white/10">
+      {/* Header row: Logo + Actions */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+          <Image src="/neodash-icon.svg" alt="NeoDash" width={32} height={32} className="w-8 h-8" />
         </div>
-        <h2 className="text-xl text-white font-[var(--font-cyberpunk)]">NEODASH</h2>
+
+        <div className="flex items-center gap-2">
+          {/* Notification Icon */}
+          <div
+            onClick={() =>
+              trackFeatureUsage('notifications', 'clicked', { location: 'mobile_menu' })
+            }
+            className="flex w-8 h-8 rounded-full bg-neon-cyan/10 items-center justify-center text-neon-cyan shadow-[0_0_8px_var(--color-neon-cyan)] cursor-pointer hover:scale-110 transition-transform"
+          >
+            <Bell className="w-4 h-4 text-neon-cyan" />
+          </div>
+
+          {/* Close Button */}
+          <button
+            onClick={() => {
+              trackFeatureUsage('mobile_menu', 'closed', { method: 'close_button' });
+              onClose();
+            }}
+            data-testid="mobile-menu-close"
+            className="w-8 h-8 bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300"
+            aria-label={t('actions.closeMenu')}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
+
+      {/* Connect Wallet Button - Full width below */}
       <button
         onClick={() => {
-          trackFeatureUsage('mobile_menu', 'closed', { method: 'close_button' });
+          trackFeatureUsage('wallet_connection', 'attempted', { location: 'mobile_menu_header' });
           onClose();
         }}
-        data-testid="mobile-menu-close"
-        className="w-8 h-8 bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300"
-        aria-label="Close mobile menu"
+        className="w-full bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-lg font-[var(--font-cyberpunk)] text-base px-6 py-3 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] cursor-pointer tracking-wide transition hover:scale-105"
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+        {t('wallet.connect')}
       </button>
     </div>
   );

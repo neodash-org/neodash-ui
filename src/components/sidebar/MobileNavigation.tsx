@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { navItems } from '@/utils/navigationData';
 import { usePostHog } from '@/hooks';
+import { useTranslation } from 'react-i18next';
 
 interface MobileNavigationProps {
   onItemClick: () => void;
@@ -13,11 +14,14 @@ interface MobileNavigationProps {
 const MobileNavigation: React.FC<MobileNavigationProps> = ({ onItemClick }) => {
   const pathname = usePathname();
   const { trackNavigation } = usePostHog();
+  const { t } = useTranslation();
 
   return (
     <nav className="flex flex-col p-6">
+      {/* Navigation Items */}
       {navItems.map((item) => {
         const isActive = pathname === item.href;
+        const label = t(item.labelKey);
         return (
           <Link
             key={item.href}
@@ -26,7 +30,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ onItemClick }) => {
               if (!isActive) {
                 trackNavigation(pathname, item.href, {
                   navigation_type: 'mobile_menu',
-                  item_label: item.label,
+                  item_label: label,
                 });
               }
               onItemClick();
@@ -36,7 +40,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ onItemClick }) => {
             }`}
           >
             <span className="text-xl">{item.icon}</span>
-            <span className="font-medium">{item.label}</span>
+            <span className="font-medium">{label}</span>
           </Link>
         );
       })}

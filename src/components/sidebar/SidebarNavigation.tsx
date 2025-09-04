@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { navItems } from '@/utils/navigationData';
 import { usePostHog } from '@/hooks';
+import { useTranslation } from 'react-i18next';
 
 interface SidebarNavigationProps {
   isCollapsed: boolean;
@@ -13,6 +14,7 @@ interface SidebarNavigationProps {
 const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ isCollapsed }) => {
   const pathname = usePathname();
   const { trackNavigation } = usePostHog();
+  const { t } = useTranslation();
 
   return (
     <nav
@@ -21,6 +23,7 @@ const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ isCollapsed }) =>
     >
       {navItems.map((item) => {
         const isActive = pathname === item.href;
+        const label = t(item.labelKey);
         return (
           <div
             key={item.href}
@@ -33,14 +36,14 @@ const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ isCollapsed }) =>
                 if (!isActive) {
                   trackNavigation(pathname, item.href, {
                     navigation_type: 'sidebar',
-                    item_label: item.label,
+                    item_label: label,
                   });
                 }
               }}
               className={`neodash-nav-link text-center transition-all duration-300 relative ${
                 isCollapsed ? 'collapsed' : ''
               } ${isActive ? 'active text-neon-cyan' : 'text-white hover:text-neon-cyan'}`}
-              title={isCollapsed ? item.label : undefined}
+              title={isCollapsed ? label : undefined}
               data-testid={`nav-link-${item.href.replace('/', '')}`}
             >
               {/* Active indicator for collapsed state */}
@@ -54,7 +57,7 @@ const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ isCollapsed }) =>
               <span className={`${isCollapsed ? 'mr-0' : 'mr-2'}`} data-testid="nav-icon">
                 {item.icon}
               </span>
-              {!isCollapsed && <span data-testid="nav-label">{item.label}</span>}
+              {!isCollapsed && <span data-testid="nav-label">{label}</span>}
             </Link>
           </div>
         );

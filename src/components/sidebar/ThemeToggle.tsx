@@ -3,6 +3,7 @@
 import React from 'react';
 import { useTheme, usePostHog } from '@/hooks';
 import { Moon, Sun } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface ThemeToggleProps {
   size?: 'sm' | 'md' | 'lg';
@@ -17,6 +18,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
 }) => {
   const { isDark, toggleTheme } = useTheme();
   const { trackThemeChange } = usePostHog();
+  const { t } = useTranslation();
 
   const sizeClasses = {
     sm: 'w-8 h-8',
@@ -34,7 +36,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
     <div className="flex items-center justify-between" data-testid={testId || 'theme-toggle'}>
       {showLabel && (
         <span className="text-white font-medium" data-testid="theme-label">
-          Theme
+          {t('settings.appearance')}
         </span>
       )}
       <button
@@ -44,7 +46,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
           toggleTheme();
         }}
         className={`relative ${sizeClasses[size]} bg-bg-card/70 border border-white/10 rounded-full flex items-center justify-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95`}
-        aria-label="Toggle dark mode"
+        aria-label={t('actions.toggleTheme')}
         data-testid="theme-toggle-button"
         data-theme={isDark ? 'dark' : 'light'}
       >

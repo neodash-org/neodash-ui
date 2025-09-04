@@ -1,0 +1,84 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "cancel": "取消",
+    "confirm": "确认",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "close": "关闭"
+  },
+  "navigation": {
+    "dashboard": "仪表板",
+    "portfolio": "投资组合",
+    "analytics": "分析",
+    "settings": "设置",
+    "bridge": "桥接"
+  },
+  "dashboard": {
+    "title": "仪表板",
+    "totalValue": "总价值",
+    "gainsLosses": "盈亏",
+    "holdings": "持仓",
+    "performanceChart": "性能图表",
+    "assetAllocation": "资产配置"
+  },
+  "portfolio": {
+    "title": "投资组合",
+    "totalBalance": "总余额",
+    "assets": "资产",
+    "transactions": "交易",
+    "history": "历史"
+  },
+  "bridge": {
+    "title": "桥接",
+    "from": "从",
+    "to": "到",
+    "amount": "数量",
+    "connect": "连接",
+    "transfer": "转账"
+  },
+  "settings": {
+    "title": "设置",
+    "appearance": "外观",
+    "language": "语言",
+    "notifications": "通知",
+    "security": "安全",
+    "languageSelection": "语言选择",
+    "english": "英语",
+    "french": "法语",
+    "spanish": "西班牙语",
+    "portuguese": "葡萄牙语",
+    "portugueseBrazil": "葡萄牙语（巴西）",
+    "japanese": "日语",
+    "chinese": "中文",
+    "german": "德语",
+    "italian": "意大利语",
+    "russian": "俄语"
+  },
+  "wallet": {
+    "connect": "连接钱包",
+    "disconnect": "断开连接",
+    "connected": "已连接",
+    "balance": "余额"
+  },
+  "notifications": {
+    "title": "通知",
+    "markAllRead": "全部标记为已读",
+    "noNotifications": "无通知"
+  },
+  "errors": {
+    "networkError": "网络错误",
+    "walletError": "钱包错误",
+    "transactionFailed": "交易失败",
+    "insufficientFunds": "余额不足"
+  },
+  "actions": {
+    "expandSidebar": "展开侧边栏",
+    "collapseSidebar": "收起侧边栏",
+    "toggleTheme": "切换主题",
+    "refresh": "刷新"
+  }
+}
