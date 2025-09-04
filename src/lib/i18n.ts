@@ -5,6 +5,14 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 // Import translation files
 import enTranslations from './locales/en.json';
 import frTranslations from './locales/fr.json';
+import esTranslations from './locales/es.json';
+import ptTranslations from './locales/pt.json';
+import ptBRTranslations from './locales/pt-BR.json';
+import jaTranslations from './locales/ja.json';
+import zhTranslations from './locales/zh.json';
+import deTranslations from './locales/de.json';
+import itTranslations from './locales/it.json';
+import ruTranslations from './locales/ru.json';
 
 // Configure i18next
 i18n
@@ -12,7 +20,7 @@ i18n
   .use(initReactI18next)
   .init({
     // Available languages
-    supportedLngs: ['en', 'fr'],
+    supportedLngs: ['en', 'fr', 'es', 'pt', 'pt-BR', 'ja', 'zh', 'de', 'it', 'ru'],
 
     // Default language
     fallbackLng: 'en',
@@ -38,6 +46,30 @@ i18n
       },
       fr: {
         translation: frTranslations,
+      },
+      es: {
+        translation: esTranslations,
+      },
+      pt: {
+        translation: ptTranslations,
+      },
+      'pt-BR': {
+        translation: ptBRTranslations,
+      },
+      ja: {
+        translation: jaTranslations,
+      },
+      zh: {
+        translation: zhTranslations,
+      },
+      de: {
+        translation: deTranslations,
+      },
+      it: {
+        translation: itTranslations,
+      },
+      ru: {
+        translation: ruTranslations,
       },
     },
 

@@ -1,0 +1,84 @@
+{
+  "common": {
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "success": "Успех",
+    "cancel": "Отмена",
+    "confirm": "Подтвердить",
+    "save": "Сохранить",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "close": "Закрыть"
+  },
+  "navigation": {
+    "dashboard": "Панель управления",
+    "portfolio": "Портфель",
+    "analytics": "Аналитика",
+    "settings": "Настройки",
+    "bridge": "Мост"
+  },
+  "dashboard": {
+    "title": "Панель управления",
+    "totalValue": "Общая стоимость",
+    "gainsLosses": "Прибыль/Убыток",
+    "holdings": "Владения",
+    "performanceChart": "График производительности",
+    "assetAllocation": "Распределение активов"
+  },
+  "portfolio": {
+    "title": "Портфель",
+    "totalBalance": "Общий баланс",
+    "assets": "Активы",
+    "transactions": "Транзакции",
+    "history": "История"
+  },
+  "bridge": {
+    "title": "Мост",
+    "from": "От",
+    "to": "К",
+    "amount": "Количество",
+    "connect": "Подключить",
+    "transfer": "Перевести"
+  },
+  "settings": {
+    "title": "Настройки",
+    "appearance": "Внешний вид",
+    "language": "Язык",
+    "notifications": "Уведомления",
+    "security": "Безопасность",
+    "languageSelection": "Выбор языка",
+    "english": "Английский",
+    "french": "Французский",
+    "spanish": "Испанский",
+    "portuguese": "Португальский",
+    "portugueseBrazil": "Португальский (Бразилия)",
+    "japanese": "Японский",
+    "chinese": "Китайский",
+    "german": "Немецкий",
+    "italian": "Итальянский",
+    "russian": "Русский"
+  },
+  "wallet": {
+    "connect": "Подключить кошелек",
+    "disconnect": "Отключить",
+    "connected": "Подключен",
+    "balance": "Баланс"
+  },
+  "notifications": {
+    "title": "Уведомления",
+    "markAllRead": "Отметить все как прочитанные",
+    "noNotifications": "Нет уведомлений"
+  },
+  "errors": {
+    "networkError": "Ошибка сети",
+    "walletError": "Ошибка кошелька",
+    "transactionFailed": "Транзакция не удалась",
+    "insufficientFunds": "Недостаточно средств"
+  },
+  "actions": {
+    "expandSidebar": "Развернуть боковую панель",
+    "collapseSidebar": "Свернуть боковую панель",
+    "toggleTheme": "Переключить тему",
+    "refresh": "Обновить"
+  }
+}

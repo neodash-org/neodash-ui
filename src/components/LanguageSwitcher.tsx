@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTranslation } from 'react-i18next';
-import { ChevronDown } from 'lucide-react';
 
 interface LanguageSwitcherProps {
   variant?: 'button' | 'dropdown';
@@ -15,7 +14,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   size = 'md',
 }) => {
   const { currentLanguage, changeLanguage, availableLanguages } = useLanguage();
-  const { t } = useTranslation();
+  const { t, ready } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -25,20 +24,30 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     lg: 'w-12 h-12 text-lg',
   };
 
-  const iconSizes = {
-    sm: 'w-4 h-4',
-    md: 'w-5 h-5',
-    lg: 'w-6 h-6',
-  };
-
   const flagEmojis = {
     en: '🇬🇧',
     fr: '🇫🇷',
+    es: '🇪🇸',
+    pt: '🇵🇹',
+    'pt-BR': '🇧🇷',
+    ja: '🇯🇵',
+    zh: '🇨🇳',
+    de: '🇩🇪',
+    it: '🇮🇹',
+    ru: '🇷🇺',
   };
 
   const languageNames = {
     en: 'EN',
     fr: 'FR',
+    es: 'ES',
+    pt: 'PT',
+    'pt-BR': 'BR',
+    ja: 'JP',
+    zh: 'CN',
+    de: 'DE',
+    it: 'IT',
+    ru: 'RU',
   };
 
   // Handle click outside to close dropdown
@@ -55,7 +64,20 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     };
   }, []);
 
-  const handleLanguageChange = (language: 'en' | 'fr') => {
+  // Don't render until i18n is ready
+  if (!ready) {
+    return (
+      <div
+        className={`${sizeClasses[size]} bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center text-neon-cyan/50`}
+      >
+        <span className="text-xs">...</span>
+      </div>
+    );
+  }
+
+  const handleLanguageChange = (
+    language: 'en' | 'fr' | 'es' | 'pt' | 'pt-BR' | 'ja' | 'zh' | 'de' | 'it' | 'ru',
+  ) => {
     changeLanguage(language);
     setIsOpen(false);
   };
@@ -79,15 +101,12 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         <button
           onClick={toggleDropdown}
           onKeyDown={handleKeyDown}
-          className={`${sizeClasses[size]} bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 hover:scale-105`}
+          className={`${sizeClasses[size]} bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center cursor-pointer text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 hover:scale-105`}
           aria-label={t('settings.languageSelection')}
           aria-expanded={isOpen}
           aria-haspopup="listbox"
         >
-          <span className="mr-1">{flagEmojis[currentLanguage as keyof typeof flagEmojis]}</span>
-          <ChevronDown
-            className={`${iconSizes[size]} transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
-          />
+          <span>{flagEmojis[currentLanguage as keyof typeof flagEmojis]}</span>
         </button>
 
         {/* Dropdown Menu */}
@@ -120,12 +139,16 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   }
 
   // Button variant (toggle between languages)
+  const allLanguages = ['en', 'fr', 'es', 'pt', 'pt-BR', 'ja', 'zh', 'de', 'it', 'ru'] as const;
+  const currentIndex = allLanguages.indexOf(currentLanguage as (typeof allLanguages)[number]);
+  const nextLanguage = allLanguages[(currentIndex + 1) % allLanguages.length];
+
   return (
     <button
-      onClick={() => changeLanguage(currentLanguage === 'en' ? 'fr' : 'en')}
-      className={`${sizeClasses[size]} bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 hover:scale-105`}
+      onClick={() => changeLanguage(nextLanguage)}
+      className={`${sizeClasses[size]} bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center cursor-pointer text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 hover:scale-105`}
       aria-label={t('settings.languageSelection')}
-      title={`${t('settings.languageSelection')}: ${t(`settings.${currentLanguage === 'en' ? 'english' : 'french'}`)}`}
+      title={`${t('settings.languageSelection')}: ${t(`settings.${currentLanguage === 'en' ? 'english' : currentLanguage === 'fr' ? 'french' : currentLanguage === 'es' ? 'spanish' : currentLanguage === 'pt' ? 'portuguese' : currentLanguage === 'pt-BR' ? 'portugueseBrazil' : currentLanguage === 'ja' ? 'japanese' : currentLanguage === 'zh' ? 'chinese' : currentLanguage === 'de' ? 'german' : currentLanguage === 'it' ? 'italian' : 'russian'}`)}`}
     >
       <span className="mr-1">{flagEmojis[currentLanguage as keyof typeof flagEmojis]}</span>
       <span className="font-bold">

@@ -79,7 +79,15 @@
     "auto": "Auto",
     "languageSelection": "Select Language",
     "english": "English",
-    "french": "French"
+    "french": "French",
+    "spanish": "Spanish",
+    "portuguese": "Portuguese",
+    "portugueseBrazil": "Portuguese (Brazil)",
+    "japanese": "Japanese",
+    "chinese": "Chinese",
+    "german": "German",
+    "italian": "Italian",
+    "russian": "Russian"
   },
   "wallet": {
     "connect": "Connect Wallet",

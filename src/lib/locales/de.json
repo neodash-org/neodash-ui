@@ -1,0 +1,84 @@
+{
+  "common": {
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "portfolio": "Portfolio",
+    "analytics": "Analysen",
+    "settings": "Einstellungen",
+    "bridge": "Brücke"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalValue": "Gesamtwert",
+    "gainsLosses": "Gewinne/Verluste",
+    "holdings": "Bestände",
+    "performanceChart": "Performance-Diagramm",
+    "assetAllocation": "Vermögensallokation"
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "totalBalance": "Gesamtsaldo",
+    "assets": "Vermögenswerte",
+    "transactions": "Transaktionen",
+    "history": "Verlauf"
+  },
+  "bridge": {
+    "title": "Brücke",
+    "from": "Von",
+    "to": "Nach",
+    "amount": "Betrag",
+    "connect": "Verbinden",
+    "transfer": "Übertragen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "appearance": "Erscheinungsbild",
+    "language": "Sprache",
+    "notifications": "Benachrichtigungen",
+    "security": "Sicherheit",
+    "languageSelection": "Sprachauswahl",
+    "english": "Englisch",
+    "french": "Französisch",
+    "spanish": "Spanisch",
+    "portuguese": "Portugiesisch",
+    "portugueseBrazil": "Portugiesisch (Brasilien)",
+    "japanese": "Japanisch",
+    "chinese": "Chinesisch",
+    "german": "Deutsch",
+    "italian": "Italienisch",
+    "russian": "Russisch"
+  },
+  "wallet": {
+    "connect": "Wallet verbinden",
+    "disconnect": "Trennen",
+    "connected": "Verbunden",
+    "balance": "Saldo"
+  },
+  "notifications": {
+    "title": "Benachrichtigungen",
+    "markAllRead": "Alle als gelesen markieren",
+    "noNotifications": "Keine Benachrichtigungen"
+  },
+  "errors": {
+    "networkError": "Netzwerkfehler",
+    "walletError": "Wallet-Fehler",
+    "transactionFailed": "Transaktion fehlgeschlagen",
+    "insufficientFunds": "Unzureichende Mittel"
+  },
+  "actions": {
+    "expandSidebar": "Seitenleiste erweitern",
+    "collapseSidebar": "Seitenleiste einklappen",
+    "toggleTheme": "Design wechseln",
+    "refresh": "Aktualisieren"
+  }
+}

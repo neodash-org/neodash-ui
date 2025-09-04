@@ -1,0 +1,84 @@
+{
+  "common": {
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "success": "Successo",
+    "cancel": "Annulla",
+    "confirm": "Conferma",
+    "save": "Salva",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "close": "Chiudi"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "portfolio": "Portafoglio",
+    "analytics": "Analisi",
+    "settings": "Impostazioni",
+    "bridge": "Ponte"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalValue": "Valore Totale",
+    "gainsLosses": "Guadagni/Perdite",
+    "holdings": "Possedimenti",
+    "performanceChart": "Grafico delle Prestazioni",
+    "assetAllocation": "Allocazione Asset"
+  },
+  "portfolio": {
+    "title": "Portafoglio",
+    "totalBalance": "Saldo Totale",
+    "assets": "Asset",
+    "transactions": "Transazioni",
+    "history": "Cronologia"
+  },
+  "bridge": {
+    "title": "Ponte",
+    "from": "Da",
+    "to": "A",
+    "amount": "Quantità",
+    "connect": "Connetti",
+    "transfer": "Trasferisci"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "appearance": "Aspetto",
+    "language": "Lingua",
+    "notifications": "Notifiche",
+    "security": "Sicurezza",
+    "languageSelection": "Selezione lingua",
+    "english": "Inglese",
+    "french": "Francese",
+    "spanish": "Spagnolo",
+    "portuguese": "Portoghese",
+    "portugueseBrazil": "Portoghese (Brasile)",
+    "japanese": "Giapponese",
+    "chinese": "Cinese",
+    "german": "Tedesco",
+    "italian": "Italiano",
+    "russian": "Russo"
+  },
+  "wallet": {
+    "connect": "Connetti Wallet",
+    "disconnect": "Disconnetti",
+    "connected": "Connesso",
+    "balance": "Saldo"
+  },
+  "notifications": {
+    "title": "Notifiche",
+    "markAllRead": "Segna Tutto come Letto",
+    "noNotifications": "Nessuna notifica"
+  },
+  "errors": {
+    "networkError": "Errore di Rete",
+    "walletError": "Errore Wallet",
+    "transactionFailed": "Transazione Fallita",
+    "insufficientFunds": "Fondi Insufficienti"
+  },
+  "actions": {
+    "expandSidebar": "Espandi Barra Laterale",
+    "collapseSidebar": "Comprimi Barra Laterale",
+    "toggleTheme": "Cambia Tema",
+    "refresh": "Aggiorna"
+  }
+}

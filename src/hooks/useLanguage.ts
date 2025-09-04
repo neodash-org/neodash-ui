@@ -1,24 +1,49 @@
 import { useTranslation } from 'react-i18next';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 export const useLanguage = () => {
-  const { i18n } = useTranslation();
+  const { i18n, ready } = useTranslation();
 
-  const currentLanguage = i18n.language;
-  const isEnglish = currentLanguage === 'en';
-  const isFrench = currentLanguage === 'fr';
+  const availableLanguages = useMemo(
+    () => ['en', 'fr', 'es', 'pt', 'pt-BR', 'ja', 'zh', 'de', 'it', 'ru'] as const,
+    [],
+  );
 
   const changeLanguage = useCallback(
-    (language: 'en' | 'fr') => {
-      i18n.changeLanguage(language);
+    (language: 'en' | 'fr' | 'es' | 'pt' | 'pt-BR' | 'ja' | 'zh' | 'de' | 'it' | 'ru') => {
+      if (ready && i18n.isInitialized) {
+        i18n.changeLanguage(language);
+      }
     },
-    [i18n],
+    [i18n, ready],
   );
 
   const toggleLanguage = useCallback(() => {
-    const newLanguage = currentLanguage === 'en' ? 'fr' : 'en';
-    changeLanguage(newLanguage);
-  }, [currentLanguage, changeLanguage]);
+    if (!ready || !i18n.isInitialized) return;
+
+    const currentLanguage = i18n.language || 'en';
+    const currentIndex = availableLanguages.indexOf(
+      currentLanguage as (typeof availableLanguages)[number],
+    );
+    const nextLanguage = availableLanguages[(currentIndex + 1) % availableLanguages.length];
+    changeLanguage(nextLanguage);
+  }, [ready, i18n, availableLanguages, changeLanguage]);
+
+  // Ensure i18n is ready before proceeding
+  if (!ready || !i18n.isInitialized) {
+    return {
+      currentLanguage: 'en',
+      isEnglish: true,
+      isFrench: false,
+      changeLanguage,
+      toggleLanguage,
+      availableLanguages,
+    };
+  }
+
+  const currentLanguage = i18n.language || 'en';
+  const isEnglish = currentLanguage === 'en';
+  const isFrench = currentLanguage === 'fr';
 
   return {
     currentLanguage,
@@ -26,6 +51,6 @@ export const useLanguage = () => {
     isFrench,
     changeLanguage,
     toggleLanguage,
-    availableLanguages: ['en', 'fr'] as const,
+    availableLanguages,
   };
 };

@@ -79,7 +79,15 @@
     "auto": "Automatique",
     "languageSelection": "Sélectionner la langue",
     "english": "Anglais",
-    "french": "Français"
+    "french": "Français",
+    "spanish": "Espagnol",
+    "portuguese": "Portugais",
+    "portugueseBrazil": "Portugais (Brésil)",
+    "japanese": "Japonais",
+    "chinese": "Chinois",
+    "german": "Allemand",
+    "italian": "Italien",
+    "russian": "Russe"
   },
   "wallet": {
     "connect": "Connecter le portefeuille",

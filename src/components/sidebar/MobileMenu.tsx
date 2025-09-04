@@ -5,7 +5,9 @@ import MobileHeader from './MobileHeader';
 import MobileNavigation from './MobileNavigation';
 import ThemeToggle from './ThemeToggle';
 import MobileFooter from './MobileFooter';
+import { LanguageSwitcher } from '../LanguageSwitcher';
 import { usePostHog } from '@/hooks';
+import { useTranslation } from 'react-i18next';
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -14,6 +16,7 @@ interface MobileMenuProps {
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
   const { trackFeatureUsage } = usePostHog();
+  const { t } = useTranslation();
 
   if (!isOpen) return null;
 
@@ -45,6 +48,14 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
         {/* Theme Toggle */}
         <div className="p-6">
           <ThemeToggle size="lg" showLabel={true} data-testid="mobile-menu-theme-toggle" />
+        </div>
+
+        {/* Language Switcher */}
+        <div className="px-6 pb-6">
+          <div className="flex items-center justify-between">
+            <span className="text-white/80 text-sm font-medium">{t('settings.language')}</span>
+            <LanguageSwitcher variant="dropdown" size="sm" />
+          </div>
         </div>
 
         <MobileFooter />

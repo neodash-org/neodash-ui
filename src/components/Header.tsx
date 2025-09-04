@@ -7,6 +7,7 @@ import { useTheme, usePostHog } from '@/hooks';
 import { Moon, Sun, Bell } from 'lucide-react';
 import { getPageTitle } from '@/utils/pageTitle';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 interface HeaderProps {
   onMobileMenuToggle: () => void;
@@ -17,12 +18,13 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
   const pathname = usePathname();
   const { isDark, toggleTheme } = useTheme();
   const { trackFeatureUsage, trackThemeChange } = usePostHog();
+  const { t } = useTranslation();
 
   const title = getPageTitle(pathname);
 
   return (
     <div className="flex items-center justify-between gap-4 md:gap-8 flex-wrap px-4 py-5 pt-4 pb-6">
-      {/* Left side: Logo (mobile) + Route Title */}
+      {/* Left side: Logo (mobile) + Route Title (desktop) */}
       <div className="flex items-center gap-4">
         {/* NEODASH Logo - Only visible on mobile */}
         <div className="md:hidden w-8 h-8">
@@ -47,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
           data-testid="theme-toggle"
           data-theme={isDark ? 'dark' : 'light'}
           className="w-8 h-8 md:w-8 md:h-8 bg-bg-card/70 border border-white/10 rounded-full flex items-center justify-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95"
-          aria-label="Toggle dark mode"
+          aria-label={t('actions.toggleTheme')}
         >
           {isDark ? (
             <Moon className="w-4 h-4 md:w-4 md:h-4 text-neon-cyan" />
@@ -68,14 +70,14 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
           <Bell className="w-4 h-4 text-neon-cyan" />
         </div>
 
-        {/* Connect Wallet */}
+        {/* Connect Wallet - Hidden on mobile, visible on desktop */}
         <button
           onClick={() =>
             trackFeatureUsage('wallet_connection', 'attempted', { location: 'header' })
           }
-          className="bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-full font-[var(--font-cyberpunk)] text-sm md:text-base px-4 md:px-6 py-2 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] cursor-pointer tracking-wide transition hover:scale-105"
+          className="hidden md:flex bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-full font-[var(--font-cyberpunk)] text-sm md:text-base px-4 md:px-6 py-2 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] cursor-pointer tracking-wide transition hover:scale-105"
         >
-          Connect Wallet
+          {t('wallet.connect')}
         </button>
 
         {/* Mobile Menu Button - Only visible on mobile, positioned on the right */}
@@ -88,7 +90,7 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
           }}
           data-testid="mobile-menu-button"
           className="md:hidden w-10 h-10 bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 hover:scale-105"
-          aria-label="Toggle mobile menu"
+          aria-label={isMobileMenuOpen ? t('actions.closeMenu') : t('actions.openMenu')}
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path

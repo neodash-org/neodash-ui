@@ -1,0 +1,84 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar"
+  },
+  "navigation": {
+    "dashboard": "Panel de Control",
+    "portfolio": "Cartera",
+    "analytics": "Análisis",
+    "settings": "Configuración",
+    "bridge": "Puente"
+  },
+  "dashboard": {
+    "title": "Panel de Control",
+    "totalValue": "Valor Total",
+    "gainsLosses": "Ganancias/Pérdidas",
+    "holdings": "Tenencia",
+    "performanceChart": "Gráfico de Rendimiento",
+    "assetAllocation": "Asignación de Activos"
+  },
+  "portfolio": {
+    "title": "Cartera",
+    "totalBalance": "Balance Total",
+    "assets": "Activos",
+    "transactions": "Transacciones",
+    "history": "Historial"
+  },
+  "bridge": {
+    "title": "Puente",
+    "from": "Desde",
+    "to": "Hacia",
+    "amount": "Cantidad",
+    "connect": "Conectar",
+    "transfer": "Transferir"
+  },
+  "settings": {
+    "title": "Configuración",
+    "appearance": "Apariencia",
+    "language": "Idioma",
+    "notifications": "Notificaciones",
+    "security": "Seguridad",
+    "languageSelection": "Selección de idioma",
+    "english": "Inglés",
+    "french": "Francés",
+    "spanish": "Español",
+    "portuguese": "Portugués",
+    "portugueseBrazil": "Portugués (Brasil)",
+    "japanese": "Japonés",
+    "chinese": "Chino",
+    "german": "Alemán",
+    "italian": "Italiano",
+    "russian": "Ruso"
+  },
+  "wallet": {
+    "connect": "Conectar Cartera",
+    "disconnect": "Desconectar",
+    "connected": "Conectado",
+    "balance": "Balance"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "markAllRead": "Marcar Todo como Leído",
+    "noNotifications": "No hay notificaciones"
+  },
+  "errors": {
+    "networkError": "Error de Red",
+    "walletError": "Error de Cartera",
+    "transactionFailed": "Transacción Fallida",
+    "insufficientFunds": "Fondos Insuficientes"
+  },
+  "actions": {
+    "expandSidebar": "Expandir Barra Lateral",
+    "collapseSidebar": "Contraer Barra Lateral",
+    "toggleTheme": "Cambiar Tema",
+    "refresh": "Actualizar"
+  }
+}

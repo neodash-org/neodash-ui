@@ -1,13 +1,13 @@
 export interface NavItem {
   href: string;
-  label: string;
+  labelKey: string;
   icon: string;
 }
 
 export const navItems: NavItem[] = [
-  { href: '/dashboard', label: 'Dashboard', icon: '📊' },
-  { href: '/portfolio', label: 'Portfolio', icon: '💼' },
-  { href: '/analytics', label: 'Analytics', icon: '📈' },
-  { href: '/settings', label: 'Settings', icon: '⚙️' },
-  { href: '/bridge', label: 'Bridge', icon: '🌉' },
+  { href: '/dashboard', labelKey: 'navigation.dashboard', icon: '📊' },
+  { href: '/portfolio', labelKey: 'navigation.portfolio', icon: '💼' },
+  { href: '/analytics', labelKey: 'navigation.analytics', icon: '📈' },
+  { href: '/settings', labelKey: 'navigation.settings', icon: '⚙️' },
+  { href: '/bridge', labelKey: 'navigation.bridge', icon: '🌉' },
 ];
