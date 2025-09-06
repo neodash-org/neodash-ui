@@ -101,7 +101,18 @@
     "walletConnect": "WalletConnect",
     "address": "Address",
     "balance": "Balance",
-    "switchNetwork": "Switch Network"
+    "switchNetwork": "Switch Network",
+    "chooseEcosystem": "Choose Your Ecosystem",
+    "selectEcosystem": "Select the blockchain ecosystem you want to connect to",
+    "ethereum": "Ethereum",
+    "solana": "Solana",
+    "ethereumDescription": "Connect to Ethereum and EVM-compatible chains",
+    "solanaDescription": "Connect to Solana blockchain",
+    "comingSoon": "Coming Soon",
+    "walletConnection": "Wallet connection for {ecosystem} will be available soon.",
+    "backToSelection": "Back to Ecosystem Selection",
+    "walletConnected": "Wallet Connected",
+    "walletSuccessfullyConnected": "Your wallet is successfully connected"
   },
   "notifications": {
     "title": "Notifications",
