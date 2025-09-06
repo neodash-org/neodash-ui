@@ -24,6 +24,10 @@ export interface WalletContextType extends WalletState {
   openModal: () => void;
   closeModal: () => void;
   setError: (error: string | null) => void;
+  // Computed properties
+  isConnected: boolean;
+  wallet: WalletInfo | null;
+  disconnectWallet: () => Promise<void>;
 }
 
 export interface EVMChain {

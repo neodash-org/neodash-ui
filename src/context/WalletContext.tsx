@@ -108,6 +108,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     openModal,
     closeModal,
     setError,
+    // Computed properties
+    isConnected: state.status === 'connected',
+    wallet: state.currentWallet,
+    disconnectWallet: disconnect,
   };
 
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
