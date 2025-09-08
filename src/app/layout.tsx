@@ -7,6 +7,8 @@ import { AppSidebar, Header, PageTitle } from '@/components';
 import { useTheme, useMobileMenu } from '@/hooks';
 import { PostHogProvider } from '@/contexts';
 import { WalletProvider } from '@/context/WalletContext';
+import { RainbowKitProviderWrapper } from '@/components/providers/RainbowKitProvider';
+import { SolanaWalletProvider } from '@/lib/wallet/solana';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { initializeErrorHandling } from '@/lib/errorHandling';
 
@@ -47,30 +49,34 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`bg-bg-main text-main min-h-screen font-[var(--font-sans)] ${theme.theme}-mode`}
       >
         <ErrorBoundary>
-          <PostHogProvider>
-            <WalletProvider>
-              <div className="flex min-h-screen max-h-screen overflow-hidden">
-                <AppSidebar
-                  isMobileMenuOpen={isMobileMenuOpen}
-                  onMobileMenuClose={closeMobileMenu}
-                />
-                {/* Main Content Area */}
-                <div className="flex-1 flex flex-col min-h-screen max-h-screen transition-all duration-300 ease-in-out">
-                  <Header
-                    onMobileMenuToggle={toggleMobileMenu}
-                    isMobileMenuOpen={isMobileMenuOpen}
-                  />
-                  <main className="flex-1 overflow-y-auto">
-                    {/* PageTitle - Only visible on mobile, inside scrollable area */}
-                    <div className="md:hidden">
-                      <PageTitle />
+          <RainbowKitProviderWrapper>
+            <SolanaWalletProvider>
+              <PostHogProvider>
+                <WalletProvider>
+                  <div className="flex min-h-screen max-h-screen overflow-hidden">
+                    <AppSidebar
+                      isMobileMenuOpen={isMobileMenuOpen}
+                      onMobileMenuClose={closeMobileMenu}
+                    />
+                    {/* Main Content Area */}
+                    <div className="flex-1 flex flex-col min-h-screen max-h-screen transition-all duration-300 ease-in-out">
+                      <Header
+                        onMobileMenuToggle={toggleMobileMenu}
+                        isMobileMenuOpen={isMobileMenuOpen}
+                      />
+                      <main className="flex-1 overflow-y-auto">
+                        {/* PageTitle - Only visible on mobile, inside scrollable area */}
+                        <div className="md:hidden">
+                          <PageTitle />
+                        </div>
+                        {children}
+                      </main>
                     </div>
-                    {children}
-                  </main>
-                </div>
-              </div>
-            </WalletProvider>
-          </PostHogProvider>
+                  </div>
+                </WalletProvider>
+              </PostHogProvider>
+            </SolanaWalletProvider>
+          </RainbowKitProviderWrapper>
         </ErrorBoundary>
       </body>
     </html>
