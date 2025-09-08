@@ -87,12 +87,12 @@ const Modal: React.FC<ModalProps> = ({
       onClick={handleOverlayClick}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black/50 dark:bg-black/80 backdrop-blur-sm dark:backdrop-blur-lg" />
 
       {/* Modal */}
       <div
         ref={modalRef}
-        className={`relative w-full ${sizeClasses[size]} bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-700 focus:outline-none ${className}`}
+        className={`relative w-full ${sizeClasses[size]} bg-white/95 dark:bg-bg-card/80 border border-gray-200 dark:border-neon-cyan/30 rounded-xl dark:rounded-2xl shadow-xl dark:shadow-[0_0_32px_var(--color-neon-cyan-88),0_0_64px_var(--color-neon-pink-44)] backdrop-blur-sm dark:backdrop-blur-lg focus:outline-none dark:before:absolute dark:before:inset-0 dark:before:rounded-2xl dark:before:bg-gradient-to-br dark:before:from-neon-cyan/5 dark:before:via-transparent dark:before:to-neon-pink/5 dark:before:pointer-events-none ${className}`}
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
@@ -100,13 +100,16 @@ const Modal: React.FC<ModalProps> = ({
       >
         {/* Header */}
         {title && (
-          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-            <h2 id="modal-title" className="text-xl font-semibold text-gray-900 dark:text-white">
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-neon-cyan/20 dark:bg-gradient-to-r dark:from-neon-cyan/5 dark:to-neon-pink/5">
+            <h2
+              id="modal-title"
+              className="text-xl text-gray-900 dark:text-white font-[var(--font-cyberpunk)] tracking-widest dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)]"
+            >
               {title}
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+              className="text-gray-400 hover:text-gray-600 dark:text-neon-cyan dark:hover:text-neon-pink transition-all duration-300 dark:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:shadow-[0_0_16px_var(--color-neon-pink)] dark:hover:scale-110 dark:bg-neon-cyan/10 dark:hover:bg-neon-pink/10 rounded-full p-2"
               aria-label="Close modal"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

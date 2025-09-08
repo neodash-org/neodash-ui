@@ -36,8 +36,8 @@ export const useTheme = () => {
     root.style.setProperty('--color-warning', currentTheme.warning);
 
     // Update document class for theme-specific CSS
-    root.classList.remove('light-mode', 'dark-mode');
-    root.classList.add(`${theme}-mode`);
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
   }, [theme]);
 
   // Load saved theme from localStorage

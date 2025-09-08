@@ -30,10 +30,10 @@ const WalletConnectionModal: React.FC = () => {
       return (
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:drop-shadow-[0_0_8px_var(--color-neon-green)] mb-2">
               Wallet Connected
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-600 dark:text-gray-300 dark:drop-shadow-[0_0_4px_var(--color-neon-green)]">
               Your wallet is successfully connected
             </p>
           </div>
@@ -76,16 +76,22 @@ const WalletConnectionModal: React.FC = () => {
           </div>
 
           {/* TODO: Implement actual wallet connection logic */}
-          <Card className="text-center py-8">
-            <div className="text-4xl mb-4">{selectedEcosystem === 'evm' ? '🔷' : '🟣'}</div>
-            <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+          <Card className="text-center py-8 dark:bg-gradient-to-br dark:from-neon-cyan/5 dark:to-neon-pink/5 dark:border-neon-cyan/30 dark:shadow-[0_0_16px_var(--color-neon-cyan-44)]">
+            <div className="text-4xl mb-4 dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)]">
+              {selectedEcosystem === 'evm' ? '🔷' : '🟣'}
+            </div>
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-white dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)] mb-2">
               Coming Soon
             </h4>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
+            <p className="text-gray-600 dark:text-gray-300 dark:drop-shadow-[0_0_4px_var(--color-neon-cyan)] mb-4">
               Wallet connection for {selectedEcosystem === 'evm' ? 'Ethereum' : 'Solana'} will be
               available soon.
             </p>
-            <Button variant="outline" onClick={handleBack}>
+            <Button
+              variant="outline"
+              onClick={handleBack}
+              className="dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105"
+            >
               Back to Ecosystem Selection
             </Button>
           </Card>
@@ -105,8 +111,8 @@ const WalletConnectionModal: React.FC = () => {
       className="max-w-md"
     >
       {error && (
-        <Card className="mb-4 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
-          <div className="flex items-center space-x-2 text-red-700 dark:text-red-400">
+        <Card className="mb-4 border-red-200 dark:border-red-500/50 bg-red-50 dark:bg-red-900/20 dark:shadow-[0_0_16px_var(--color-red-44)]">
+          <div className="flex items-center space-x-2 text-red-700 dark:text-red-400 dark:drop-shadow-[0_0_4px_var(--color-red)]">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
@@ -115,7 +121,9 @@ const WalletConnectionModal: React.FC = () => {
                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span className="text-sm font-medium">{error}</span>
+            <span className="text-sm font-medium dark:font-[var(--font-cyberpunk)] dark:tracking-wide">
+              {error}
+            </span>
           </div>
         </Card>
       )}
