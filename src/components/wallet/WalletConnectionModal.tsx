@@ -93,7 +93,7 @@ const WalletConnectionModal: React.FC = () => {
                     <div className={isMobile ? 'space-y-2' : 'flex gap-2'}>
                       <Button
                         variant="outline"
-                        size={isMobile ? 'default' : 'sm'}
+                        size={isMobile ? 'md' : 'sm'}
                         onClick={() => {
                           console.log('Switch Network clicked, openChainModal:', openChainModal);
                           openChainModal();
@@ -105,7 +105,7 @@ const WalletConnectionModal: React.FC = () => {
                       </Button>
                       <Button
                         variant="outline"
-                        size={isMobile ? 'default' : 'sm'}
+                        size={isMobile ? 'md' : 'sm'}
                         onClick={() => {
                           navigator.clipboard.writeText(account.address);
                           console.log(t('wallet.addressCopied'));
@@ -117,7 +117,7 @@ const WalletConnectionModal: React.FC = () => {
                       </Button>
                       <Button
                         variant="outline"
-                        size={isMobile ? 'default' : 'sm'}
+                        size={isMobile ? 'md' : 'sm'}
                         onClick={() => {
                           console.log('Disconnecting wallet');
                           disconnect();
