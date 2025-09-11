@@ -45,7 +45,10 @@ const WalletConnectionModal: React.FC = () => {
                 </div>
 
                 {/* EVM Connection Status */}
-                <Card className="dark:bg-gradient-to-br dark:from-neon-cyan/5 dark:to-neon-pink/5 dark:border-neon-cyan/30 dark:shadow-[0_0_16px_var(--color-neon-cyan-44)]">
+                <Card
+                  className="dark:bg-gradient-to-br dark:from-neon-cyan/5 dark:to-neon-pink/5 dark:border-neon-cyan/30 dark:shadow-[0_0_16px_var(--color-neon-cyan-44)]"
+                  data-testid="evm-connection-status"
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <div className="text-2xl">🔷</div>
@@ -67,6 +70,7 @@ const WalletConnectionModal: React.FC = () => {
                         size="sm"
                         onClick={openChainModal}
                         className="dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105"
+                        data-testid="switch-network-button"
                       >
                         Switch Network
                       </Button>
@@ -75,6 +79,7 @@ const WalletConnectionModal: React.FC = () => {
                         size="sm"
                         onClick={openAccountModal}
                         className="dark:border-neon-pink/30 dark:hover:border-neon-pink dark:hover:shadow-[0_0_8px_var(--color-neon-pink)] dark:hover:scale-105"
+                        data-testid="manage-account-button"
                       >
                         Manage Account
                       </Button>
@@ -93,6 +98,7 @@ const WalletConnectionModal: React.FC = () => {
                     onSelect={handleEcosystemSelect}
                     onClose={handleClose}
                     selectedEcosystem={selectedEcosystem}
+                    data-testid="additional-ecosystem-selector"
                   />
                 </div>
               </div>
@@ -105,6 +111,7 @@ const WalletConnectionModal: React.FC = () => {
               onSelect={handleEcosystemSelect}
               onClose={handleClose}
               selectedEcosystem={selectedEcosystem}
+              data-testid="ecosystem-selector"
             />
           );
         }}
@@ -129,6 +136,7 @@ const WalletConnectionModal: React.FC = () => {
             title={evmConnected ? 'Manage Wallets' : 'Connect Wallet'}
             size="md"
             className="max-w-md"
+            data-testid="wallet-connection-modal"
           >
             {error && (
               <Card className="mb-4 border-red-200 dark:border-red-500/50 bg-red-50 dark:bg-red-900/20 dark:shadow-[0_0_16px_var(--color-red-44)]">

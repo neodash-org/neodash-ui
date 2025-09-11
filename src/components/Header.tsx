@@ -94,6 +94,7 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
                   variant="primary"
                   size="md"
                   className="bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-full font-[var(--font-cyberpunk)] px-6 py-2 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] tracking-wide transition hover:scale-105"
+                  data-testid="connect-wallet-button"
                 >
                   {evmConnected ? 'Manage Wallets' : t('wallet.connect')}
                 </Button>

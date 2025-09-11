@@ -9,12 +9,14 @@ interface EcosystemSelectorProps {
   onSelect: (type: WalletType | null) => void;
   onClose: () => void;
   selectedEcosystem?: WalletType | null;
+  'data-testid'?: string;
 }
 
 const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
   onSelect,
   onClose,
   selectedEcosystem,
+  'data-testid': dataTestId,
 }) => {
   const { publicKey: solanaPublicKey } = useWallet();
   const ecosystems = [
@@ -44,11 +46,17 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
 
   // If Solana ecosystem is selected, show Solana wallet selector
   if (selectedEcosystem === 'solana') {
-    return <SolanaWalletSelector onBack={() => onSelect(null)} onClose={onClose} />;
+    return (
+      <SolanaWalletSelector
+        onBack={() => onSelect(null)}
+        onClose={onClose}
+        data-testid="solana-wallet-selector"
+      />
+    );
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-testid={dataTestId || 'ecosystem-selector'}>
       <div className="text-center">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)] mb-2">
           Choose Your Ecosystem
@@ -83,6 +91,7 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
                       className={`${ecosystem.color} border-2 hover:shadow-md dark:hover:shadow-[0_0_24px_var(--color-neon-cyan-66),0_0_32px_var(--color-neon-pink-44)] transition-all duration-300 cursor-pointer dark:hover:scale-[1.02] dark:hover:border-neon-cyan/60`}
                       onClick={evmConnected ? openAccountModal : openConnectModal}
                       hover
+                      data-testid="evm-ecosystem-card"
                     >
                       <div className="flex items-center space-x-4">
                         <div className="text-2xl">{ecosystem.icon}</div>
@@ -145,6 +154,7 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
               className={`${ecosystem.color} border-2 hover:shadow-md dark:hover:shadow-[0_0_24px_var(--color-neon-pink-66),0_0_32px_var(--color-neon-cyan-44)] transition-all duration-300 cursor-pointer dark:hover:scale-[1.02] dark:hover:border-neon-pink/60`}
               onClick={() => onSelect(ecosystem.type)}
               hover
+              data-testid="solana-ecosystem-card"
             >
               <div className="flex items-center space-x-4">
                 <div className="text-2xl">{ecosystem.icon}</div>

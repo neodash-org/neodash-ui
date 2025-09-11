@@ -6,14 +6,19 @@ import { Card, Button, Separator } from '@/design-system/components';
 interface SolanaWalletSelectorProps {
   onBack: () => void;
   onClose: () => void;
+  'data-testid'?: string;
 }
 
-const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({ onBack, onClose }) => {
+const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
+  onBack,
+  onClose,
+  'data-testid': dataTestId,
+}) => {
   const { connected, publicKey, wallet } = useWallet();
 
   if (connected && publicKey) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4" data-testid={dataTestId || 'solana-wallet-connected'}>
         <div className="text-center">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:drop-shadow-[0_0_8px_var(--color-neon-green)] mb-2">
             Solana Wallet Connected
@@ -58,13 +63,14 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({ onBack, onC
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-testid={dataTestId || 'solana-wallet-selector'}>
       <div className="flex items-center space-x-3">
         <Button
           variant="outline"
           size="sm"
           onClick={onBack}
           className="p-2 dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105"
+          data-testid="back-button"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path

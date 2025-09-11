@@ -7,6 +7,7 @@ interface CardProps {
   padding?: 'none' | 'sm' | 'md' | 'lg';
   hover?: boolean;
   onClick?: () => void;
+  'data-testid'?: string;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -16,6 +17,7 @@ const Card: React.FC<CardProps> = ({
   padding = 'md',
   hover = false,
   onClick,
+  'data-testid': dataTestId,
 }) => {
   const variantClasses = {
     default: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
@@ -46,6 +48,7 @@ const Card: React.FC<CardProps> = ({
         ${className}
       `}
       onClick={onClick}
+      data-testid={dataTestId}
     >
       {children}
     </div>
