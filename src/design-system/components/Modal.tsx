@@ -10,6 +10,7 @@ interface ModalProps {
   className?: string;
   closeOnOverlayClick?: boolean;
   closeOnEscape?: boolean;
+  'data-testid'?: string;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -21,6 +22,7 @@ const Modal: React.FC<ModalProps> = ({
   className = '',
   closeOnOverlayClick = true,
   closeOnEscape = true,
+  'data-testid': dataTestId,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
@@ -97,6 +99,7 @@ const Modal: React.FC<ModalProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? 'modal-title' : undefined}
+        data-testid={dataTestId}
       >
         {/* Header */}
         {title && (
