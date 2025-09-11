@@ -112,7 +112,13 @@
     "walletConnection": "Wallet connection for {ecosystem} will be available soon.",
     "backToSelection": "Back to Ecosystem Selection",
     "walletConnected": "Wallet Connected",
-    "walletSuccessfullyConnected": "Your wallet is successfully connected"
+    "walletSuccessfullyConnected": "Your wallet is successfully connected",
+    "walletManagement": "Wallet Management",
+    "manageWallets": "Manage your connected wallets and connect to additional ecosystems",
+    "ethereumConnected": "Ethereum Connected",
+    "copyAddress": "Copy Address",
+    "addressCopied": "Address copied to clipboard",
+    "connectAdditionalEcosystems": "Connect Additional Ecosystems"
   },
   "notifications": {
     "title": "Notifications",

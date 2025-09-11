@@ -10,6 +10,8 @@ interface EcosystemSelectorProps {
   onClose: () => void;
   selectedEcosystem?: WalletType | null;
   'data-testid'?: string;
+  hideConnectedEcosystems?: boolean;
+  evmConnected?: boolean;
 }
 
 const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
@@ -17,9 +19,11 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
   onClose,
   selectedEcosystem,
   'data-testid': dataTestId,
+  hideConnectedEcosystems = false,
+  evmConnected = false,
 }) => {
   const { publicKey: solanaPublicKey } = useWallet();
-  const ecosystems = [
+  const allEcosystems = [
     {
       type: 'evm' as WalletType,
       name: 'Ethereum',
@@ -43,6 +47,21 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
         'text-purple-700 dark:text-neon-pink dark:drop-shadow-[0_0_4px_var(--color-neon-pink)]',
     },
   ];
+
+  // Filter out connected ecosystems if hideConnectedEcosystems is true
+  const ecosystems = allEcosystems.filter((ecosystem) => {
+    if (!hideConnectedEcosystems) return true;
+
+    if (ecosystem.type === 'evm') {
+      return !evmConnected;
+    }
+
+    if (ecosystem.type === 'solana') {
+      return !solanaPublicKey;
+    }
+
+    return true;
+  });
 
   // If Solana ecosystem is selected, show Solana wallet selector
   if (selectedEcosystem === 'solana') {
@@ -80,7 +99,7 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
                   mounted,
                 }) => {
                   const ready = mounted && authenticationStatus !== 'loading';
-                  const evmConnected =
+                  const isEvmConnected =
                     ready &&
                     account &&
                     chain &&
@@ -89,7 +108,7 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
                   return (
                     <Card
                       className={`${ecosystem.color} border-2 hover:shadow-md dark:hover:shadow-[0_0_24px_var(--color-neon-cyan-66),0_0_32px_var(--color-neon-pink-44)] transition-all duration-300 cursor-pointer dark:hover:scale-[1.02] dark:hover:border-neon-cyan/60`}
-                      onClick={evmConnected ? openAccountModal : openConnectModal}
+                      onClick={isEvmConnected ? openAccountModal : openConnectModal}
                       hover
                       data-testid="evm-ecosystem-card"
                     >
@@ -102,25 +121,28 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
                             >
                               {ecosystem.name}
                             </h4>
-                            {evmConnected && (
+                            {isEvmConnected && (
                               <div className="w-2 h-2 bg-neon-green rounded-full shadow-[0_0_4px_var(--color-neon-green)]"></div>
                             )}
                           </div>
                           <p className="text-sm text-gray-600 dark:text-gray-300 dark:drop-shadow-[0_0_2px_var(--color-neon-cyan)]">
-                            {evmConnected
+                            {isEvmConnected
                               ? `Connected: ${account.displayName}`
                               : ecosystem.description}
                           </p>
-                          <div className="flex flex-wrap gap-1 mt-2">
-                            {ecosystem.wallets.map((wallet) => (
-                              <span
-                                key={wallet}
-                                className="text-xs bg-white/50 dark:bg-neon-cyan/10 dark:border dark:border-neon-cyan/30 dark:text-neon-cyan dark:shadow-[0_0_4px_var(--color-neon-cyan)] px-2 py-1 rounded-full"
-                              >
-                                {wallet}
-                              </span>
-                            ))}
-                          </div>
+                          {/* Only show wallet badges when not connected */}
+                          {!isEvmConnected && (
+                            <div className="flex flex-wrap gap-1 mt-2">
+                              {ecosystem.wallets.map((wallet) => (
+                                <span
+                                  key={wallet}
+                                  className="text-xs bg-white/50 dark:bg-neon-cyan/10 dark:border dark:border-neon-cyan/30 dark:text-neon-cyan dark:shadow-[0_0_4px_var(--color-neon-cyan)] px-2 py-1 rounded-full"
+                                >
+                                  {wallet}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                         </div>
                         <div className="text-gray-400 dark:text-neon-cyan dark:shadow-[0_0_8px_var(--color-neon-cyan)]">
                           <svg
@@ -174,16 +196,19 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
                       ? `Connected: ${solanaPublicKey.toString().slice(0, 4)}...${solanaPublicKey.toString().slice(-4)}`
                       : ecosystem.description}
                   </p>
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {ecosystem.wallets.map((wallet) => (
-                      <span
-                        key={wallet}
-                        className="text-xs bg-white/50 dark:bg-neon-pink/10 dark:border dark:border-neon-pink/30 dark:text-neon-pink dark:shadow-[0_0_4px_var(--color-neon-pink)] px-2 py-1 rounded-full"
-                      >
-                        {wallet}
-                      </span>
-                    ))}
-                  </div>
+                  {/* Only show wallet badges when not connected */}
+                  {!solanaConnected && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {ecosystem.wallets.map((wallet) => (
+                        <span
+                          key={wallet}
+                          className="text-xs bg-white/50 dark:bg-neon-pink/10 dark:border dark:border-neon-pink/30 dark:text-neon-pink dark:shadow-[0_0_4px_var(--color-neon-pink)] px-2 py-1 rounded-full"
+                        >
+                          {wallet}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div className="text-gray-400 dark:text-neon-pink dark:shadow-[0_0_8px_var(--color-neon-pink)]">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -4,10 +4,14 @@ import { useWallet } from '@/lib/wallet/hooks';
 import { WalletType } from '@/lib/wallet/types';
 import EcosystemSelector from './EcosystemSelector';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useDisconnect } from 'wagmi';
+import { useTranslation } from 'react-i18next';
 
 const WalletConnectionModal: React.FC = () => {
+  const { t } = useTranslation();
   const { isModalOpen, closeModal, error, setError } = useWallet();
   const [selectedEcosystem, setSelectedEcosystem] = useState<WalletType | null>(null);
+  const { disconnect } = useDisconnect();
 
   const handleEcosystemSelect = (type: WalletType | null) => {
     setSelectedEcosystem(type);
@@ -23,7 +27,7 @@ const WalletConnectionModal: React.FC = () => {
   const renderContent = () => {
     return (
       <ConnectButton.Custom>
-        {({ account, chain, openAccountModal, openChainModal, authenticationStatus, mounted }) => {
+        {({ account, chain, openChainModal, authenticationStatus, mounted }) => {
           const ready = mounted && authenticationStatus !== 'loading';
           const evmConnected =
             ready &&
@@ -36,11 +40,8 @@ const WalletConnectionModal: React.FC = () => {
             return (
               <div className="space-y-4">
                 <div className="text-center">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:drop-shadow-[0_0_8px_var(--color-neon-green)] mb-2">
-                    Wallet Management
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 dark:drop-shadow-[0_0_4px_var(--color-neon-green)]">
-                    Manage your connected wallets and connect to additional ecosystems
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    {t('wallet.manageWallets')}
                   </p>
                 </div>
 
@@ -49,18 +50,18 @@ const WalletConnectionModal: React.FC = () => {
                   className="dark:bg-gradient-to-br dark:from-neon-cyan/5 dark:to-neon-pink/5 dark:border-neon-cyan/30 dark:shadow-[0_0_16px_var(--color-neon-cyan-44)]"
                   data-testid="evm-connection-status"
                 >
-                  <div className="flex items-center justify-between">
+                  <div className="space-y-4">
                     <div className="flex items-center space-x-3">
                       <div className="text-2xl">🔷</div>
                       <div>
                         <div className="flex items-center gap-2">
                           <h4 className="font-semibold text-gray-900 dark:text-white dark:font-[var(--font-cyberpunk)] dark:tracking-wide">
-                            Ethereum Connected
+                            {t('wallet.ethereumConnected')}
                           </h4>
                           <div className="w-2 h-2 bg-neon-green rounded-full shadow-[0_0_4px_var(--color-neon-green)]"></div>
                         </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">
-                          {account.displayName} • {chain.name}
+                        <p className="text-sm text-gray-600 dark:text-gray-300 font-mono break-all">
+                          {account.address}
                         </p>
                       </div>
                     </div>
@@ -68,20 +69,39 @@ const WalletConnectionModal: React.FC = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={openChainModal}
-                        className="dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105"
+                        onClick={() => {
+                          console.log('Switch Network clicked, openChainModal:', openChainModal);
+                          openChainModal();
+                        }}
+                        className="rounded-none border-b-4 dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105"
                         data-testid="switch-network-button"
                       >
-                        Switch Network
+                        {t('wallet.switchNetwork')}
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={openAccountModal}
-                        className="dark:border-neon-pink/30 dark:hover:border-neon-pink dark:hover:shadow-[0_0_8px_var(--color-neon-pink)] dark:hover:scale-105"
-                        data-testid="manage-account-button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(account.address);
+                          console.log(t('wallet.addressCopied'));
+                        }}
+                        className="rounded-none border-b-4 dark:border-neon-green/30 dark:hover:border-neon-green dark:hover:shadow-[0_0_8px_var(--color-neon-green)] dark:hover:scale-105"
+                        data-testid="copy-address-button"
                       >
-                        Manage Account
+                        {t('wallet.copyAddress')}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          console.log('Disconnecting wallet');
+                          disconnect();
+                          handleClose();
+                        }}
+                        className="rounded-none border-b-4 dark:border-neon-red/30 dark:hover:border-neon-red dark:hover:shadow-[0_0_8px_var(--color-neon-red)] dark:hover:scale-105"
+                        data-testid="disconnect-button"
+                      >
+                        {t('wallet.disconnect')}
                       </Button>
                     </div>
                   </div>
@@ -92,13 +112,15 @@ const WalletConnectionModal: React.FC = () => {
                 {/* Additional Ecosystems */}
                 <div>
                   <h4 className="text-md font-semibold text-gray-900 dark:text-white dark:font-[var(--font-cyberpunk)] dark:tracking-wide mb-3">
-                    Connect Additional Ecosystems
+                    {t('wallet.connectAdditionalEcosystems')}
                   </h4>
                   <EcosystemSelector
                     onSelect={handleEcosystemSelect}
                     onClose={handleClose}
                     selectedEcosystem={selectedEcosystem}
                     data-testid="additional-ecosystem-selector"
+                    hideConnectedEcosystems={true}
+                    evmConnected={evmConnected}
                   />
                 </div>
               </div>
@@ -112,6 +134,7 @@ const WalletConnectionModal: React.FC = () => {
               onClose={handleClose}
               selectedEcosystem={selectedEcosystem}
               data-testid="ecosystem-selector"
+              evmConnected={evmConnected}
             />
           );
         }}
@@ -133,7 +156,7 @@ const WalletConnectionModal: React.FC = () => {
           <Modal
             isOpen={isModalOpen}
             onClose={handleClose}
-            title={evmConnected ? 'Manage Wallets' : 'Connect Wallet'}
+            title={evmConnected ? t('wallet.walletManagement') : t('wallet.connect')}
             size="md"
             className="max-w-md"
             data-testid="wallet-connection-modal"
