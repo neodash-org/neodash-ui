@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { useWalletConnection, useWalletBalance, useWalletTransaction } from '../hooks';
+import { WalletInfo } from '../types';
 
 // Mock wallet context
 const mockWalletContext = {
@@ -15,8 +16,8 @@ const mockWalletContext = {
   closeModal: vi.fn(),
   connect: vi.fn(),
   disconnect: vi.fn(),
-  status: 'disconnected',
-  currentWallet: null,
+  status: 'disconnected' as const,
+  currentWallet: null as WalletInfo | null,
 };
 
 vi.mock('@/context/WalletContext', () => ({
