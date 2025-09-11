@@ -88,6 +88,7 @@ describe('useWalletTransaction', () => {
     const mockWallet = {
       type: 'evm' as const,
       address: '0x123...abc',
+      name: 'Mock Wallet',
       balance: '1.0',
     };
     mockWalletContext.currentWallet = mockWallet;
