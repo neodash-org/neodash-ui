@@ -43,6 +43,39 @@ vi.mock('@/lib/wallet/hooks', () => ({
   }),
 }));
 
+// Mock wagmi
+vi.mock('wagmi', () => ({
+  useDisconnect: () => ({
+    disconnect: vi.fn(),
+  }),
+  WagmiProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+}));
+
+// Mock i18n
+vi.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => {
+      const translations: Record<string, string> = {
+        'wallet.connect': 'Connect Wallet',
+        'wallet.disconnect': 'Disconnect',
+        'wallet.switchNetwork': 'Switch Network',
+        'wallet.copyAddress': 'Copy Address',
+        'wallet.walletManagement': 'Wallet Management',
+        'wallet.manageWallets':
+          'Manage your connected wallets and connect to additional ecosystems',
+        'wallet.ethereumConnected': 'Ethereum Connected',
+        'wallet.connectAdditionalEcosystems': 'Connect Additional Ecosystems',
+        'wallet.ethereum': 'Ethereum',
+        'wallet.solana': 'Solana',
+        'wallet.ethereumDescription': 'Connect to Ethereum and EVM-compatible chains',
+        'wallet.solanaDescription': 'Connect to Solana blockchain',
+        'wallet.addressCopied': 'Address copied to clipboard',
+      };
+      return translations[key] || key;
+    },
+  }),
+}));
+
 const MockWalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <WalletProvider>{children}</WalletProvider>
 );
