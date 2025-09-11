@@ -92,7 +92,8 @@ describe('WalletConnectionModal', () => {
       </MockWalletProvider>,
     );
 
-    expect(screen.getByTestId('wallet-connection-modal')).toBeInTheDocument();
+    // Check for Dialog content instead of the old modal
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
   it('shows ecosystem selector when not connected', () => {
