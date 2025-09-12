@@ -3,6 +3,7 @@
 import React from 'react';
 import MobileLeftPanelHeader from './MobileLeftPanelHeader';
 import MobileNavigation from './MobileNavigation';
+import ThemeToggle from './ThemeToggle';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { usePostHog } from '@/hooks';
 
@@ -42,16 +43,19 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
           <div className="border-t border-white/10" />
         </div>
 
-        {/* Language Section */}
+        {/* Appearance Section */}
         <div className="px-6 py-3">
-          <div className="flex items-center justify-between">
-            <span className="text-gray-900 dark:text-white font-medium">Language</span>
-            <LanguageSwitcher
-              variant="dropdown"
-              size="sm"
-              showLabel={false}
-              data-testid="mobile-menu-language-switcher"
-            />
+          <div className="space-y-3">
+            <ThemeToggle size="sm" showLabel={true} data-testid="mobile-menu-theme-toggle" />
+            <div className="flex items-center justify-between">
+              <span className="text-gray-900 dark:text-white font-medium">Language</span>
+              <LanguageSwitcher
+                variant="dropdown"
+                size="sm"
+                showLabel={false}
+                data-testid="mobile-menu-language-switcher"
+              />
+            </div>
           </div>
         </div>
       </aside>
