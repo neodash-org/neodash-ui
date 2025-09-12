@@ -4,6 +4,7 @@ import React from 'react';
 import { Orbitron, Rajdhani } from 'next/font/google';
 import './globals.css';
 import { AppSidebar, Header, PageTitle } from '@/components';
+import { WalletConnectionModal } from '@/components/wallet';
 import { useTheme, useMobileMenu } from '@/hooks';
 import { PostHogProvider } from '@/contexts';
 import { WalletProvider } from '@/context/WalletContext';
@@ -73,6 +74,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                       </main>
                     </div>
                   </div>
+                  {/* Wallet Connection Modal - Global */}
+                  <WalletConnectionModal />
                 </WalletProvider>
               </PostHogProvider>
             </SolanaWalletProvider>

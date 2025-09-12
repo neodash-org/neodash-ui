@@ -9,7 +9,6 @@ import { getPageTitle } from '@/utils/pageTitle';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
 import { useWallet } from '@/lib/wallet/hooks';
-import { WalletConnectionModal } from './wallet';
 import { Button } from '@/design-system/components';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
@@ -74,8 +73,8 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
           <Bell className="w-4 h-4 text-neon-cyan" />
         </div>
 
-        {/* Wallet Section - Hidden on mobile, visible on desktop */}
-        <div className="hidden md:flex">
+        {/* Wallet Section - Visible on both mobile and desktop */}
+        <div className="flex">
           <ConnectButton.Custom>
             {({ account, chain, authenticationStatus, mounted }) => {
               const ready = mounted && authenticationStatus !== 'loading';
@@ -93,7 +92,7 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
                   }}
                   variant="primary"
                   size="md"
-                  className="bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-full font-[var(--font-cyberpunk)] px-6 py-2 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] tracking-wide transition hover:scale-105"
+                  className="bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-full font-[var(--font-cyberpunk)] px-4 md:px-6 py-2 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] tracking-wide transition hover:scale-105 text-sm md:text-base"
                   data-testid="connect-wallet-button"
                 >
                   {evmConnected ? 'Manage Wallets' : t('wallet.connect')}
@@ -125,9 +124,6 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
           </svg>
         </button>
       </div>
-
-      {/* Wallet Connection Modal */}
-      <WalletConnectionModal />
     </div>
   );
 };
