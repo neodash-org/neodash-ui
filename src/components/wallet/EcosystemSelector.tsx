@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Button, Separator } from '@/design-system/components';
+import { Card } from '@/design-system/components';
 import { WalletType } from '@/lib/wallet/types';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -75,13 +75,7 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
   }
 
   return (
-    <div className="space-y-4" data-testid={dataTestId || 'ecosystem-selector'}>
-      <div className="text-center">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)] mb-2">
-          Choose Your Ecosystem
-        </h3>
-      </div>
-
+    <div className="space-y-4 pb-6" data-testid={dataTestId || 'ecosystem-selector'}>
       <div className="grid gap-3">
         {ecosystems.map((ecosystem) => {
           if (ecosystem.type === 'evm') {
@@ -221,19 +215,6 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
             </Card>
           );
         })}
-      </div>
-
-      <Separator />
-
-      <div className="flex justify-center">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onClose}
-          className="text-gray-600 dark:text-gray-300 dark:hover:text-neon-cyan dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105"
-        >
-          Cancel
-        </Button>
       </div>
     </div>
   );

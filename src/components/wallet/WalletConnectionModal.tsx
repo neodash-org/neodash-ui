@@ -8,14 +8,7 @@ import { useDisconnect } from 'wagmi';
 import { useTranslation } from 'react-i18next';
 import { useWindowSize } from 'usehooks-ts';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from '@/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 
 const WalletConnectionModal: React.FC = () => {
   const { t } = useTranslation();
@@ -72,55 +65,121 @@ const WalletConnectionModal: React.FC = () => {
                           </h4>
                           <div className="w-2 h-2 bg-neon-green rounded-full shadow-[0_0_4px_var(--color-neon-green)]"></div>
                         </div>
-                        <p
-                          className={`text-sm text-gray-600 dark:text-gray-300 font-mono ${isMobile ? 'truncate' : 'break-all'}`}
-                        >
-                          {isMobile
-                            ? `${account.address.slice(0, 6)}...${account.address.slice(-4)}`
-                            : account.address}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p
+                            className={`text-sm text-gray-600 dark:text-gray-300 font-mono ${isMobile ? 'truncate' : 'break-all'} flex-1`}
+                          >
+                            {isMobile
+                              ? `${account.address.slice(0, 8)}...${account.address.slice(-8)}`
+                              : account.address}
+                          </p>
+                          {isMobile && (
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(account.address);
+                                console.log(t('wallet.addressCopied'));
+                              }}
+                              className="w-6 h-6 rounded bg-neon-green/10 border border-neon-green/30 hover:bg-neon-green/20 hover:border-neon-green hover:shadow-[0_0_8px_var(--color-neon-green)] transition-all duration-300 flex items-center justify-center flex-shrink-0"
+                              data-testid="copy-address-icon"
+                            >
+                              <svg
+                                className="w-3 h-3 text-neon-green"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                                />
+                              </svg>
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
 
-                    {/* Mobile: Stack buttons vertically, Desktop: Horizontal */}
+                    {/* Mobile: 2 rows (Switch+Copy, Disconnect), Desktop: Horizontal */}
                     <div className={isMobile ? 'space-y-2' : 'flex gap-2'}>
-                      <Button
-                        variant="outline"
-                        size={isMobile ? 'md' : 'sm'}
-                        onClick={() => {
-                          console.log('Switch Network clicked, openChainModal:', openChainModal);
-                          openChainModal();
-                        }}
-                        className={`w-full ${isMobile ? '' : 'flex-1'} rounded-none border-b-4 dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105`}
-                        data-testid="switch-network-button"
-                      >
-                        {t('wallet.switchNetwork')}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size={isMobile ? 'md' : 'sm'}
-                        onClick={() => {
-                          navigator.clipboard.writeText(account.address);
-                          console.log(t('wallet.addressCopied'));
-                        }}
-                        className={`w-full ${isMobile ? '' : 'flex-1'} rounded-none border-b-4 dark:border-neon-green/30 dark:hover:border-neon-green dark:hover:shadow-[0_0_8px_var(--color-neon-green)] dark:hover:scale-105`}
-                        data-testid="copy-address-button"
-                      >
-                        {t('wallet.copyAddress')}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size={isMobile ? 'md' : 'sm'}
-                        onClick={() => {
-                          console.log('Disconnecting wallet');
-                          disconnect();
-                          handleClose();
-                        }}
-                        className={`w-full ${isMobile ? '' : 'flex-1'} rounded-none border-b-4 dark:border-neon-red/30 dark:hover:border-neon-red dark:hover:shadow-[0_0_8px_var(--color-neon-red)] dark:hover:scale-105`}
-                        data-testid="disconnect-button"
-                      >
-                        {t('wallet.disconnect')}
-                      </Button>
+                      {isMobile ? (
+                        <>
+                          {/* First row: Switch Network only */}
+                          <Button
+                            variant="outline"
+                            size="md"
+                            onClick={() => {
+                              console.log(
+                                'Switch Network clicked, openChainModal:',
+                                openChainModal,
+                              );
+                              openChainModal();
+                            }}
+                            className="w-full rounded-none border-b-4 dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105"
+                            data-testid="switch-network-button"
+                          >
+                            {t('wallet.switchNetwork')}
+                          </Button>
+                          {/* Second row: Disconnect */}
+                          <Button
+                            variant="outline"
+                            size="md"
+                            onClick={() => {
+                              console.log('Disconnecting wallet');
+                              disconnect();
+                              handleClose();
+                            }}
+                            className="w-full rounded-none border-b-4 dark:border-neon-red/30 dark:hover:border-neon-red dark:hover:shadow-[0_0_8px_var(--color-neon-red)] dark:hover:scale-105"
+                            data-testid="disconnect-button"
+                          >
+                            {t('wallet.disconnect')}
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              console.log(
+                                'Switch Network clicked, openChainModal:',
+                                openChainModal,
+                              );
+                              openChainModal();
+                            }}
+                            className="flex-1 rounded-none border-b-4 dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105"
+                            data-testid="switch-network-button"
+                          >
+                            {t('wallet.switchNetwork')}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              navigator.clipboard.writeText(account.address);
+                              console.log(t('wallet.addressCopied'));
+                            }}
+                            className="flex-1 rounded-none border-b-4 dark:border-neon-green/30 dark:hover:border-neon-green dark:hover:shadow-[0_0_8px_var(--color-neon-green)] dark:hover:scale-105"
+                            data-testid="copy-address-button"
+                          >
+                            {t('wallet.copyAddress')}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              console.log('Disconnecting wallet');
+                              disconnect();
+                              handleClose();
+                            }}
+                            className="flex-1 rounded-none border-b-4 dark:border-neon-red/30 dark:hover:border-neon-red dark:hover:shadow-[0_0_8px_var(--color-neon-red)] dark:hover:scale-105"
+                            data-testid="disconnect-button"
+                          >
+                            {t('wallet.disconnect')}
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </div>
                 </Card>
@@ -206,13 +265,28 @@ const WalletConnectionModal: React.FC = () => {
 
         return (
           <Drawer open={isModalOpen} onOpenChange={closeModal}>
-            <DrawerContent className="dark:bg-bg-card/80 dark:border-neon-cyan/30 dark:shadow-[0_0_32px_var(--color-neon-cyan-88),0_0_64px_var(--color-neon-pink-44)]">
-              <DrawerHeader className="text-left">
+            <DrawerContent className="dark:bg-bg-card/95 dark:border-neon-cyan/30 dark:shadow-[0_0_32px_var(--color-neon-cyan-88),0_0_64px_var(--color-neon-pink-44)] max-h-[50vh] sm:max-h-[60vh] flex flex-col">
+              <DrawerHeader className="text-left relative pr-12 flex-shrink-0">
+                <button
+                  onClick={handleClose}
+                  className="absolute top-0 right-4 w-8 h-8 bg-neon-cyan/10 border border-neon-cyan/30 rounded-lg flex items-center justify-center text-neon-cyan hover:bg-neon-cyan/20 hover:border-neon-cyan hover:shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300"
+                  data-testid="drawer-close-button"
+                  aria-label={t('actions.closeMenu')}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
                 <DrawerTitle className="dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:text-white dark:text-2xl dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)]">
                   {evmConnected ? t('wallet.walletManagement') : t('wallet.connect')}
                 </DrawerTitle>
               </DrawerHeader>
-              <div className="px-4">
+              <div className="px-4 flex-1 overflow-y-auto">
                 {error && (
                   <Card className="mb-4 border-red-200 dark:border-red-500/50 bg-red-50 dark:bg-red-900/20 dark:shadow-[0_0_16px_var(--color-red-44)]">
                     <div className="flex items-center space-x-2 text-red-700 dark:text-red-400 dark:drop-shadow-[0_0_4px_var(--color-red)]">
@@ -237,16 +311,6 @@ const WalletConnectionModal: React.FC = () => {
                 )}
                 {renderContent(true)}
               </div>
-              <DrawerFooter className="pt-2">
-                <DrawerClose asChild>
-                  <Button
-                    variant="outline"
-                    className="dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105 dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:drop-shadow-[0_0_4px_var(--color-neon-cyan)]"
-                  >
-                    {t('common.close')}
-                  </Button>
-                </DrawerClose>
-              </DrawerFooter>
             </DrawerContent>
           </Drawer>
         );

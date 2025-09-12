@@ -11,6 +11,6 @@ export { default as MobileMenu } from './sidebar/MobileMenu';
 export { default as SidebarHeader } from './sidebar/SidebarHeader';
 export { default as SidebarNavigation } from './sidebar/SidebarNavigation';
 export { default as ThemeToggle } from './sidebar/ThemeToggle';
-export { default as MobileHeader } from './sidebar/MobileHeader';
+export { default as MobileLeftPanelHeader } from './sidebar/MobileLeftPanelHeader';
 export { default as MobileNavigation } from './sidebar/MobileNavigation';
 export { default as MobileFooter } from './sidebar/MobileFooter';

@@ -1,4 +1,7 @@
 {
+  "app": {
+    "name": "NeoDash"
+  },
   "common": {
     "loading": "Laden...",
     "error": "Fehler",

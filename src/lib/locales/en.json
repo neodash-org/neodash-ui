@@ -1,4 +1,7 @@
 {
+  "app": {
+    "name": "NeoDash"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",
@@ -117,6 +120,7 @@
     "manageWallets": "Manage your connected wallets and connect to additional ecosystems",
     "ethereumConnected": "Ethereum Connected",
     "copyAddress": "Copy Address",
+    "copy": "Copy",
     "addressCopied": "Address copied to clipboard",
     "connectAdditionalEcosystems": "Connect Additional Ecosystems"
   },

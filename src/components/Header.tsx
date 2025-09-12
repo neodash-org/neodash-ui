@@ -43,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
 
       {/* Right side: Actions */}
       <div className="flex items-center gap-3 md:gap-5">
-        {/* Dark Mode Toggle - Using Lucide icons */}
+        {/* Dark Mode Toggle - Hidden on mobile, visible on desktop */}
         <button
           onClick={() => {
             const newTheme = isDark ? 'light' : 'dark';
@@ -51,18 +51,29 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
             toggleTheme();
           }}
           data-testid="theme-toggle"
-          className="w-8 h-8 md:w-8 md:h-8 bg-bg-card/70 border border-white/10 rounded-full flex items-center justify-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95"
+          className="hidden md:flex w-8 h-8 bg-bg-card/70 border border-white/10 rounded-full items-center justify-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95"
           aria-label={t('actions.toggleTheme')}
         >
           {isDark ? (
-            <Moon className="w-4 h-4 md:w-4 md:h-4 text-neon-cyan" />
+            <Moon className="w-4 h-4 text-neon-cyan" />
           ) : (
-            <Sun className="w-4 h-4 md:w-4 md:h-4 text-neon-yellow" />
+            <Sun className="w-4 h-4 text-neon-yellow" />
           )}
         </button>
 
-        {/* Language Switcher */}
-        <LanguageSwitcher variant="dropdown" size="md" />
+        {/* Language Switcher - Hidden on mobile, visible on desktop */}
+        <div className="hidden md:block">
+          <LanguageSwitcher variant="dropdown" size="md" />
+        </div>
+
+        {/* Notification Icon - Visible on both mobile and desktop */}
+        <div
+          onClick={() => trackFeatureUsage('notifications', 'clicked', { location: 'header' })}
+          data-testid="notification-icon"
+          className="flex w-8 h-8 rounded-full bg-neon-cyan/10 items-center justify-center text-neon-cyan shadow-[0_0_8px_var(--color-neon-cyan)] cursor-pointer hover:scale-110 transition-transform"
+        >
+          <Bell className="w-4 h-4 text-neon-cyan" />
+        </div>
 
         {/* Wallet Icon - Visible on mobile only */}
         <div
@@ -74,15 +85,6 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
           className="md:hidden flex w-8 h-8 rounded-full bg-gradient-to-r from-neon-cyan to-neon-pink items-center justify-center text-white shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] cursor-pointer hover:scale-110 transition-transform"
         >
           <Wallet className="w-4 h-4 text-white" />
-        </div>
-
-        {/* Notification Icon - Visible on both mobile and desktop */}
-        <div
-          onClick={() => trackFeatureUsage('notifications', 'clicked', { location: 'header' })}
-          data-testid="notification-icon"
-          className="flex w-8 h-8 rounded-full bg-neon-cyan/10 items-center justify-center text-neon-cyan shadow-[0_0_8px_var(--color-neon-cyan)] cursor-pointer hover:scale-110 transition-transform"
-        >
-          <Bell className="w-4 h-4 text-neon-cyan" />
         </div>
 
         {/* Wallet Section - Hidden on mobile, visible on desktop */}
