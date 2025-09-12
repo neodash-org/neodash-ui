@@ -54,17 +54,6 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ onClose }) => {
           </button>
         </div>
       </div>
-
-      {/* Connect Wallet Button - Full width below */}
-      <button
-        onClick={() => {
-          trackFeatureUsage('wallet_connection', 'attempted', { location: 'mobile_menu_header' });
-          onClose();
-        }}
-        className="w-full bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-lg font-[var(--font-cyberpunk)] text-base px-6 py-3 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] cursor-pointer tracking-wide transition hover:scale-105"
-      >
-        {t('wallet.connect')}
-      </button>
     </div>
   );
 };
