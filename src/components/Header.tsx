@@ -73,8 +73,8 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
           <Bell className="w-4 h-4 text-neon-cyan" />
         </div>
 
-        {/* Wallet Section - Visible on both mobile and desktop */}
-        <div className="flex">
+        {/* Wallet Section - Hidden on mobile, visible on desktop */}
+        <div className="hidden md:flex">
           <ConnectButton.Custom>
             {({ account, chain, authenticationStatus, mounted }) => {
               const ready = mounted && authenticationStatus !== 'loading';
@@ -92,7 +92,7 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
                   }}
                   variant="primary"
                   size="md"
-                  className="bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-full font-[var(--font-cyberpunk)] px-4 md:px-6 py-2 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] tracking-wide transition hover:scale-105 text-sm md:text-base"
+                  className="bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-full font-[var(--font-cyberpunk)] px-6 py-2 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] tracking-wide transition hover:scale-105"
                   data-testid="connect-wallet-button"
                 >
                   {evmConnected ? 'Manage Wallets' : t('wallet.connect')}
