@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useTheme, usePostHog } from '@/hooks';
-import { Moon, Sun, Bell } from 'lucide-react';
+import { Moon, Sun, Bell, Wallet } from 'lucide-react';
 import { getPageTitle } from '@/utils/pageTitle';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
@@ -63,6 +63,18 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
 
         {/* Language Switcher */}
         <LanguageSwitcher variant="dropdown" size="md" />
+
+        {/* Wallet Icon - Visible on mobile only */}
+        <div
+          onClick={() => {
+            trackFeatureUsage('wallet_connection', 'modal_opened', { location: 'header_mobile' });
+            openModal();
+          }}
+          data-testid="mobile-wallet-icon"
+          className="md:hidden flex w-8 h-8 rounded-full bg-gradient-to-r from-neon-cyan to-neon-pink items-center justify-center text-white shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] cursor-pointer hover:scale-110 transition-transform"
+        >
+          <Wallet className="w-4 h-4 text-white" />
+        </div>
 
         {/* Notification Icon - Visible on both mobile and desktop */}
         <div
