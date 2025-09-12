@@ -40,7 +40,7 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
       name: 'Solana',
       description: 'Connect to Solana blockchain',
       icon: '🟣',
-      wallets: ['Phantom', 'Solflare', 'Backpack'],
+      wallets: ['Phantom', 'Solflare'],
       color:
         'bg-purple-50 dark:bg-gradient-to-br dark:from-purple-900/30 dark:to-pink-900/20 border-purple-200 dark:border-neon-pink/40 dark:shadow-[0_0_16px_var(--color-neon-pink-44)]',
       textColor:
@@ -80,9 +80,6 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)] mb-2">
           Choose Your Ecosystem
         </h3>
-        <p className="text-sm text-gray-600 dark:text-gray-300 dark:drop-shadow-[0_0_4px_var(--color-neon-cyan)]">
-          Select the blockchain ecosystem you want to connect to
-        </p>
       </div>
 
       <div className="grid gap-3">

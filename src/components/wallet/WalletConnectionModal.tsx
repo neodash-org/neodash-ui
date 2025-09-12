@@ -136,9 +136,6 @@ const WalletConnectionModal: React.FC = () => {
 
                 {/* Additional Ecosystems */}
                 <div>
-                  <h4 className="text-md font-semibold text-gray-900 dark:text-white dark:font-[var(--font-cyberpunk)] dark:tracking-wide mb-3">
-                    {t('wallet.connectAdditionalEcosystems')}
-                  </h4>
                   <EcosystemSelector
                     onSelect={handleEcosystemSelect}
                     onClose={handleClose}
@@ -180,12 +177,12 @@ const WalletConnectionModal: React.FC = () => {
         if (isDesktop) {
           return (
             <Dialog open={isModalOpen} onOpenChange={closeModal}>
-              <DialogContent className="sm:max-w-md dark:bg-bg-card/80 dark:border-neon-cyan/30 dark:shadow-[0_0_32px_var(--color-neon-cyan-88),0_0_64px_var(--color-neon-pink-44)]">
+              <DialogContent className="sm:max-w-md dark:bg-bg-card/80 dark:border-neon-cyan/30 dark:shadow-[0_0_32px_var(--color-neon-cyan-88),0_0_64px_var(--color-neon-pink-44)] dark:backdrop-blur-lg">
                 <DialogHeader>
-                  <DialogTitle className="dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:text-white">
+                  <DialogTitle className="dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:text-white dark:text-2xl dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)]">
                     {evmConnected ? t('wallet.walletManagement') : t('wallet.connect')}
                   </DialogTitle>
-                  <DialogDescription className="dark:text-gray-300">
+                  <DialogDescription className="dark:text-gray-300 dark:drop-shadow-[0_0_4px_var(--color-neon-cyan)]">
                     {evmConnected ? t('wallet.manageWallets') : t('wallet.chooseEcosystem')}
                   </DialogDescription>
                 </DialogHeader>
@@ -219,12 +216,12 @@ const WalletConnectionModal: React.FC = () => {
 
         return (
           <Drawer open={isModalOpen} onOpenChange={closeModal}>
-            <DrawerContent className="dark:bg-bg-card/80 dark:border-neon-cyan/30">
+            <DrawerContent className="dark:bg-bg-card/80 dark:border-neon-cyan/30 dark:shadow-[0_0_32px_var(--color-neon-cyan-88),0_0_64px_var(--color-neon-pink-44)]">
               <DrawerHeader className="text-left">
-                <DrawerTitle className="dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:text-white">
+                <DrawerTitle className="dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:text-white dark:text-2xl dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)]">
                   {evmConnected ? t('wallet.walletManagement') : t('wallet.connect')}
                 </DrawerTitle>
-                <DrawerDescription className="dark:text-gray-300">
+                <DrawerDescription className="dark:text-gray-300 dark:drop-shadow-[0_0_4px_var(--color-neon-cyan)]">
                   {evmConnected ? t('wallet.manageWallets') : t('wallet.chooseEcosystem')}
                 </DrawerDescription>
               </DrawerHeader>
@@ -257,7 +254,7 @@ const WalletConnectionModal: React.FC = () => {
                 <DrawerClose asChild>
                   <Button
                     variant="outline"
-                    className="dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)]"
+                    className="dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105 dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:drop-shadow-[0_0_4px_var(--color-neon-cyan)]"
                   >
                     {t('common.close')}
                   </Button>
