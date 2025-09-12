@@ -4,7 +4,8 @@ import React from 'react';
 import Image from 'next/image';
 import { usePostHog } from '@/hooks';
 import { useTranslation } from 'react-i18next';
-import { Bell } from 'lucide-react';
+import { Bell, Wallet } from 'lucide-react';
+import { useWallet } from '@/lib/wallet/hooks';
 
 interface MobileHeaderProps {
   onClose: () => void;
@@ -13,6 +14,7 @@ interface MobileHeaderProps {
 const MobileHeader: React.FC<MobileHeaderProps> = ({ onClose }) => {
   const { trackFeatureUsage } = usePostHog();
   const { t } = useTranslation();
+  const { openModal } = useWallet();
 
   return (
     <div className="p-5 border-b border-white/10">
@@ -23,6 +25,18 @@ const MobileHeader: React.FC<MobileHeaderProps> = ({ onClose }) => {
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Wallet Icon */}
+          <div
+            onClick={() => {
+              trackFeatureUsage('wallet_connection', 'modal_opened', { location: 'mobile_header' });
+              openModal();
+            }}
+            className="flex w-8 h-8 rounded-full bg-gradient-to-r from-neon-cyan/10 to-neon-pink/10 items-center justify-center text-neon-cyan shadow-[0_0_8px_var(--color-neon-cyan)] cursor-pointer hover:scale-110 transition-transform"
+            data-testid="mobile-wallet-icon"
+          >
+            <Wallet className="w-4 h-4 text-neon-cyan" />
+          </div>
+
           {/* Notification Icon */}
           <div
             onClick={() =>
