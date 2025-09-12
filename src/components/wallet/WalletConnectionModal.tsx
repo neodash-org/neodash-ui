@@ -7,18 +7,11 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useDisconnect } from 'wagmi';
 import { useTranslation } from 'react-i18next';
 import { useWindowSize } from 'usehooks-ts';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -182,9 +175,6 @@ const WalletConnectionModal: React.FC = () => {
                   <DialogTitle className="dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:text-white dark:text-2xl dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)]">
                     {evmConnected ? t('wallet.walletManagement') : t('wallet.connect')}
                   </DialogTitle>
-                  <DialogDescription className="dark:text-gray-300 dark:drop-shadow-[0_0_4px_var(--color-neon-cyan)]">
-                    {evmConnected ? t('wallet.manageWallets') : t('wallet.chooseEcosystem')}
-                  </DialogDescription>
                 </DialogHeader>
                 {error && (
                   <Card className="mb-4 border-red-200 dark:border-red-500/50 bg-red-50 dark:bg-red-900/20 dark:shadow-[0_0_16px_var(--color-red-44)]">
@@ -221,9 +211,6 @@ const WalletConnectionModal: React.FC = () => {
                 <DrawerTitle className="dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:text-white dark:text-2xl dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)]">
                   {evmConnected ? t('wallet.walletManagement') : t('wallet.connect')}
                 </DrawerTitle>
-                <DrawerDescription className="dark:text-gray-300 dark:drop-shadow-[0_0_4px_var(--color-neon-cyan)]">
-                  {evmConnected ? t('wallet.manageWallets') : t('wallet.chooseEcosystem')}
-                </DrawerDescription>
               </DrawerHeader>
               <div className="px-4">
                 {error && (
