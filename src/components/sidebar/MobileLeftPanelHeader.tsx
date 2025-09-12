@@ -16,7 +16,7 @@ const MobileLeftPanelHeader: React.FC<MobileLeftPanelHeaderProps> = ({ onClose }
     <div className="px-5 py-3 border-b border-white/10">
       {/* Header row: Logo + Actions */}
       <div className="flex items-center justify-between">
-        <div className="text-white font-[var(--font-cyberpunk)] tracking-wide text-lg">
+        <div className="text-gray-900 dark:text-white font-[var(--font-cyberpunk)] tracking-wide text-lg">
           {t('app.name')}
         </div>
 

@@ -42,7 +42,7 @@ const SidebarNavigation: React.FC<SidebarNavigationProps> = ({ isCollapsed }) =>
               }}
               className={`neodash-nav-link text-center transition-all duration-300 relative ${
                 isCollapsed ? 'collapsed' : ''
-              } ${isActive ? 'active text-neon-cyan' : 'text-white hover:text-neon-cyan'}`}
+              } ${isActive ? 'active text-neon-cyan' : 'text-gray-700 dark:text-white hover:text-neon-cyan'}`}
               title={isCollapsed ? label : undefined}
               data-testid={`nav-link-${item.href.replace('/', '')}`}
             >

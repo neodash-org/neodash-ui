@@ -31,7 +31,7 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
       icon: '🔷',
       wallets: ['MetaMask', 'Rainbow', 'Coinbase', 'Trust'],
       color:
-        'bg-blue-50 dark:bg-gradient-to-br dark:from-blue-900/30 dark:to-cyan-900/20 border-blue-200 dark:border-neon-cyan/40 dark:shadow-[0_0_16px_var(--color-neon-cyan-44)]',
+        'bg-blue-50 dark:bg-gradient-to-br dark:from-blue-900/30 dark:to-cyan-900/20 border-blue-200 dark:border-neon-cyan/40 shadow-[0_0_8px_var(--color-blue-500)] dark:shadow-[0_0_16px_var(--color-neon-cyan-44)]',
       textColor:
         'text-blue-700 dark:text-neon-cyan dark:drop-shadow-[0_0_4px_var(--color-neon-cyan)]',
     },
@@ -42,7 +42,7 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
       icon: '🟣',
       wallets: ['Phantom', 'Solflare'],
       color:
-        'bg-purple-50 dark:bg-gradient-to-br dark:from-purple-900/30 dark:to-pink-900/20 border-purple-200 dark:border-neon-pink/40 dark:shadow-[0_0_16px_var(--color-neon-pink-44)]',
+        'bg-purple-50 dark:bg-gradient-to-br dark:from-purple-900/30 dark:to-pink-900/20 border-purple-200 dark:border-neon-pink/40 shadow-[0_0_8px_var(--color-purple-500)] dark:shadow-[0_0_16px_var(--color-neon-pink-44)]',
       textColor:
         'text-purple-700 dark:text-neon-pink dark:drop-shadow-[0_0_4px_var(--color-neon-pink)]',
     },
@@ -98,7 +98,7 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
 
                   return (
                     <Card
-                      className={`${ecosystem.color} border-2 hover:shadow-md dark:hover:shadow-[0_0_24px_var(--color-neon-cyan-66),0_0_32px_var(--color-neon-pink-44)] transition-all duration-300 cursor-pointer dark:hover:scale-[1.02] dark:hover:border-neon-cyan/60`}
+                      className={`${ecosystem.color} border-2 hover:shadow-lg dark:hover:shadow-[0_0_24px_var(--color-neon-cyan-66),0_0_32px_var(--color-neon-pink-44)] transition-all duration-300 cursor-pointer hover:scale-[1.02] dark:hover:scale-[1.02] hover:border-blue-400 dark:hover:border-neon-cyan/60`}
                       onClick={isEvmConnected ? openAccountModal : openConnectModal}
                       hover
                       data-testid="evm-ecosystem-card"
@@ -113,7 +113,7 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
                               {ecosystem.name}
                             </h4>
                             {isEvmConnected && (
-                              <div className="w-2 h-2 bg-neon-green rounded-full shadow-[0_0_4px_var(--color-neon-green)]"></div>
+                              <div className="w-2 h-2 bg-green-500 dark:bg-neon-green rounded-full shadow-[0_0_4px_var(--color-green-500)] dark:shadow-[0_0_4px_var(--color-neon-green)]"></div>
                             )}
                           </div>
                           <p className="text-sm text-gray-600 dark:text-gray-300 dark:drop-shadow-[0_0_2px_var(--color-neon-cyan)]">
@@ -127,7 +127,7 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
                               {ecosystem.wallets.map((wallet) => (
                                 <span
                                   key={wallet}
-                                  className="text-xs bg-white/50 dark:bg-neon-cyan/10 dark:border dark:border-neon-cyan/30 dark:text-neon-cyan dark:shadow-[0_0_4px_var(--color-neon-cyan)] px-2 py-1 rounded-full"
+                                  className="text-xs bg-blue-100 dark:bg-neon-cyan/10 border border-blue-200 dark:border-neon-cyan/30 text-blue-700 dark:text-neon-cyan shadow-[0_0_4px_var(--color-blue-500)] dark:shadow-[0_0_4px_var(--color-neon-cyan)] px-2 py-1 rounded-full"
                                 >
                                   {wallet}
                                 </span>
@@ -164,7 +164,7 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
           return (
             <Card
               key={ecosystem.type}
-              className={`${ecosystem.color} border-2 hover:shadow-md dark:hover:shadow-[0_0_24px_var(--color-neon-pink-66),0_0_32px_var(--color-neon-cyan-44)] transition-all duration-300 cursor-pointer dark:hover:scale-[1.02] dark:hover:border-neon-pink/60`}
+              className={`${ecosystem.color} border-2 hover:shadow-lg dark:hover:shadow-[0_0_24px_var(--color-neon-pink-66),0_0_32px_var(--color-neon-cyan-44)] transition-all duration-300 cursor-pointer hover:scale-[1.02] dark:hover:scale-[1.02] hover:border-purple-400 dark:hover:border-neon-pink/60`}
               onClick={() => onSelect(ecosystem.type)}
               hover
               data-testid="solana-ecosystem-card"
@@ -179,7 +179,7 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
                       {ecosystem.name}
                     </h4>
                     {solanaConnected && (
-                      <div className="w-2 h-2 bg-neon-green rounded-full shadow-[0_0_4px_var(--color-neon-green)]"></div>
+                      <div className="w-2 h-2 bg-green-500 dark:bg-neon-green rounded-full shadow-[0_0_4px_var(--color-green-500)] dark:shadow-[0_0_4px_var(--color-neon-green)]"></div>
                     )}
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-300 dark:drop-shadow-[0_0_2px_var(--color-neon-pink)]">
@@ -193,7 +193,7 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
                       {ecosystem.wallets.map((wallet) => (
                         <span
                           key={wallet}
-                          className="text-xs bg-white/50 dark:bg-neon-pink/10 dark:border dark:border-neon-pink/30 dark:text-neon-pink dark:shadow-[0_0_4px_var(--color-neon-pink)] px-2 py-1 rounded-full"
+                          className="text-xs bg-purple-100 dark:bg-neon-pink/10 border border-purple-200 dark:border-neon-pink/30 text-purple-700 dark:text-neon-pink shadow-[0_0_4px_var(--color-purple-500)] dark:shadow-[0_0_4px_var(--color-neon-pink)] px-2 py-1 rounded-full"
                         >
                           {wallet}
                         </span>

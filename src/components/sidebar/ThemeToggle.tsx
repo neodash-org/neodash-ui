@@ -35,12 +35,15 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
   return (
     <div className="flex items-center justify-between" data-testid={testId || 'theme-toggle'}>
       {showLabel && (
-        <span className="text-white font-medium" data-testid="theme-label">
+        <span className="text-gray-900 dark:text-white font-medium" data-testid="theme-label">
           {t('settings.appearance')}
         </span>
       )}
       <button
-        onClick={() => {
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('ThemeToggle clicked, current theme:', isDark ? 'dark' : 'light');
           const newTheme = isDark ? 'light' : 'dark';
           trackThemeChange(isDark ? 'dark' : 'light', newTheme);
           toggleTheme();

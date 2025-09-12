@@ -63,7 +63,7 @@ const WalletConnectionModal: React.FC = () => {
                           <h4 className="font-semibold text-gray-900 dark:text-white dark:font-[var(--font-cyberpunk)] dark:tracking-wide">
                             {t('wallet.ethereumConnected')}
                           </h4>
-                          <div className="w-2 h-2 bg-neon-green rounded-full shadow-[0_0_4px_var(--color-neon-green)]"></div>
+                          <div className="w-2 h-2 bg-green-500 dark:bg-neon-green rounded-full shadow-[0_0_4px_var(--color-green-500)] dark:shadow-[0_0_4px_var(--color-neon-green)]"></div>
                         </div>
                         <div className="flex items-center gap-2">
                           <p
@@ -73,30 +73,28 @@ const WalletConnectionModal: React.FC = () => {
                               ? `${account.address.slice(0, 8)}...${account.address.slice(-8)}`
                               : account.address}
                           </p>
-                          {isMobile && (
-                            <button
-                              onClick={() => {
-                                navigator.clipboard.writeText(account.address);
-                                console.log(t('wallet.addressCopied'));
-                              }}
-                              className="w-6 h-6 rounded bg-neon-green/10 border border-neon-green/30 hover:bg-neon-green/20 hover:border-neon-green hover:shadow-[0_0_8px_var(--color-neon-green)] transition-all duration-300 flex items-center justify-center flex-shrink-0"
-                              data-testid="copy-address-icon"
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(account.address);
+                              console.log(t('wallet.addressCopied'));
+                            }}
+                            className="w-6 h-6 rounded bg-green-100 dark:bg-neon-green/10 border border-green-300 dark:border-neon-green/30 hover:bg-green-200 dark:hover:bg-neon-green/20 hover:border-green-400 dark:hover:border-neon-green hover:shadow-[0_0_8px_var(--color-green-500)] dark:hover:shadow-[0_0_8px_var(--color-neon-green)] transition-all duration-300 flex items-center justify-center flex-shrink-0"
+                            data-testid="copy-address-icon"
+                          >
+                            <svg
+                              className="w-3 h-3 text-green-600 dark:text-neon-green"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
                             >
-                              <svg
-                                className="w-3 h-3 text-neon-green"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                                />
-                              </svg>
-                            </button>
-                          )}
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                              />
+                            </svg>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -152,18 +150,6 @@ const WalletConnectionModal: React.FC = () => {
                             data-testid="switch-network-button"
                           >
                             {t('wallet.switchNetwork')}
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              navigator.clipboard.writeText(account.address);
-                              console.log(t('wallet.addressCopied'));
-                            }}
-                            className="flex-1 rounded-none border-b-4 dark:border-neon-green/30 dark:hover:border-neon-green dark:hover:shadow-[0_0_8px_var(--color-neon-green)] dark:hover:scale-105"
-                            data-testid="copy-address-button"
-                          >
-                            {t('wallet.copyAddress')}
                           </Button>
                           <Button
                             variant="outline"

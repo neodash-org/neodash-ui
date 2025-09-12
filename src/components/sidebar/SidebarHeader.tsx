@@ -34,7 +34,7 @@ const SidebarHeader: React.FC<SidebarHeaderProps> = ({ isCollapsed, toggleSideba
       {!isCollapsed && (
         <Link
           href="/"
-          className="text-2xl tracking-widest text-white select-none font-[var(--font-cyberpunk)] mb-4"
+          className="text-2xl tracking-widest text-gray-900 dark:text-white select-none font-[var(--font-cyberpunk)] mb-4"
           data-testid="sidebar-logo-text"
         >
           NEODASH

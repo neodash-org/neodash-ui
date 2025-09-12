@@ -45,7 +45,10 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
       <div className="flex items-center gap-3 md:gap-5">
         {/* Dark Mode Toggle - Hidden on mobile, visible on desktop */}
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Header theme toggle clicked, current theme:', isDark ? 'dark' : 'light');
             const newTheme = isDark ? 'light' : 'dark';
             trackThemeChange(isDark ? 'dark' : 'light', newTheme, { source: 'header' });
             toggleTheme();
@@ -53,6 +56,7 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
           data-testid="theme-toggle"
           className="hidden md:flex w-8 h-8 bg-bg-card/70 border border-white/10 rounded-full items-center justify-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95"
           aria-label={t('actions.toggleTheme')}
+          type="button"
         >
           {isDark ? (
             <Moon className="w-4 h-4 text-neon-cyan" />
@@ -65,6 +69,28 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
         <div className="hidden md:block">
           <LanguageSwitcher variant="dropdown" size="md" />
         </div>
+
+        {/* Theme Toggle - Visible on mobile, visible on desktop */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Mobile theme toggle clicked, current theme:', isDark ? 'dark' : 'light');
+            const newTheme = isDark ? 'light' : 'dark';
+            trackThemeChange(isDark ? 'dark' : 'light', newTheme, { source: 'header_mobile' });
+            toggleTheme();
+          }}
+          data-testid="mobile-theme-toggle"
+          className="w-8 h-8 bg-bg-card/70 border border-white/10 rounded-full flex items-center justify-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95"
+          aria-label={t('actions.toggleTheme')}
+          type="button"
+        >
+          {isDark ? (
+            <Moon className="w-4 h-4 text-neon-cyan" />
+          ) : (
+            <Sun className="w-4 h-4 text-neon-yellow" />
+          )}
+        </button>
 
         {/* Notification Icon - Visible on both mobile and desktop */}
         <div
@@ -118,7 +144,10 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
 
         {/* Mobile Menu Button - Only visible on mobile, positioned on the right */}
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Hamburger clicked, current theme:', isDark ? 'dark' : 'light');
             trackFeatureUsage('mobile_menu', isMobileMenuOpen ? 'closed' : 'opened', {
               location: 'header',
             });
@@ -127,6 +156,7 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
           data-testid="mobile-menu-button"
           className="md:hidden w-10 h-10 bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 hover:scale-105"
           aria-label={isMobileMenuOpen ? t('actions.closeMenu') : t('actions.openMenu')}
+          type="button"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path

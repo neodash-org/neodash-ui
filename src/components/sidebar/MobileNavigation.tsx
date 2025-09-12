@@ -36,7 +36,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ onItemClick }) => {
               onItemClick();
             }}
             className={`flex items-center gap-4 py-3 transition-all duration-300 ${
-              isActive ? 'text-neon-cyan' : 'text-white hover:text-neon-cyan'
+              isActive ? 'text-neon-cyan' : 'text-gray-700 dark:text-white hover:text-neon-cyan'
             }`}
           >
             <span className="text-xl">{item.icon}</span>
