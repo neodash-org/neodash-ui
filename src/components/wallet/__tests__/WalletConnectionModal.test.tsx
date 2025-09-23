@@ -22,16 +22,7 @@ vi.mock('@rainbow-me/rainbowkit', () => ({
   },
 }));
 
-// Mock Solana wallet adapter
-vi.mock('@solana/wallet-adapter-react', () => ({
-  useWallet: () => ({
-    publicKey: null,
-    connect: vi.fn(),
-    disconnect: vi.fn(),
-    connecting: false,
-    connected: false,
-  }),
-}));
+// Solana wallet adapter is mocked globally in setup.ts
 
 // Mock wallet hooks
 vi.mock('@/lib/wallet/hooks', () => ({
@@ -43,13 +34,7 @@ vi.mock('@/lib/wallet/hooks', () => ({
   }),
 }));
 
-// Mock wagmi
-vi.mock('wagmi', () => ({
-  useDisconnect: () => ({
-    disconnect: vi.fn(),
-  }),
-  WagmiProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-}));
+// Wagmi is mocked globally in setup.ts
 
 // Mock i18n
 vi.mock('react-i18next', () => ({

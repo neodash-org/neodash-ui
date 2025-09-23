@@ -22,16 +22,7 @@ vi.mock('@rainbow-me/rainbowkit', () => ({
   },
 }));
 
-// Mock Solana wallet adapter
-vi.mock('@solana/wallet-adapter-react', () => ({
-  useWallet: () => ({
-    publicKey: null,
-    connect: vi.fn(),
-    disconnect: vi.fn(),
-    connecting: false,
-    connected: false,
-  }),
-}));
+// Solana wallet adapter is mocked globally in setup.ts
 
 // Mock SolanaWalletSelector
 vi.mock('../SolanaWalletSelector', () => ({
