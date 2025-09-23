@@ -119,6 +119,7 @@
     "walletManagement": "Wallet Management",
     "manageWallets": "Manage your connected wallets and connect to additional ecosystems",
     "ethereumConnected": "Ethereum Connected",
+    "solanaConnected": "Solana Connected",
     "copyAddress": "Copy Address",
     "copy": "Copy",
     "addressCopied": "Address copied to clipboard",
