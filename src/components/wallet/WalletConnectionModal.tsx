@@ -16,7 +16,12 @@ const WalletConnectionModal: React.FC = () => {
   const { isModalOpen, closeModal, openModal, error, setError } = useWallet();
   const [selectedEcosystem, setSelectedEcosystem] = useState<WalletType | null>(null);
   const { disconnect } = useDisconnect();
-  const { publicKey: solanaPublicKey, connected: isSolanaConnected, wallet: solanaWallet, disconnect: disconnectSolana } = useSolanaWallet();
+  const {
+    publicKey: solanaPublicKey,
+    connected: isSolanaConnected,
+    wallet: solanaWallet,
+    disconnect: disconnectSolana,
+  } = useSolanaWallet();
   const { width } = useWindowSize();
   const isDesktop = width >= 768; // md breakpoint
   const [isRainbowKitOpen, setIsRainbowKitOpen] = useState(false);
@@ -28,9 +33,9 @@ const WalletConnectionModal: React.FC = () => {
       const rkDialog = document.querySelector('[data-rk] [role="dialog"]');
       const wasOpen = isRainbowKitOpen;
       const isNowOpen = Boolean(rkDialog);
-      
+
       setIsRainbowKitOpen(isNowOpen);
-      
+
       // If RainbowKit just closed and we clicked switch, reopen our modal
       if (wasOpen && !isNowOpen && switchClicked) {
         setSwitchClicked(false);
@@ -264,7 +269,7 @@ const WalletConnectionModal: React.FC = () => {
                         <div className={isMobile ? 'space-y-2' : 'flex gap-2'}>
                           <Button
                             variant="outline"
-                            size={isMobile ? "md" : "sm"}
+                            size={isMobile ? 'md' : 'sm'}
                             onClick={() => {
                               disconnectSolana();
                               handleClose();
@@ -328,11 +333,15 @@ const WalletConnectionModal: React.FC = () => {
               <DialogContent
                 className={`sm:max-w-md dark:bg-bg-card/80 dark:border-neon-cyan/30 dark:shadow-[0_0_32px_var(--color-neon-cyan-88),0_0_64px_var(--color-neon-pink-44)] dark:backdrop-blur-lg ${isRainbowKitOpen ? 'pointer-events-none' : ''}`}
                 aria-hidden={isRainbowKitOpen || undefined}
+                aria-describedby="wallet-modal-description"
               >
                 <DialogHeader>
                   <DialogTitle className="dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:text-white dark:text-2xl dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)]">
                     {evmConnected ? t('wallet.walletManagement') : t('wallet.connect')}
                   </DialogTitle>
+                  <p id="wallet-modal-description" className="sr-only">
+                    {evmConnected ? t('wallet.manageWallets') : t('wallet.selectEcosystem')}
+                  </p>
                 </DialogHeader>
                 {error && (
                   <Card className="mb-4 border-red-200 dark:border-red-500/50 bg-red-50 dark:bg-red-900/20 dark:shadow-[0_0_16px_var(--color-red-44)]">
@@ -367,6 +376,7 @@ const WalletConnectionModal: React.FC = () => {
             <DrawerContent
               className={`dark:bg-bg-card/95 dark:border-neon-cyan/30 dark:shadow-[0_0_32px_var(--color-neon-cyan-88),0_0_64px_var(--color-neon-pink-44)] max-h-[50vh] sm:max-h-[60vh] flex flex-col ${isRainbowKitOpen ? 'pointer-events-none' : ''}`}
               aria-hidden={isRainbowKitOpen || undefined}
+              aria-describedby="wallet-drawer-description"
             >
               <DrawerHeader className="text-left relative pr-12 flex-shrink-0">
                 <button
@@ -387,6 +397,9 @@ const WalletConnectionModal: React.FC = () => {
                 <DrawerTitle className="dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:text-white dark:text-2xl dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)]">
                   {evmConnected ? t('wallet.walletManagement') : t('wallet.connect')}
                 </DrawerTitle>
+                <p id="wallet-drawer-description" className="sr-only">
+                  {evmConnected ? t('wallet.manageWallets') : t('wallet.selectEcosystem')}
+                </p>
               </DrawerHeader>
               <div className="px-4 flex-1 overflow-y-auto">
                 {error && (
