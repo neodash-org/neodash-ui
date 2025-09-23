@@ -99,7 +99,15 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
                   return (
                     <Card
                       className={`${ecosystem.color} border-2 hover:shadow-lg dark:hover:shadow-[0_0_24px_var(--color-neon-cyan-66),0_0_32px_var(--color-neon-pink-44)] transition-all duration-300 cursor-pointer hover:scale-[1.02] dark:hover:scale-[1.02] hover:border-blue-400 dark:hover:border-neon-cyan/60`}
-                      onClick={isEvmConnected ? openAccountModal : openConnectModal}
+                      onClick={() => {
+                        // Close our custom modal before opening RainbowKit to avoid stacked dialogs
+                        onClose();
+                        if (isEvmConnected) {
+                          openAccountModal();
+                        } else {
+                          openConnectModal();
+                        }
+                      }}
                       hover
                       data-testid="evm-ecosystem-card"
                     >

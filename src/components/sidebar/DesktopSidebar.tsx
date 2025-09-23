@@ -8,8 +8,6 @@ import SidebarNavigation from './SidebarNavigation';
 const DesktopSidebar: React.FC = () => {
   const { isCollapsed, toggleSidebar } = useSidebar();
 
-  console.log('DesktopSidebar - isCollapsed:', isCollapsed);
-  console.log('DesktopSidebar - width class:', isCollapsed ? 'w-16' : 'w-[190px]');
 
   return (
     <aside

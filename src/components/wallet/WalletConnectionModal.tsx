@@ -12,11 +12,45 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 
 const WalletConnectionModal: React.FC = () => {
   const { t } = useTranslation();
-  const { isModalOpen, closeModal, error, setError } = useWallet();
+  const { isModalOpen, closeModal, openModal, error, setError } = useWallet();
   const [selectedEcosystem, setSelectedEcosystem] = useState<WalletType | null>(null);
   const { disconnect } = useDisconnect();
   const { width } = useWindowSize();
   const isDesktop = width >= 768; // md breakpoint
+  const [isRainbowKitOpen, setIsRainbowKitOpen] = useState(false);
+  const [switchClicked, setSwitchClicked] = useState(false);
+
+  // Observe DOM to detect RainbowKit modal presence so we can disable pointer events on our dialog
+  React.useEffect(() => {
+    const check = () => {
+      const rkDialog = document.querySelector('[data-rk] [role="dialog"]');
+      const wasOpen = isRainbowKitOpen;
+      const isNowOpen = Boolean(rkDialog);
+      
+      setIsRainbowKitOpen(isNowOpen);
+      
+      // If RainbowKit just closed and we clicked switch, reopen our modal
+      if (wasOpen && !isNowOpen && switchClicked) {
+        setSwitchClicked(false);
+        setTimeout(() => {
+          openModal();
+        }, 100);
+      }
+    };
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [isRainbowKitOpen, switchClicked, openModal]);
+
+  // Toggle a body class so we can globally adjust stacking/pointer-events while RainbowKit is open
+  React.useEffect(() => {
+    if (isRainbowKitOpen) {
+      document.body.classList.add('rk-open');
+    } else {
+      document.body.classList.remove('rk-open');
+    }
+  }, [isRainbowKitOpen]);
 
   const handleEcosystemSelect = (type: WalletType | null) => {
     setSelectedEcosystem(type);
@@ -108,11 +142,11 @@ const WalletConnectionModal: React.FC = () => {
                             variant="outline"
                             size="md"
                             onClick={() => {
-                              console.log(
-                                'Switch Network clicked, openChainModal:',
-                                openChainModal,
-                              );
-                              openChainModal();
+                              setSwitchClicked(true);
+                              closeModal();
+                              setTimeout(() => {
+                                openChainModal();
+                              }, 0);
                             }}
                             className="w-full rounded-none border-b-4 dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105"
                             data-testid="switch-network-button"
@@ -124,7 +158,6 @@ const WalletConnectionModal: React.FC = () => {
                             variant="outline"
                             size="md"
                             onClick={() => {
-                              console.log('Disconnecting wallet');
                               disconnect();
                               handleClose();
                             }}
@@ -140,11 +173,11 @@ const WalletConnectionModal: React.FC = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                              console.log(
-                                'Switch Network clicked, openChainModal:',
-                                openChainModal,
-                              );
-                              openChainModal();
+                              setSwitchClicked(true);
+                              closeModal();
+                              setTimeout(() => {
+                                openChainModal();
+                              }, 0);
                             }}
                             className="flex-1 rounded-none border-b-4 dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105"
                             data-testid="switch-network-button"
@@ -155,7 +188,6 @@ const WalletConnectionModal: React.FC = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                              console.log('Disconnecting wallet');
                               disconnect();
                               handleClose();
                             }}
@@ -214,8 +246,11 @@ const WalletConnectionModal: React.FC = () => {
 
         if (isDesktop) {
           return (
-            <Dialog open={isModalOpen} onOpenChange={closeModal}>
-              <DialogContent className="sm:max-w-md dark:bg-bg-card/80 dark:border-neon-cyan/30 dark:shadow-[0_0_32px_var(--color-neon-cyan-88),0_0_64px_var(--color-neon-pink-44)] dark:backdrop-blur-lg">
+            <Dialog modal={false} open={isModalOpen} onOpenChange={closeModal}>
+              <DialogContent
+                className={`sm:max-w-md dark:bg-bg-card/80 dark:border-neon-cyan/30 dark:shadow-[0_0_32px_var(--color-neon-cyan-88),0_0_64px_var(--color-neon-pink-44)] dark:backdrop-blur-lg ${isRainbowKitOpen ? 'pointer-events-none' : ''}`}
+                aria-hidden={isRainbowKitOpen || undefined}
+              >
                 <DialogHeader>
                   <DialogTitle className="dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:text-white dark:text-2xl dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)]">
                     {evmConnected ? t('wallet.walletManagement') : t('wallet.connect')}
@@ -251,7 +286,10 @@ const WalletConnectionModal: React.FC = () => {
 
         return (
           <Drawer open={isModalOpen} onOpenChange={closeModal}>
-            <DrawerContent className="dark:bg-bg-card/95 dark:border-neon-cyan/30 dark:shadow-[0_0_32px_var(--color-neon-cyan-88),0_0_64px_var(--color-neon-pink-44)] max-h-[50vh] sm:max-h-[60vh] flex flex-col">
+            <DrawerContent
+              className={`dark:bg-bg-card/95 dark:border-neon-cyan/30 dark:shadow-[0_0_32px_var(--color-neon-cyan-88),0_0_64px_var(--color-neon-pink-44)] max-h-[50vh] sm:max-h-[60vh] flex flex-col ${isRainbowKitOpen ? 'pointer-events-none' : ''}`}
+              aria-hidden={isRainbowKitOpen || undefined}
+            >
               <DrawerHeader className="text-left relative pr-12 flex-shrink-0">
                 <button
                   onClick={handleClose}
