@@ -1,2 +1,13 @@
+#!/bin/sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Load NVM and set up PATH
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Enable pnpm
+export PATH="$PATH:$HOME/.local/share/pnpm"
+
 pnpm type-check
 pnpm run test
