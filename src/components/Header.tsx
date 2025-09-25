@@ -32,7 +32,7 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
       <div className="flex items-center gap-4">
         {/* NEODASH Logo - Only visible on mobile */}
         <div className="md:hidden w-8 h-8">
-          <Image src="/neodash-icon.svg" alt="NEODASH" width={32} height={32} />
+          <Image src="/neodash-icon.svg" alt={t('app.name')} width={32} height={32} />
         </div>
 
         {/* Route Title - Only visible on desktop */}

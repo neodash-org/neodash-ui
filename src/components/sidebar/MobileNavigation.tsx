@@ -18,7 +18,6 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({ onItemClick }) => {
 
   return (
     <nav className="flex flex-col p-6">
-      {/* Navigation Items */}
       {navItems.map((item) => {
         const isActive = pathname === item.href;
         const label = t(item.labelKey);
