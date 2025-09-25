@@ -17,7 +17,7 @@ const SettingsPage = () => (
       </h3>
       <div className="space-y-6">
         <div className="flex items-center gap-6">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-neon-pink to-neon-cyan shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] flex items-center justify-center font-bold text-white text-2xl tracking-wider font-[var(--font-cyberpunk)]">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-neon-pink to-neon-cyan shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] flex items-center justify-center text-white text-2xl tracking-wider font-[var(--font-cyberpunk)]">
             N
           </div>
           <div className="flex-1">
