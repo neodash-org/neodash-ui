@@ -87,7 +87,9 @@
     "walletConnected": "Carteira Conectada",
     "walletSuccessfullyConnected": "Sua carteira foi conectada com sucesso",
     "walletManagement": "Gerenciamento de Carteiras",
+    "connectedWallets": "Carteiras Conectadas",
     "manageWallets": "Gerencie suas carteiras conectadas e conecte-se a ecossistemas adicionais",
+    "manageWalletsDetailed": "Gerencie suas carteiras conectadas e visualize informações detalhadas",
     "ethereumConnected": "Ethereum Conectado",
     "copyAddress": "Copiar Endereço",
     "addressCopied": "Endereço copiado para a área de transferência",
@@ -109,5 +111,12 @@
     "collapseSidebar": "Recolher Barra Lateral",
     "toggleTheme": "Alterar Tema",
     "refresh": "Atualizar"
+  },
+  "footer": {
+    "termsOfUse": "Termos de uso",
+    "termsOfUseShort": "ToU",
+    "privacyPolicy": "Política de privacidade",
+    "privacyPolicyShort": "PP",
+    "allRightsReserved": "Todos os direitos reservados"
   }
 }

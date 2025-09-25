@@ -117,7 +117,6 @@ const WalletConnectionModal: React.FC = () => {
                           <button
                             onClick={() => {
                               navigator.clipboard.writeText(account.address);
-                              console.log(t('wallet.addressCopied'));
                             }}
                             className="w-6 h-6 rounded bg-green-100 dark:bg-neon-green/10 border border-green-300 dark:border-neon-green/30 hover:bg-green-200 dark:hover:bg-neon-green/20 hover:border-green-400 dark:hover:border-neon-green hover:shadow-[0_0_8px_var(--color-green-500)] dark:hover:shadow-[0_0_8px_var(--color-neon-green)] transition-all duration-300 flex items-center justify-center flex-shrink-0"
                             data-testid="copy-address-icon"
@@ -239,7 +238,6 @@ const WalletConnectionModal: React.FC = () => {
                               <button
                                 onClick={() => {
                                   navigator.clipboard.writeText(solanaPublicKey.toBase58());
-                                  console.log(t('wallet.addressCopied'));
                                 }}
                                 className="w-6 h-6 rounded bg-green-100 dark:bg-neon-green/10 border border-green-300 dark:border-neon-green/30 hover:bg-green-200 dark:hover:bg-neon-green/20 hover:border-green-400 dark:hover:border-neon-green hover:shadow-[0_0_8px_var(--color-green-500)] dark:hover:shadow-[0_0_8px_var(--color-neon-green)] transition-all duration-300 flex items-center justify-center flex-shrink-0"
                                 data-testid="copy-solana-address-icon"

@@ -48,7 +48,6 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Header theme toggle clicked, current theme:', isDark ? 'dark' : 'light');
             const newTheme = isDark ? 'light' : 'dark';
             trackThemeChange(isDark ? 'dark' : 'light', newTheme, { source: 'header' });
             toggleTheme();
@@ -125,7 +124,6 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Hamburger clicked, current theme:', isDark ? 'dark' : 'light');
             trackFeatureUsage('mobile_menu', isMobileMenuOpen ? 'closed' : 'opened', {
               location: 'header',
             });

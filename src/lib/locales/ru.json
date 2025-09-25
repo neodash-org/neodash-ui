@@ -87,7 +87,9 @@
     "walletConnected": "Кошелек подключен",
     "walletSuccessfullyConnected": "Ваш кошелек успешно подключен",
     "walletManagement": "Управление кошельками",
+    "connectedWallets": "Подключенные кошельки",
     "manageWallets": "Управляйте подключенными кошельками и подключайтесь к дополнительным экосистемам",
+    "manageWalletsDetailed": "Управляйте подключенными кошельками и просматривайте подробную информацию",
     "ethereumConnected": "Ethereum подключен",
     "copyAddress": "Копировать адрес",
     "addressCopied": "Адрес скопирован в буфер обмена",
@@ -109,5 +111,12 @@
     "collapseSidebar": "Свернуть боковую панель",
     "toggleTheme": "Переключить тему",
     "refresh": "Обновить"
+  },
+  "footer": {
+    "termsOfUse": "Условия использования",
+    "termsOfUseShort": "ToU",
+    "privacyPolicy": "Политика конфиденциальности",
+    "privacyPolicyShort": "PP",
+    "allRightsReserved": "Все права защищены"
   }
 }

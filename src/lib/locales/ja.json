@@ -87,7 +87,9 @@
     "walletConnected": "ウォレット接続済み",
     "walletSuccessfullyConnected": "ウォレットが正常に接続されました",
     "walletManagement": "ウォレット管理",
+    "connectedWallets": "接続されたウォレット",
     "manageWallets": "接続されたウォレットを管理し、追加のエコシステムに接続",
+    "manageWalletsDetailed": "接続されたウォレットを管理し、詳細情報を表示",
     "ethereumConnected": "Ethereum接続済み",
     "copyAddress": "アドレスをコピー",
     "addressCopied": "アドレスがクリップボードにコピーされました",
@@ -109,5 +111,12 @@
     "collapseSidebar": "サイドバーを折りたたむ",
     "toggleTheme": "テーマを切り替え",
     "refresh": "更新"
+  },
+  "footer": {
+    "termsOfUse": "利用規約",
+    "termsOfUseShort": "ToU",
+    "privacyPolicy": "プライバシーポリシー",
+    "privacyPolicyShort": "PP",
+    "allRightsReserved": "全著作権所有"
   }
 }

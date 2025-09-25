@@ -86,7 +86,9 @@
     "walletConnected": "Wallet verbunden",
     "walletSuccessfullyConnected": "Ihr Wallet wurde erfolgreich verbunden",
     "walletManagement": "Wallet-Verwaltung",
+    "connectedWallets": "Verbundene Wallets",
     "manageWallets": "Verwalten Sie Ihre verbundenen Wallets und verbinden Sie sich mit zusätzlichen Ökosystemen",
+    "manageWalletsDetailed": "Verwalten Sie Ihre verbundenen Wallets und sehen Sie detaillierte Informationen",
     "ethereumConnected": "Ethereum verbunden",
     "copyAddress": "Adresse kopieren",
     "addressCopied": "Adresse in die Zwischenablage kopiert",
@@ -108,5 +110,12 @@
     "collapseSidebar": "Seitenleiste einklappen",
     "toggleTheme": "Design wechseln",
     "refresh": "Aktualisieren"
+  },
+  "footer": {
+    "termsOfUse": "Nutzungsbedingungen",
+    "termsOfUseShort": "AGB",
+    "privacyPolicy": "Datenschutzrichtlinie",
+    "privacyPolicyShort": "DS",
+    "allRightsReserved": "Alle Rechte vorbehalten"
   }
 }

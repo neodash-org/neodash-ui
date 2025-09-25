@@ -3,6 +3,7 @@
 import React from 'react';
 import MobileLeftPanelHeader from './MobileLeftPanelHeader';
 import MobileNavigation from './MobileNavigation';
+import Footer from './Footer';
 import ThemeToggle from './ThemeToggle';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { usePostHog } from '@/hooks';
@@ -58,6 +59,9 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
             </div>
           </div>
         </div>
+
+        {/* Footer */}
+        <Footer />
       </aside>
     </>
   );

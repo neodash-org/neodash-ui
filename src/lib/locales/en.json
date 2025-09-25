@@ -117,7 +117,9 @@
     "walletConnected": "Wallet Connected",
     "walletSuccessfullyConnected": "Your wallet is successfully connected",
     "walletManagement": "Wallet Management",
+    "connectedWallets": "Connected Wallets",
     "manageWallets": "Manage your connected wallets and connect to additional ecosystems",
+    "manageWalletsDetailed": "Manage your connected wallets and view detailed information",
     "ethereumConnected": "Ethereum Connected",
     "solanaConnected": "Solana Connected",
     "copyAddress": "Copy Address",
@@ -149,5 +151,12 @@
     "collapseSidebar": "Collapse sidebar",
     "openMenu": "Open menu",
     "closeMenu": "Close menu"
+  },
+  "footer": {
+    "termsOfUse": "Terms of Use",
+    "termsOfUseShort": "ToU",
+    "privacyPolicy": "Privacy Policy",
+    "privacyPolicyShort": "PP",
+    "allRightsReserved": "All rights reserved"
   }
 }

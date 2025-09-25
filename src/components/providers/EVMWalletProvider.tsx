@@ -10,11 +10,11 @@ import '@rainbow-me/rainbowkit/styles.css';
 
 const queryClient = new QueryClient();
 
-interface RainbowKitProviderWrapperProps {
+interface EVMWalletProviderProps {
   children: React.ReactNode;
 }
 
-export function RainbowKitProviderWrapper({ children }: RainbowKitProviderWrapperProps) {
+export function EVMWalletProvider({ children }: EVMWalletProviderProps) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>

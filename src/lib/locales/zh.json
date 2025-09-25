@@ -87,7 +87,9 @@
     "walletConnected": "钱包已连接",
     "walletSuccessfullyConnected": "您的钱包已成功连接",
     "walletManagement": "钱包管理",
+    "connectedWallets": "已连接的钱包",
     "manageWallets": "管理您已连接的钱包并连接到其他生态系统",
+    "manageWalletsDetailed": "管理您已连接的钱包并查看详细信息",
     "ethereumConnected": "以太坊已连接",
     "copyAddress": "复制地址",
     "addressCopied": "地址已复制到剪贴板",
@@ -109,5 +111,12 @@
     "collapseSidebar": "收起侧边栏",
     "toggleTheme": "切换主题",
     "refresh": "刷新"
+  },
+  "footer": {
+    "termsOfUse": "使用条款",
+    "termsOfUseShort": "ToU",
+    "privacyPolicy": "隐私政策",
+    "privacyPolicyShort": "PP",
+    "allRightsReserved": "版权所有"
   }
 }
