@@ -3,13 +3,14 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { usePostHog } from '@/hooks';
 
 // Constants
 const CHAIN_ICON_SIZE = 16;
 const SKELETON_WIDTH = 32;
 const SKELETON_HEIGHT = 10;
+const SKELETON_MULTIPLIER = 4;
 
 // Chain Icon Component
 const ChainIcon: React.FC<{
@@ -20,7 +21,7 @@ const ChainIcon: React.FC<{
   return (
     <div
       className="w-4 h-4 rounded-full overflow-hidden"
-      style={{ background: chain.iconBackground }}
+      style={{ background: chain.iconBackground || 'transparent' }}
     >
       <Image
         alt={chain.name ?? 'Chain icon'}
@@ -33,6 +34,150 @@ const ChainIcon: React.FC<{
         }}
       />
     </div>
+  );
+};
+
+// Individual Button Components
+const ConnectButtonComponent: React.FC<{
+  onClick: () => void;
+  className: string;
+  ariaLabel: string;
+  children: React.ReactNode;
+  onTrack: () => void;
+}> = ({ onClick, className, ariaLabel, children, onTrack }) => {
+  const handleClick = useCallback(() => {
+    onTrack();
+    onClick();
+  }, [onTrack, onClick]);
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        handleClick();
+      }
+    },
+    [handleClick],
+  );
+
+  return (
+    <button
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      type="button"
+      className={className}
+      aria-label={ariaLabel}
+    >
+      {children}
+    </button>
+  );
+};
+
+const WrongNetworkButton: React.FC<{
+  onClick: () => void;
+  className: string;
+  ariaLabel: string;
+  children: React.ReactNode;
+  onTrack: () => void;
+}> = ({ onClick, className, ariaLabel, children, onTrack }) => {
+  const handleClick = useCallback(() => {
+    onTrack();
+    onClick();
+  }, [onTrack, onClick]);
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        handleClick();
+      }
+    },
+    [handleClick],
+  );
+
+  return (
+    <button
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      type="button"
+      className={className}
+      aria-label={ariaLabel}
+    >
+      {children}
+    </button>
+  );
+};
+
+const ChainButton: React.FC<{
+  onClick: () => void;
+  className: string;
+  ariaLabel: string;
+  chain: { name?: string; iconUrl?: string; iconBackground?: string; hasIcon?: boolean };
+  onTrack: () => void;
+}> = ({ onClick, className, ariaLabel, chain, onTrack }) => {
+  const handleClick = useCallback(() => {
+    onTrack();
+    onClick();
+  }, [onTrack, onClick]);
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        handleClick();
+      }
+    },
+    [handleClick],
+  );
+
+  return (
+    <button
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      type="button"
+      className={className}
+      aria-label={ariaLabel}
+    >
+      <ChainIcon chain={chain} />
+      {chain?.name || 'Unknown Network'}
+    </button>
+  );
+};
+
+const AccountButton: React.FC<{
+  onClick: () => void;
+  className: string;
+  ariaLabel: string;
+  account: { displayName?: string; displayBalance?: string };
+  onTrack: () => void;
+}> = ({ onClick, className, ariaLabel, account, onTrack }) => {
+  const handleClick = useCallback(() => {
+    onTrack();
+    onClick();
+  }, [onTrack, onClick]);
+
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        handleClick();
+      }
+    },
+    [handleClick],
+  );
+
+  return (
+    <button
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+      type="button"
+      className={className}
+      aria-label={ariaLabel}
+    >
+      <div className="w-2 h-2 bg-neon-green rounded-full shadow-[0_0_4px_var(--color-neon-green)]"></div>
+      {account?.displayName || 'Unknown Account'}
+      {account?.displayBalance ? ` (${account.displayBalance})` : ''}
+    </button>
   );
 };
 
@@ -79,7 +224,10 @@ export const CyberpunkConnectButton = React.memo(function CyberpunkConnectButton
           return (
             <div
               className="bg-gray-300 dark:bg-gray-700 rounded-full animate-pulse"
-              style={{ width: SKELETON_WIDTH * 4, height: SKELETON_HEIGHT * 4 }}
+              style={{
+                width: SKELETON_WIDTH * SKELETON_MULTIPLIER,
+                height: SKELETON_HEIGHT * SKELETON_MULTIPLIER,
+              }}
             />
           );
         }
@@ -109,75 +257,66 @@ export const CyberpunkConnectButton = React.memo(function CyberpunkConnectButton
               // Simplified logic: if not connected, show connect button
               if (!connected || (!account && !chain)) {
                 return (
-                  <button
-                    onClick={() => {
+                  <ConnectButtonComponent
+                    onClick={openConnectModal}
+                    className={buttonStyles.connect}
+                    ariaLabel={t('wallet.connect')}
+                    onTrack={() =>
                       trackFeatureUsage('wallet_connect', 'clicked', {
                         source: 'cyberpunk_button',
-                      });
-                      openConnectModal();
-                    }}
-                    type="button"
-                    className={buttonStyles.connect}
-                    aria-label={t('wallet.connect')}
+                      })
+                    }
                   >
                     {t('wallet.connect')}
-                  </button>
+                  </ConnectButtonComponent>
                 );
               }
 
               if (chain?.unsupported) {
                 return (
-                  <button
-                    onClick={() => {
+                  <WrongNetworkButton
+                    onClick={openChainModal}
+                    className={buttonStyles.wrongNetwork}
+                    ariaLabel={t('wallet.wrongNetwork')}
+                    onTrack={() =>
                       trackFeatureUsage('wallet_network_switch', 'clicked', {
                         source: 'cyberpunk_button',
                         reason: 'wrong_network',
-                      });
-                      openChainModal();
-                    }}
-                    type="button"
-                    className={buttonStyles.wrongNetwork}
-                    aria-label={t('wallet.wrongNetwork')}
+                      })
+                    }
                   >
                     {t('wallet.wrongNetwork')}
-                  </button>
+                  </WrongNetworkButton>
                 );
               }
 
               return (
                 <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => {
+                  <ChainButton
+                    onClick={openChainModal}
+                    className={buttonStyles.chain}
+                    ariaLabel={`${t('wallet.switchNetwork')}: ${chain?.name || 'Unknown'}`}
+                    chain={chain}
+                    onTrack={() =>
                       trackFeatureUsage('wallet_network_switch', 'clicked', {
                         source: 'cyberpunk_button',
                         chain: chain?.name || 'unknown',
-                      });
-                      openChainModal();
-                    }}
-                    type="button"
-                    className={buttonStyles.chain}
-                    aria-label={`${t('wallet.switchNetwork')}: ${chain?.name || 'Unknown'}`}
-                  >
-                    <ChainIcon chain={chain} />
-                    {chain?.name || 'Unknown Network'}
-                  </button>
+                      })
+                    }
+                  />
 
-                  <button
-                    onClick={() => {
+                  <AccountButton
+                    onClick={openAccountModal}
+                    className={buttonStyles.account}
+                    ariaLabel={`${t('wallet.address')}: ${account?.displayName || 'Unknown'}`}
+                    account={account}
+                    onTrack={() =>
                       trackFeatureUsage('wallet_account_modal', 'clicked', {
                         source: 'cyberpunk_button',
                         hasBalance: !!account?.displayBalance,
-                      });
-                      openAccountModal();
-                    }}
-                    type="button"
-                    className={buttonStyles.account}
-                    aria-label={`${t('wallet.address')}: ${account?.displayName || 'Unknown'}`}
-                  >
-                    <div className="w-2 h-2 bg-neon-green rounded-full shadow-[0_0_4px_var(--color-neon-green)]"></div>
-                    {account?.displayName || 'Unknown Account'}
-                    {account?.displayBalance ? ` (${account.displayBalance})` : ''}
-                  </button>
+                      })
+                    }
+                  />
                 </div>
               );
             })()}
