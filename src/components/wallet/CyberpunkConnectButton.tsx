@@ -4,9 +4,41 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
 import React, { useMemo } from 'react';
+import { usePostHog } from '@/hooks';
+
+// Constants
+const CHAIN_ICON_SIZE = 16;
+const SKELETON_WIDTH = 32;
+const SKELETON_HEIGHT = 10;
+
+// Chain Icon Component
+const ChainIcon: React.FC<{
+  chain: { name?: string; iconUrl?: string; iconBackground?: string };
+}> = ({ chain }) => {
+  if (!chain?.hasIcon || !chain?.iconUrl) return null;
+
+  return (
+    <div
+      className="w-4 h-4 rounded-full overflow-hidden"
+      style={{ background: chain.iconBackground }}
+    >
+      <Image
+        alt={chain.name ?? 'Chain icon'}
+        src={chain.iconUrl}
+        width={CHAIN_ICON_SIZE}
+        height={CHAIN_ICON_SIZE}
+        className="w-full h-full object-cover"
+        onError={(e) => {
+          e.currentTarget.style.display = 'none';
+        }}
+      />
+    </div>
+  );
+};
 
 export const CyberpunkConnectButton = React.memo(function CyberpunkConnectButton() {
   const { t } = useTranslation();
+  const { trackFeatureUsage } = usePostHog();
 
   // Memoize button styles to prevent unnecessary re-renders
   const buttonStyles = useMemo(
@@ -45,7 +77,10 @@ export const CyberpunkConnectButton = React.memo(function CyberpunkConnectButton
         // Error state handling
         if (!mounted) {
           return (
-            <div className="w-32 h-10 bg-gray-300 dark:bg-gray-700 rounded-full animate-pulse" />
+            <div
+              className="bg-gray-300 dark:bg-gray-700 rounded-full animate-pulse"
+              style={{ width: SKELETON_WIDTH * 4, height: SKELETON_HEIGHT * 4 }}
+            />
           );
         }
 
@@ -71,24 +106,16 @@ export const CyberpunkConnectButton = React.memo(function CyberpunkConnectButton
             })}
           >
             {(() => {
-              // Error handling for missing account/chain data
-              if (!account && !chain) {
+              // Simplified logic: if not connected, show connect button
+              if (!connected || (!account && !chain)) {
                 return (
                   <button
-                    onClick={openConnectModal}
-                    type="button"
-                    className={buttonStyles.connect}
-                    aria-label={t('wallet.connect')}
-                  >
-                    {t('wallet.connect')}
-                  </button>
-                );
-              }
-
-              if (!connected) {
-                return (
-                  <button
-                    onClick={openConnectModal}
+                    onClick={() => {
+                      trackFeatureUsage('wallet_connect', 'clicked', {
+                        source: 'cyberpunk_button',
+                      });
+                      openConnectModal();
+                    }}
                     type="button"
                     className={buttonStyles.connect}
                     aria-label={t('wallet.connect')}
@@ -101,7 +128,13 @@ export const CyberpunkConnectButton = React.memo(function CyberpunkConnectButton
               if (chain?.unsupported) {
                 return (
                   <button
-                    onClick={openChainModal}
+                    onClick={() => {
+                      trackFeatureUsage('wallet_network_switch', 'clicked', {
+                        source: 'cyberpunk_button',
+                        reason: 'wrong_network',
+                      });
+                      openChainModal();
+                    }}
                     type="button"
                     className={buttonStyles.wrongNetwork}
                     aria-label={t('wallet.wrongNetwork')}
@@ -114,34 +147,29 @@ export const CyberpunkConnectButton = React.memo(function CyberpunkConnectButton
               return (
                 <div className="flex items-center gap-3">
                   <button
-                    onClick={openChainModal}
+                    onClick={() => {
+                      trackFeatureUsage('wallet_network_switch', 'clicked', {
+                        source: 'cyberpunk_button',
+                        chain: chain?.name || 'unknown',
+                      });
+                      openChainModal();
+                    }}
                     type="button"
                     className={buttonStyles.chain}
                     aria-label={`${t('wallet.switchNetwork')}: ${chain?.name || 'Unknown'}`}
                   >
-                    {chain?.hasIcon && chain?.iconUrl && (
-                      <div
-                        className="w-4 h-4 rounded-full overflow-hidden"
-                        style={{ background: chain.iconBackground }}
-                      >
-                        <Image
-                          alt={chain.name ?? 'Chain icon'}
-                          src={chain.iconUrl}
-                          width={16}
-                          height={16}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            // Fallback for broken chain icons
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                      </div>
-                    )}
+                    <ChainIcon chain={chain} />
                     {chain?.name || 'Unknown Network'}
                   </button>
 
                   <button
-                    onClick={openAccountModal}
+                    onClick={() => {
+                      trackFeatureUsage('wallet_account_modal', 'clicked', {
+                        source: 'cyberpunk_button',
+                        hasBalance: !!account?.displayBalance,
+                      });
+                      openAccountModal();
+                    }}
                     type="button"
                     className={buttonStyles.account}
                     aria-label={`${t('wallet.address')}: ${account?.displayName || 'Unknown'}`}
