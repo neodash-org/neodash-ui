@@ -287,17 +287,19 @@ const WalletConnectionModal: React.FC = () => {
                   </>
                 )}
 
-                {/* Additional Ecosystems */}
-                <div>
-                  <EcosystemSelector
-                    onSelect={handleEcosystemSelect}
-                    onClose={handleClose}
-                    selectedEcosystem={selectedEcosystem}
-                    data-testid="additional-ecosystem-selector"
-                    hideConnectedEcosystems={true}
-                    evmConnected={evmConnected}
-                  />
-                </div>
+                {/* Additional Ecosystems - only show if not all ecosystems are connected */}
+                {(!evmConnected || !isSolanaConnected) && (
+                  <div>
+                    <EcosystemSelector
+                      onSelect={handleEcosystemSelect}
+                      onClose={handleClose}
+                      selectedEcosystem={selectedEcosystem}
+                      data-testid="additional-ecosystem-selector"
+                      hideConnectedEcosystems={true}
+                      evmConnected={evmConnected}
+                    />
+                  </div>
+                )}
               </div>
             );
           }
