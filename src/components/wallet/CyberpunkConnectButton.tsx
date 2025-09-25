@@ -2,184 +2,19 @@
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useTranslation } from 'react-i18next';
-import Image from 'next/image';
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { usePostHog } from '@/hooks';
+import {
+  ConnectButton as CustomConnectButton,
+  WrongNetworkButton,
+  ChainButton,
+  AccountButton,
+} from './connect-button';
 
 // Constants
-const CHAIN_ICON_SIZE = 16;
 const SKELETON_WIDTH = 32;
 const SKELETON_HEIGHT = 10;
 const SKELETON_MULTIPLIER = 4;
-
-// Chain Icon Component
-const ChainIcon: React.FC<{
-  chain: { name?: string; iconUrl?: string; iconBackground?: string; hasIcon?: boolean };
-}> = ({ chain }) => {
-  if (!chain?.hasIcon || !chain?.iconUrl) return null;
-
-  return (
-    <div
-      className="w-4 h-4 rounded-full overflow-hidden"
-      style={{ background: chain.iconBackground || 'transparent' }}
-    >
-      <Image
-        alt={chain.name ?? 'Chain icon'}
-        src={chain.iconUrl}
-        width={CHAIN_ICON_SIZE}
-        height={CHAIN_ICON_SIZE}
-        className="w-full h-full object-cover"
-        onError={(e) => {
-          e.currentTarget.style.display = 'none';
-        }}
-      />
-    </div>
-  );
-};
-
-// Individual Button Components
-const ConnectButtonComponent: React.FC<{
-  onClick: () => void;
-  className: string;
-  ariaLabel: string;
-  children: React.ReactNode;
-  onTrack: () => void;
-}> = ({ onClick, className, ariaLabel, children, onTrack }) => {
-  const handleClick = useCallback(() => {
-    onTrack();
-    onClick();
-  }, [onTrack, onClick]);
-
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        handleClick();
-      }
-    },
-    [handleClick],
-  );
-
-  return (
-    <button
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      type="button"
-      className={className}
-      aria-label={ariaLabel}
-    >
-      {children}
-    </button>
-  );
-};
-
-const WrongNetworkButton: React.FC<{
-  onClick: () => void;
-  className: string;
-  ariaLabel: string;
-  children: React.ReactNode;
-  onTrack: () => void;
-}> = ({ onClick, className, ariaLabel, children, onTrack }) => {
-  const handleClick = useCallback(() => {
-    onTrack();
-    onClick();
-  }, [onTrack, onClick]);
-
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        handleClick();
-      }
-    },
-    [handleClick],
-  );
-
-  return (
-    <button
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      type="button"
-      className={className}
-      aria-label={ariaLabel}
-    >
-      {children}
-    </button>
-  );
-};
-
-const ChainButton: React.FC<{
-  onClick: () => void;
-  className: string;
-  ariaLabel: string;
-  chain: { name?: string; iconUrl?: string; iconBackground?: string; hasIcon?: boolean };
-  onTrack: () => void;
-}> = ({ onClick, className, ariaLabel, chain, onTrack }) => {
-  const handleClick = useCallback(() => {
-    onTrack();
-    onClick();
-  }, [onTrack, onClick]);
-
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        handleClick();
-      }
-    },
-    [handleClick],
-  );
-
-  return (
-    <button
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      type="button"
-      className={className}
-      aria-label={ariaLabel}
-    >
-      <ChainIcon chain={chain} />
-      {chain?.name || 'Unknown Network'}
-    </button>
-  );
-};
-
-const AccountButton: React.FC<{
-  onClick: () => void;
-  className: string;
-  ariaLabel: string;
-  account: { displayName?: string; displayBalance?: string };
-  onTrack: () => void;
-}> = ({ onClick, className, ariaLabel, account, onTrack }) => {
-  const handleClick = useCallback(() => {
-    onTrack();
-    onClick();
-  }, [onTrack, onClick]);
-
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        handleClick();
-      }
-    },
-    [handleClick],
-  );
-
-  return (
-    <button
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      type="button"
-      className={className}
-      aria-label={ariaLabel}
-    >
-      <div className="w-2 h-2 bg-neon-green rounded-full shadow-[0_0_4px_var(--color-neon-green)]"></div>
-      {account?.displayName || 'Unknown Account'}
-      {account?.displayBalance ? ` (${account.displayBalance})` : ''}
-    </button>
-  );
-};
 
 export const CyberpunkConnectButton = React.memo(function CyberpunkConnectButton() {
   const { t } = useTranslation();
@@ -257,7 +92,7 @@ export const CyberpunkConnectButton = React.memo(function CyberpunkConnectButton
               // Simplified logic: if not connected, show connect button
               if (!connected || (!account && !chain)) {
                 return (
-                  <ConnectButtonComponent
+                  <CustomConnectButton
                     onClick={openConnectModal}
                     className={buttonStyles.connect}
                     ariaLabel={t('wallet.connect')}
@@ -268,7 +103,7 @@ export const CyberpunkConnectButton = React.memo(function CyberpunkConnectButton
                     }
                   >
                     {t('wallet.connect')}
-                  </ConnectButtonComponent>
+                  </CustomConnectButton>
                 );
               }
 
