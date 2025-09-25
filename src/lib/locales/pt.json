@@ -76,6 +76,7 @@
     "address": "Endereço",
     "balance": "Saldo",
     "switchNetwork": "Trocar Rede",
+    "wrongNetwork": "Rede Incorreta",
     "chooseEcosystem": "Escolha seu Ecossistema",
     "selectEcosystem": "Selecione o ecossistema blockchain ao qual deseja se conectar",
     "ethereum": "Ethereum",

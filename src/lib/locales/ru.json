@@ -76,6 +76,7 @@
     "address": "Адрес",
     "balance": "Баланс",
     "switchNetwork": "Сменить сеть",
+    "wrongNetwork": "Неправильная сеть",
     "chooseEcosystem": "Выберите вашу экосистему",
     "selectEcosystem": "Выберите блокчейн-экосистему, к которой хотите подключиться",
     "ethereum": "Ethereum",

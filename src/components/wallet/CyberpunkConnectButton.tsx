@@ -2,6 +2,7 @@
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useTranslation } from 'react-i18next';
+import Image from 'next/image';
 
 export function CyberpunkConnectButton() {
   const { t } = useTranslation();
@@ -57,7 +58,7 @@ export function CyberpunkConnectButton() {
                     type="button"
                     className="bg-red-500 text-white border-none rounded-full font-[var(--font-cyberpunk)] px-6 py-2 shadow-[0_0_12px_var(--color-red)] tracking-wide transition hover:scale-105"
                   >
-                    Wrong network
+                    {t('wallet.wrongNetwork')}
                   </button>
                 );
               }
@@ -69,23 +70,18 @@ export function CyberpunkConnectButton() {
                     type="button"
                     className="flex items-center gap-2 bg-bg-card/70 border border-white/10 rounded-full px-3 py-2 text-white font-[var(--font-cyberpunk)] tracking-wide shadow-[0_0_8px_var(--color-neon-cyan)] hover:scale-105 transition-all duration-300"
                   >
-                    {chain.hasIcon && (
+                    {chain.hasIcon && chain.iconUrl && (
                       <div
-                        style={{
-                          background: chain.iconBackground,
-                          width: 16,
-                          height: 16,
-                          borderRadius: 999,
-                          overflow: 'hidden',
-                        }}
+                        className="w-4 h-4 rounded-full overflow-hidden"
+                        style={{ background: chain.iconBackground }}
                       >
-                        {chain.iconUrl && (
-                          <img
-                            alt={chain.name ?? 'Chain icon'}
-                            src={chain.iconUrl}
-                            style={{ width: 16, height: 16 }}
-                          />
-                        )}
+                        <Image
+                          alt={chain.name ?? 'Chain icon'}
+                          src={chain.iconUrl}
+                          width={16}
+                          height={16}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
                     )}
                     {chain.name}

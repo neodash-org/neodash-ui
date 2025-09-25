@@ -76,6 +76,7 @@
     "address": "地址",
     "balance": "余额",
     "switchNetwork": "切换网络",
+    "wrongNetwork": "错误的网络",
     "chooseEcosystem": "选择您的生态系统",
     "selectEcosystem": "选择您要连接的区块链生态系统",
     "ethereum": "Ethereum",

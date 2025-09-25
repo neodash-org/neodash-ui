@@ -76,6 +76,7 @@
     "address": "アドレス",
     "balance": "残高",
     "switchNetwork": "ネットワーク切り替え",
+    "wrongNetwork": "間違ったネットワーク",
     "chooseEcosystem": "エコシステムを選択",
     "selectEcosystem": "接続したいブロックチェーンエコシステムを選択してください",
     "ethereum": "Ethereum",

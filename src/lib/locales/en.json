@@ -106,6 +106,7 @@
     "address": "Address",
     "balance": "Balance",
     "switchNetwork": "Switch Network",
+    "wrongNetwork": "Wrong Network",
     "chooseEcosystem": "Choose Your Ecosystem",
     "selectEcosystem": "Select the blockchain ecosystem you want to connect to",
     "ethereum": "Ethereum",
