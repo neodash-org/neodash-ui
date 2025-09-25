@@ -11,7 +11,8 @@
     "save": "Speichern",
     "delete": "Löschen",
     "edit": "Bearbeiten",
-    "close": "Schließen"
+    "close": "Schließen",
+    "language": "Sprache"
   },
   "navigation": {
     "dashboard": "Dashboard",

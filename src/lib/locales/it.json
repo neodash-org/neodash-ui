@@ -12,7 +12,8 @@
     "save": "Salva",
     "delete": "Elimina",
     "edit": "Modifica",
-    "close": "Chiudi"
+    "close": "Chiudi",
+    "language": "Lingua"
   },
   "navigation": {
     "dashboard": "Dashboard",

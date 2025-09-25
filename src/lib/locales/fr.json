@@ -21,7 +21,8 @@
     "sort": "Trier",
     "refresh": "Actualiser",
     "retry": "Réessayer",
-    "reload": "Recharger"
+    "reload": "Recharger",
+    "language": "Langue"
   },
   "navigation": {
     "dashboard": "Tableau de bord",

@@ -21,7 +21,8 @@
     "sort": "Sort",
     "refresh": "Refresh",
     "retry": "Retry",
-    "reload": "Reload"
+    "reload": "Reload",
+    "language": "Language"
   },
   "navigation": {
     "dashboard": "Dashboard",

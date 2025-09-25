@@ -12,7 +12,8 @@
     "save": "Guardar",
     "delete": "Eliminar",
     "edit": "Editar",
-    "close": "Fechar"
+    "close": "Fechar",
+    "language": "Idioma"
   },
   "navigation": {
     "dashboard": "Painel de Controlo",
