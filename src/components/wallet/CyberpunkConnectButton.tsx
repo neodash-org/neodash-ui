@@ -13,7 +13,7 @@ const SKELETON_HEIGHT = 10;
 
 // Chain Icon Component
 const ChainIcon: React.FC<{
-  chain: { name?: string; iconUrl?: string; iconBackground?: string };
+  chain: { name?: string; iconUrl?: string; iconBackground?: string; hasIcon?: boolean };
 }> = ({ chain }) => {
   if (!chain?.hasIcon || !chain?.iconUrl) return null;
 
