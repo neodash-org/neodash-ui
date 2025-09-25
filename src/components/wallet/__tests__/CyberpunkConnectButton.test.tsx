@@ -1,7 +1,7 @@
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { CyberpunkConnectButton } from '../CyberpunkConnectButton';
+import { WalletConnectButton } from '../connect-button/ConnectButton';
 
 // Mock Next.js Image component
 vi.mock('next/image', () => ({
@@ -70,20 +70,20 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
-describe('CyberpunkConnectButton', () => {
+describe('WalletConnectButton', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('should render connect button when not connected', () => {
-    render(<CyberpunkConnectButton />);
+    render(<WalletConnectButton />);
 
     expect(screen.getByText('Connect Wallet')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Connect Wallet' })).toBeInTheDocument();
   });
 
   it('should call openConnectModal when connect button is clicked', () => {
-    render(<CyberpunkConnectButton />);
+    render(<WalletConnectButton />);
 
     const connectButton = screen.getByRole('button', { name: 'Connect Wallet' });
     fireEvent.click(connectButton);
@@ -92,7 +92,7 @@ describe('CyberpunkConnectButton', () => {
   });
 
   it('should have proper accessibility attributes', () => {
-    render(<CyberpunkConnectButton />);
+    render(<WalletConnectButton />);
 
     const connectButton = screen.getByRole('button', { name: 'Connect Wallet' });
     expect(connectButton).toHaveAttribute('type', 'button');
@@ -100,11 +100,11 @@ describe('CyberpunkConnectButton', () => {
   });
 
   it('should render the component without crashing', () => {
-    expect(() => render(<CyberpunkConnectButton />)).not.toThrow();
+    expect(() => render(<WalletConnectButton />)).not.toThrow();
   });
 
   it('should have cyberpunk styling classes', () => {
-    render(<CyberpunkConnectButton />);
+    render(<WalletConnectButton />);
 
     const connectButton = screen.getByRole('button', { name: 'Connect Wallet' });
     expect(connectButton).toHaveClass('bg-gradient-to-r', 'from-neon-cyan', 'to-neon-pink');

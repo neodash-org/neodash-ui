@@ -5,3 +5,4 @@ export { default as WalletInfo } from './WalletInfo';
 export { default as SolanaWalletSelector } from './SolanaWalletSelector';
 export { default as EvmWalletConnector } from './EvmWalletConnector';
 export { default as SolanaWalletConnector } from './SolanaWalletConnector';
+export { WalletConnectButton } from './connect-button';
