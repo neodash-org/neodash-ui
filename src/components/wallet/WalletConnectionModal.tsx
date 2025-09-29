@@ -70,15 +70,6 @@ const WalletConnectionModal: React.FC = () => {
     // Get wallet states from WalletContext
     const isSolanaConnectedFromContext = !!solanaWallet;
 
-    // Debug logging
-    console.log('🔍 WalletConnectionModal Debug:', {
-      solanaWallet: !!solanaWallet,
-      solanaWalletAddress: solanaWallet?.address,
-      isSolanaConnectedFromContext,
-      condition: isSolanaConnectedFromContext && solanaWallet,
-      timestamp: new Date().toISOString(),
-    });
-
     return (
       <ConnectButton.Custom>
         {({ account, chain, openChainModal, authenticationStatus, mounted }) => {
@@ -92,8 +83,8 @@ const WalletConnectionModal: React.FC = () => {
           // Use context state as primary source of truth
           const evmConnected = evmConnectedFromRainbowKit && !!evmWallet;
 
-          // If EVM is connected, show connection status and management options
-          if (evmConnected) {
+          // If any wallet is connected, show wallet management
+          if (evmConnected || isSolanaConnectedFromContext) {
             return (
               <div className="space-y-4">
                 <div className="text-center">
@@ -102,124 +93,127 @@ const WalletConnectionModal: React.FC = () => {
                   </p>
                 </div>
 
-                {/* EVM Connection Status */}
-                <Card
-                  className="dark:bg-gradient-to-br dark:from-neon-cyan/5 dark:to-neon-pink/5 dark:border-neon-cyan/30 dark:shadow-[0_0_16px_var(--color-neon-cyan-44)]"
-                  data-testid="evm-connection-status"
-                >
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="text-2xl">🔷</div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-semibold text-gray-900 dark:text-white dark:font-[var(--font-cyberpunk)] dark:tracking-wide">
-                            {t('wallet.ethereumConnected')}
-                          </h4>
-                          <div className="w-2 h-2 bg-green-500 dark:bg-neon-green rounded-full shadow-[0_0_4px_var(--color-green-500)] dark:shadow-[0_0_4px_var(--color-neon-green)]"></div>
+                {/* EVM Connection Status - only show if EVM is connected */}
+                {evmConnected && (
+                  <>
+                    <Card
+                      className="dark:bg-gradient-to-br dark:from-neon-cyan/5 dark:to-neon-pink/5 dark:border-neon-cyan/30 dark:shadow-[0_0_16px_var(--color-neon-cyan-44)]"
+                      data-testid="evm-connection-status"
+                    >
+                      <div className="space-y-4">
+                        <div className="flex items-center space-x-3">
+                          <div className="text-2xl">🔷</div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-semibold text-gray-900 dark:text-white dark:font-[var(--font-cyberpunk)] dark:tracking-wide">
+                                {t('wallet.ethereumConnected')}
+                              </h4>
+                              <div className="w-2 h-2 bg-green-500 dark:bg-neon-green rounded-full shadow-[0_0_4px_var(--color-green-500)] dark:shadow-[0_0_4px_var(--color-neon-green)]"></div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <p
+                                className={`text-sm text-gray-600 dark:text-gray-300 font-mono ${isMobile ? 'truncate' : 'break-all'} flex-1`}
+                              >
+                                {isMobile
+                                  ? `${account.address.slice(0, 8)}...${account.address.slice(-8)}`
+                                  : account.address}
+                              </p>
+                              <button
+                                onClick={() => {
+                                  navigator.clipboard.writeText(account.address);
+                                }}
+                                className="w-6 h-6 rounded bg-green-100 dark:bg-neon-green/10 border border-green-300 dark:border-neon-green/30 hover:bg-green-200 dark:hover:bg-neon-green/20 hover:border-green-400 dark:hover:border-neon-green hover:shadow-[0_0_8px_var(--color-green-500)] dark:hover:shadow-[0_0_8px_var(--color-neon-green)] transition-all duration-300 flex items-center justify-center flex-shrink-0"
+                                data-testid="copy-address-icon"
+                              >
+                                <svg
+                                  className="w-3 h-3 text-green-600 dark:text-neon-green"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <p
-                            className={`text-sm text-gray-600 dark:text-gray-300 font-mono ${isMobile ? 'truncate' : 'break-all'} flex-1`}
-                          >
-                            {isMobile
-                              ? `${account.address.slice(0, 8)}...${account.address.slice(-8)}`
-                              : account.address}
-                          </p>
-                          <button
-                            onClick={() => {
-                              navigator.clipboard.writeText(account.address);
-                            }}
-                            className="w-6 h-6 rounded bg-green-100 dark:bg-neon-green/10 border border-green-300 dark:border-neon-green/30 hover:bg-green-200 dark:hover:bg-neon-green/20 hover:border-green-400 dark:hover:border-neon-green hover:shadow-[0_0_8px_var(--color-green-500)] dark:hover:shadow-[0_0_8px_var(--color-neon-green)] transition-all duration-300 flex items-center justify-center flex-shrink-0"
-                            data-testid="copy-address-icon"
-                          >
-                            <svg
-                              className="w-3 h-3 text-green-600 dark:text-neon-green"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                              />
-                            </svg>
-                          </button>
+
+                        {/* Mobile: 2 rows (Switch+Copy, Disconnect), Desktop: Horizontal */}
+                        <div className={isMobile ? 'space-y-2' : 'flex gap-2'}>
+                          {isMobile ? (
+                            <>
+                              {/* First row: Switch Network only */}
+                              <Button
+                                variant="outline"
+                                size="md"
+                                onClick={() => {
+                                  setSwitchClicked(true);
+                                  closeModal();
+                                  setTimeout(() => {
+                                    openChainModal();
+                                  }, 0);
+                                }}
+                                className="w-full rounded-none border-b-4 dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105"
+                                data-testid="switch-network-button"
+                              >
+                                {t('wallet.switchNetwork')}
+                              </Button>
+                              {/* Second row: Disconnect */}
+                              <Button
+                                variant="outline"
+                                size="md"
+                                onClick={() => {
+                                  disconnect();
+                                  handleClose();
+                                }}
+                                className="w-full rounded-none border-b-4 dark:border-neon-red/30 dark:hover:border-neon-red dark:hover:shadow-[0_0_8px_var(--color-neon-red)] dark:hover:scale-105"
+                                data-testid="disconnect-button"
+                              >
+                                {t('wallet.disconnect')}
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setSwitchClicked(true);
+                                  closeModal();
+                                  setTimeout(() => {
+                                    openChainModal();
+                                  }, 0);
+                                }}
+                                className="flex-1 rounded-none border-b-4 dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105"
+                                data-testid="switch-network-button"
+                              >
+                                {t('wallet.switchNetwork')}
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  disconnect();
+                                  handleClose();
+                                }}
+                                className="flex-1 rounded-none border-b-4 dark:border-neon-red/30 dark:hover:border-neon-red dark:hover:shadow-[0_0_8px_var(--color-neon-red)] dark:hover:scale-105"
+                                data-testid="disconnect-button"
+                              >
+                                {t('wallet.disconnect')}
+                              </Button>
+                            </>
+                          )}
                         </div>
                       </div>
-                    </div>
-
-                    {/* Mobile: 2 rows (Switch+Copy, Disconnect), Desktop: Horizontal */}
-                    <div className={isMobile ? 'space-y-2' : 'flex gap-2'}>
-                      {isMobile ? (
-                        <>
-                          {/* First row: Switch Network only */}
-                          <Button
-                            variant="outline"
-                            size="md"
-                            onClick={() => {
-                              setSwitchClicked(true);
-                              closeModal();
-                              setTimeout(() => {
-                                openChainModal();
-                              }, 0);
-                            }}
-                            className="w-full rounded-none border-b-4 dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105"
-                            data-testid="switch-network-button"
-                          >
-                            {t('wallet.switchNetwork')}
-                          </Button>
-                          {/* Second row: Disconnect */}
-                          <Button
-                            variant="outline"
-                            size="md"
-                            onClick={() => {
-                              disconnect();
-                              handleClose();
-                            }}
-                            className="w-full rounded-none border-b-4 dark:border-neon-red/30 dark:hover:border-neon-red dark:hover:shadow-[0_0_8px_var(--color-neon-red)] dark:hover:scale-105"
-                            data-testid="disconnect-button"
-                          >
-                            {t('wallet.disconnect')}
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setSwitchClicked(true);
-                              closeModal();
-                              setTimeout(() => {
-                                openChainModal();
-                              }, 0);
-                            }}
-                            className="flex-1 rounded-none border-b-4 dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105"
-                            data-testid="switch-network-button"
-                          >
-                            {t('wallet.switchNetwork')}
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              disconnect();
-                              handleClose();
-                            }}
-                            className="flex-1 rounded-none border-b-4 dark:border-neon-red/30 dark:hover:border-neon-red dark:hover:shadow-[0_0_8px_var(--color-neon-red)] dark:hover:scale-105"
-                            data-testid="disconnect-button"
-                          >
-                            {t('wallet.disconnect')}
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </Card>
-
-                <Separator />
+                    </Card>
+                    <Separator />
+                  </>
+                )}
 
                 {/* Solana Wallet Management */}
                 {isSolanaConnectedFromContext && solanaWallet && (

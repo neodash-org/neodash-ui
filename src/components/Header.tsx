@@ -8,9 +8,8 @@ import { Moon, Sun, Bell, Wallet } from 'lucide-react';
 import { getPageTitle } from '@/utils/pageTitle';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
-import { useWallet } from '@/lib/wallet/hooks';
+import { useWallet } from '@/context/WalletContext';
 import { Button } from '@/design-system/components';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 interface HeaderProps {
   onMobileMenuToggle: () => void;
@@ -22,7 +21,7 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
   const { isDark, toggleTheme } = useTheme();
   const { trackFeatureUsage, trackThemeChange } = usePostHog();
   const { t } = useTranslation();
-  const { openModal } = useWallet();
+  const { openModal, isConnected } = useWallet();
 
   const title = getPageTitle(pathname);
 
@@ -92,31 +91,18 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
 
         {/* Wallet Section - Hidden on mobile, visible on desktop */}
         <div className="hidden md:flex">
-          <ConnectButton.Custom>
-            {({ account, chain, authenticationStatus, mounted }) => {
-              const ready = mounted && authenticationStatus !== 'loading';
-              const evmConnected =
-                ready &&
-                account &&
-                chain &&
-                (!authenticationStatus || authenticationStatus === 'authenticated');
-
-              return (
-                <Button
-                  onClick={() => {
-                    trackFeatureUsage('wallet_connection', 'modal_opened', { location: 'header' });
-                    openModal();
-                  }}
-                  variant="primary"
-                  size="md"
-                  className="bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-full font-[var(--font-cyberpunk)] px-6 py-2 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] tracking-wide transition hover:scale-105"
-                  data-testid="connect-wallet-button"
-                >
-                  {evmConnected ? 'Manage Wallets' : t('wallet.connect')}
-                </Button>
-              );
+          <Button
+            onClick={() => {
+              trackFeatureUsage('wallet_connection', 'modal_opened', { location: 'header' });
+              openModal();
             }}
-          </ConnectButton.Custom>
+            variant="primary"
+            size="md"
+            className="bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-full font-[var(--font-cyberpunk)] px-6 py-2 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] tracking-wide transition hover:scale-105"
+            data-testid="connect-wallet-button"
+          >
+            {isConnected ? 'Manage Wallets' : t('wallet.connect')}
+          </Button>
         </div>
 
         {/* Mobile Menu Button - Only visible on mobile, positioned on the right */}

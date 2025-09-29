@@ -172,9 +172,13 @@ const EcosystemSelector: React.FC<EcosystemSelectorProps> = ({
           return (
             <Card
               key={ecosystem.type}
-              className={`${ecosystem.color} border-2 hover:shadow-lg dark:hover:shadow-[0_0_24px_var(--color-neon-pink-66),0_0_32px_var(--color-neon-cyan-44)] transition-all duration-300 cursor-pointer hover:scale-[1.02] dark:hover:scale-[1.02] hover:border-purple-400 dark:hover:border-neon-pink/60`}
-              onClick={() => onSelect(ecosystem.type)}
-              hover
+              className={`${ecosystem.color} border-2 transition-all duration-300 ${
+                solanaConnected
+                  ? 'cursor-default opacity-75'
+                  : 'hover:shadow-lg dark:hover:shadow-[0_0_24px_var(--color-neon-pink-66),0_0_32px_var(--color-neon-cyan-44)] cursor-pointer hover:scale-[1.02] dark:hover:scale-[1.02] hover:border-purple-400 dark:hover:border-neon-pink/60'
+              }`}
+              onClick={solanaConnected ? undefined : () => onSelect(ecosystem.type)}
+              hover={!solanaConnected}
               data-testid="solana-ecosystem-card"
             >
               <div className="flex items-center space-x-4">
