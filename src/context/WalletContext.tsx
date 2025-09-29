@@ -1,5 +1,11 @@
 import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
-import { WalletContextType, WalletState, WalletType, WalletInfo } from '@/lib/wallet/types';
+import {
+  WalletContextType,
+  WalletState,
+  WalletType,
+  WalletInfo,
+  WalletStatus,
+} from '@/lib/wallet/types';
 import { useAccount, useDisconnect as useWagmiDisconnect } from 'wagmi';
 import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
 
@@ -36,7 +42,7 @@ type WalletAction =
 const walletReducer = (state: ExtendedWalletState, action: WalletAction): ExtendedWalletState => {
   console.log('🔍 Wallet Reducer:', {
     action: action.type,
-    payload: action.payload,
+    payload: 'payload' in action ? action.payload : undefined,
     currentState: {
       evmWallet: !!state.evmWallet,
       solanaWallet: !!state.solanaWallet,
@@ -62,7 +68,7 @@ const walletReducer = (state: ExtendedWalletState, action: WalletAction): Extend
       const newState = {
         ...state,
         connectedWallets,
-        status: connectedWallets.length > 0 ? 'connected' : 'disconnected',
+        status: (connectedWallets.length > 0 ? 'connected' : 'disconnected') as WalletStatus,
         currentWallet: connectedWallets[0] || null,
       };
       console.log('🔍 Updated Connected Wallets:', {
