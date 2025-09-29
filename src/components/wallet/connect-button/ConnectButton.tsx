@@ -20,14 +20,6 @@ export const WalletConnectButton = React.memo(function WalletConnectButton() {
   const { trackFeatureUsage } = usePostHog();
   const { connectedWallets, solanaWallet } = useWallet();
 
-  // CTO-level debugging logs
-  console.log('🔍 WalletConnectButton Render:', {
-    connectedWallets: connectedWallets.length,
-    solanaWallet: !!solanaWallet,
-    solanaAddress: solanaWallet?.address,
-    timestamp: new Date().toISOString(),
-  });
-
   // Memoize button styles to prevent unnecessary re-renders
   const buttonStyles = useMemo(
     () => ({
@@ -65,20 +57,6 @@ export const WalletConnectButton = React.memo(function WalletConnectButton() {
         // Check if any wallet is connected (EVM or Solana)
         const hasAnyConnectedWallet = evmConnected || connectedWallets.length > 0;
 
-        // CTO-level debugging logs for RainbowKit state
-        console.log('🔍 RainbowKit State:', {
-          evmConnected,
-          account: !!account,
-          chain: chain?.name,
-          authenticationStatus,
-          mounted,
-          ready,
-          hasAnyConnectedWallet,
-          connectedWalletsCount: connectedWallets.length,
-          solanaWalletExists: !!solanaWallet,
-          timestamp: new Date().toISOString(),
-        });
-
         // Error state handling
         if (!mounted) {
           return (
@@ -114,19 +92,6 @@ export const WalletConnectButton = React.memo(function WalletConnectButton() {
             })}
           >
             {(() => {
-              // CTO-level debugging for decision logic
-              console.log('🔍 Decision Logic:', {
-                hasAnyConnectedWallet,
-                evmConnected,
-                solanaWallet: !!solanaWallet,
-                decision: !hasAnyConnectedWallet
-                  ? 'SHOW_CONNECT'
-                  : !evmConnected && solanaWallet
-                    ? 'SHOW_SOLANA_ONLY'
-                    : 'SHOW_EVM_MANAGEMENT',
-                timestamp: new Date().toISOString(),
-              });
-
               // Show connect button only if no wallets are connected
               if (!hasAnyConnectedWallet) {
                 return (

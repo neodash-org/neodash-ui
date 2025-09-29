@@ -1,122 +1,23 @@
-import React, { createContext, useContext, useReducer, useCallback, useEffect } from 'react';
-import {
-  WalletContextType,
-  WalletState,
-  WalletType,
-  WalletInfo,
-  WalletStatus,
-} from '@/lib/wallet/types';
+import React, { createContext, useContext, useMemo, useState, useCallback } from 'react';
+import { WalletContextType, WalletType, WalletInfo, WalletStatus } from '@/lib/wallet/types';
 import { useAccount, useDisconnect as useWagmiDisconnect } from 'wagmi';
 import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
 
-// Extended state to handle multiple wallets
-interface ExtendedWalletState extends WalletState {
+// Extended context type for the hook
+type ExtendedWalletContextType = WalletContextType & {
   evmWallet: WalletInfo | null;
   solanaWallet: WalletInfo | null;
   connectedWallets: WalletInfo[];
-}
-
-const initialState: ExtendedWalletState = {
-  status: 'disconnected',
-  currentWallet: null,
-  error: null,
-  isModalOpen: false,
-  evmWallet: null,
-  solanaWallet: null,
-  connectedWallets: [],
-};
-
-// Action types
-type WalletAction =
-  | { type: 'SET_STATUS'; payload: WalletState['status'] }
-  | { type: 'SET_WALLET'; payload: WalletInfo | null }
-  | { type: 'SET_EVM_WALLET'; payload: WalletInfo | null }
-  | { type: 'SET_SOLANA_WALLET'; payload: WalletInfo | null }
-  | { type: 'UPDATE_CONNECTED_WALLETS' }
-  | { type: 'SET_ERROR'; payload: string | null }
-  | { type: 'OPEN_MODAL' }
-  | { type: 'CLOSE_MODAL' }
-  | { type: 'RESET' };
-
-// Reducer
-const walletReducer = (state: ExtendedWalletState, action: WalletAction): ExtendedWalletState => {
-  console.log('🔍 Wallet Reducer:', {
-    action: action.type,
-    payload: 'payload' in action ? action.payload : undefined,
-    currentState: {
-      evmWallet: !!state.evmWallet,
-      solanaWallet: !!state.solanaWallet,
-      connectedWallets: state.connectedWallets.length,
-      status: state.status,
-    },
-    timestamp: new Date().toISOString(),
-  });
-
-  switch (action.type) {
-    case 'SET_STATUS':
-      return { ...state, status: action.payload };
-    case 'SET_WALLET':
-      return { ...state, currentWallet: action.payload };
-    case 'SET_EVM_WALLET':
-      const newEvmState = { ...state, evmWallet: action.payload };
-      // Auto-update connected wallets after setting EVM wallet
-      const evmConnectedWallets = [newEvmState.evmWallet, newEvmState.solanaWallet].filter(
-        Boolean,
-      ) as WalletInfo[];
-      return {
-        ...newEvmState,
-        connectedWallets: evmConnectedWallets,
-        status: (evmConnectedWallets.length > 0 ? 'connected' : 'disconnected') as WalletStatus,
-        currentWallet: evmConnectedWallets[0] || null,
-      };
-    case 'SET_SOLANA_WALLET':
-      const newSolanaState = { ...state, solanaWallet: action.payload };
-      // Auto-update connected wallets after setting Solana wallet
-      const solanaConnectedWallets = [newSolanaState.evmWallet, newSolanaState.solanaWallet].filter(
-        Boolean,
-      ) as WalletInfo[];
-      return {
-        ...newSolanaState,
-        connectedWallets: solanaConnectedWallets,
-        status: (solanaConnectedWallets.length > 0 ? 'connected' : 'disconnected') as WalletStatus,
-        currentWallet: solanaConnectedWallets[0] || null,
-      };
-    case 'UPDATE_CONNECTED_WALLETS':
-      const connectedWallets = [state.evmWallet, state.solanaWallet].filter(
-        Boolean,
-      ) as WalletInfo[];
-      const newState = {
-        ...state,
-        connectedWallets,
-        status: (connectedWallets.length > 0 ? 'connected' : 'disconnected') as WalletStatus,
-        currentWallet: connectedWallets[0] || null,
-      };
-      console.log('🔍 Updated Connected Wallets:', {
-        connectedWallets: connectedWallets.length,
-        status: newState.status,
-        currentWallet: newState.currentWallet?.type,
-        timestamp: new Date().toISOString(),
-      });
-      return newState;
-    case 'SET_ERROR':
-      return { ...state, error: action.payload };
-    case 'OPEN_MODAL':
-      return { ...state, isModalOpen: true };
-    case 'CLOSE_MODAL':
-      return { ...state, isModalOpen: false };
-    case 'RESET':
-      return initialState;
-    default:
-      return state;
-  }
 };
 
 // Context
-const WalletContext = createContext<WalletContextType | undefined>(undefined);
+const WalletContext = createContext<ExtendedWalletContextType | undefined>(undefined);
 
 // Provider
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [state, dispatch] = useReducer(walletReducer, initialState);
+  // Simple state for modal and errors
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // EVM wallet integration
   const { address: evmAddress, isConnected: isEvmConnected, chain } = useAccount();
@@ -129,71 +30,45 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     wallet: solanaWallet,
   } = useSolanaWallet();
 
-  // Sync EVM wallet state
-  useEffect(() => {
-    console.log('🔍 EVM State Sync:', {
-      isEvmConnected,
-      evmAddress,
-      chainName: chain?.name,
-      chainId: chain?.id,
-      timestamp: new Date().toISOString(),
-    });
-
+  // Derive wallet states from existing hooks - no complex state management
+  const evmWallet = useMemo((): WalletInfo | null => {
     if (isEvmConnected && evmAddress && chain) {
-      const evmWalletInfo: WalletInfo = {
+      return {
         address: evmAddress,
         type: 'evm',
-        name: 'EVM Wallet', // We'll get the actual wallet name from RainbowKit
+        name: 'EVM Wallet',
         chainId: chain.id,
       };
-      console.log('🔍 Setting EVM Wallet:', evmWalletInfo);
-      dispatch({ type: 'SET_EVM_WALLET', payload: evmWalletInfo });
-    } else {
-      console.log('🔍 Clearing EVM Wallet');
-      dispatch({ type: 'SET_EVM_WALLET', payload: null });
     }
+    return null;
   }, [isEvmConnected, evmAddress, chain]);
 
-  // Sync Solana wallet state
-  useEffect(() => {
-    console.log('🔍 Solana State Sync:', {
-      isSolanaConnected,
-      solanaPublicKey: solanaPublicKey?.toBase58(),
-      solanaWalletName: solanaWallet?.adapter.name,
-      timestamp: new Date().toISOString(),
-    });
-
+  const solanaWalletInfo = useMemo((): WalletInfo | null => {
     if (isSolanaConnected && solanaPublicKey && solanaWallet) {
-      const solanaWalletInfo: WalletInfo = {
+      return {
         address: solanaPublicKey.toBase58(),
         type: 'solana',
         name: solanaWallet.adapter.name,
       };
-      console.log('🔍 Setting Solana Wallet:', solanaWalletInfo);
-      dispatch({ type: 'SET_SOLANA_WALLET', payload: solanaWalletInfo });
-    } else {
-      console.log('🔍 Clearing Solana Wallet');
-      dispatch({ type: 'SET_SOLANA_WALLET', payload: null });
     }
+    return null;
   }, [isSolanaConnected, solanaPublicKey, solanaWallet]);
+
+  const connectedWallets = useMemo((): WalletInfo[] => {
+    return [evmWallet, solanaWalletInfo].filter(Boolean) as WalletInfo[];
+  }, [evmWallet, solanaWalletInfo]);
+
+  const status: WalletStatus = connectedWallets.length > 0 ? 'connected' : 'disconnected';
+  const currentWallet = connectedWallets[0] || null;
 
   const connect = useCallback(async () => {
     try {
-      dispatch({ type: 'SET_STATUS', payload: 'connecting' });
-      dispatch({ type: 'SET_ERROR', payload: null });
-
+      setError(null);
       // The actual connection is handled by RainbowKit and Solana wallet adapters
       // This function is mainly for opening the appropriate modal
-      dispatch({ type: 'OPEN_MODAL' });
-
-      // The wallet state will be updated via the useEffect hooks above
-      // when the actual connection happens through the UI components
+      setIsModalOpen(true);
     } catch (error) {
-      dispatch({
-        type: 'SET_ERROR',
-        payload: error instanceof Error ? error.message : 'Connection failed',
-      });
-      dispatch({ type: 'SET_STATUS', payload: 'error' });
+      setError(error instanceof Error ? error.message : 'Connection failed');
     }
   }, []);
 
@@ -204,65 +79,45 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           disconnectEvm();
         } else if (type === 'solana' && isSolanaConnected) {
           // Solana disconnect is handled by the wallet adapter
-          // The useEffect will update the state when disconnection happens
         } else {
           // Disconnect all wallets
           if (isEvmConnected) disconnectEvm();
-          // Solana disconnect is handled by the wallet adapter
         }
-
-        dispatch({ type: 'SET_ERROR', payload: null });
+        setError(null);
       } catch (error) {
-        dispatch({
-          type: 'SET_ERROR',
-          payload: error instanceof Error ? error.message : 'Disconnection failed',
-        });
+        setError(error instanceof Error ? error.message : 'Disconnection failed');
       }
     },
     [isEvmConnected, isSolanaConnected, disconnectEvm],
   );
 
   const openModal = useCallback(() => {
-    dispatch({ type: 'OPEN_MODAL' });
+    setIsModalOpen(true);
   }, []);
 
   const closeModal = useCallback(() => {
-    dispatch({ type: 'CLOSE_MODAL' });
+    setIsModalOpen(false);
   }, []);
 
-  const setError = useCallback((error: string | null) => {
-    dispatch({ type: 'SET_ERROR', payload: error });
-  }, []);
-
-  const value: WalletContextType = {
-    ...state,
+  const value: ExtendedWalletContextType = {
+    status,
+    currentWallet,
+    error,
+    isModalOpen,
     connect,
     disconnect,
     openModal,
     closeModal,
     setError,
-    // Computed properties
-    isConnected: state.status === 'connected',
-    wallet: state.currentWallet,
+    isConnected: status === 'connected',
+    wallet: currentWallet,
     disconnectWallet: disconnect,
-    // Additional properties for multi-wallet support
-    evmWallet: state.evmWallet,
-    solanaWallet: state.solanaWallet,
-    connectedWallets: state.connectedWallets,
-  } as WalletContextType & {
-    evmWallet: WalletInfo | null;
-    solanaWallet: WalletInfo | null;
-    connectedWallets: WalletInfo[];
+    evmWallet,
+    solanaWallet: solanaWalletInfo,
+    connectedWallets,
   };
 
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
-};
-
-// Extended context type for the hook
-type ExtendedWalletContextType = WalletContextType & {
-  evmWallet: WalletInfo | null;
-  solanaWallet: WalletInfo | null;
-  connectedWallets: WalletInfo[];
 };
 
 // Hook
@@ -271,5 +126,5 @@ export const useWallet = (): ExtendedWalletContextType => {
   if (context === undefined) {
     throw new Error('useWallet must be used within a WalletProvider');
   }
-  return context as ExtendedWalletContextType;
+  return context;
 };
