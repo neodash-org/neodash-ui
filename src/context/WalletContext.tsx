@@ -34,6 +34,18 @@ type WalletAction =
 
 // Reducer
 const walletReducer = (state: ExtendedWalletState, action: WalletAction): ExtendedWalletState => {
+  console.log('🔍 Wallet Reducer:', {
+    action: action.type,
+    payload: action.payload,
+    currentState: {
+      evmWallet: !!state.evmWallet,
+      solanaWallet: !!state.solanaWallet,
+      connectedWallets: state.connectedWallets.length,
+      status: state.status,
+    },
+    timestamp: new Date().toISOString(),
+  });
+
   switch (action.type) {
     case 'SET_STATUS':
       return { ...state, status: action.payload };
@@ -47,12 +59,19 @@ const walletReducer = (state: ExtendedWalletState, action: WalletAction): Extend
       const connectedWallets = [state.evmWallet, state.solanaWallet].filter(
         Boolean,
       ) as WalletInfo[];
-      return {
+      const newState = {
         ...state,
         connectedWallets,
         status: connectedWallets.length > 0 ? 'connected' : 'disconnected',
         currentWallet: connectedWallets[0] || null,
       };
+      console.log('🔍 Updated Connected Wallets:', {
+        connectedWallets: connectedWallets.length,
+        status: newState.status,
+        currentWallet: newState.currentWallet?.type,
+        timestamp: new Date().toISOString(),
+      });
+      return newState;
     case 'SET_ERROR':
       return { ...state, error: action.payload };
     case 'OPEN_MODAL':
@@ -86,6 +105,14 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   // Sync EVM wallet state
   useEffect(() => {
+    console.log('🔍 EVM State Sync:', {
+      isEvmConnected,
+      evmAddress,
+      chainName: chain?.name,
+      chainId: chain?.id,
+      timestamp: new Date().toISOString(),
+    });
+
     if (isEvmConnected && evmAddress && chain) {
       const evmWalletInfo: WalletInfo = {
         address: evmAddress,
@@ -93,8 +120,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         name: 'EVM Wallet', // We'll get the actual wallet name from RainbowKit
         chainId: chain.id,
       };
+      console.log('🔍 Setting EVM Wallet:', evmWalletInfo);
       dispatch({ type: 'SET_EVM_WALLET', payload: evmWalletInfo });
     } else {
+      console.log('🔍 Clearing EVM Wallet');
       dispatch({ type: 'SET_EVM_WALLET', payload: null });
     }
     dispatch({ type: 'UPDATE_CONNECTED_WALLETS' });
@@ -102,14 +131,23 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   // Sync Solana wallet state
   useEffect(() => {
+    console.log('🔍 Solana State Sync:', {
+      isSolanaConnected,
+      solanaPublicKey: solanaPublicKey?.toBase58(),
+      solanaWalletName: solanaWallet?.adapter.name,
+      timestamp: new Date().toISOString(),
+    });
+
     if (isSolanaConnected && solanaPublicKey && solanaWallet) {
       const solanaWalletInfo: WalletInfo = {
         address: solanaPublicKey.toBase58(),
         type: 'solana',
         name: solanaWallet.adapter.name,
       };
+      console.log('🔍 Setting Solana Wallet:', solanaWalletInfo);
       dispatch({ type: 'SET_SOLANA_WALLET', payload: solanaWalletInfo });
     } else {
+      console.log('🔍 Clearing Solana Wallet');
       dispatch({ type: 'SET_SOLANA_WALLET', payload: null });
     }
     dispatch({ type: 'UPDATE_CONNECTED_WALLETS' });
