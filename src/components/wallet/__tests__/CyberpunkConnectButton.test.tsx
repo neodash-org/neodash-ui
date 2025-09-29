@@ -70,6 +70,15 @@ vi.mock('react-i18next', () => ({
   }),
 }));
 
+// Mock WalletContext
+vi.mock('@/context/WalletContext', () => ({
+  useWallet: () => ({
+    connectedWallets: [],
+    evmWallet: null,
+    solanaWallet: null,
+  }),
+}));
+
 describe('WalletConnectButton', () => {
   beforeEach(() => {
     vi.clearAllMocks();

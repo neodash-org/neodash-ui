@@ -4,6 +4,7 @@ import { ConnectButton as RainbowKitConnectButton } from '@rainbow-me/rainbowkit
 import { useTranslation } from 'react-i18next';
 import React, { useMemo } from 'react';
 import { usePostHog } from '@/hooks';
+import { useWallet } from '@/context/WalletContext';
 import { BaseConnectButton } from './BaseConnectButton';
 import { WrongNetworkButton } from './WrongNetworkButton';
 import { ChainButton } from './ChainButton';
@@ -17,6 +18,7 @@ const SKELETON_MULTIPLIER = 4;
 export const WalletConnectButton = React.memo(function WalletConnectButton() {
   const { t } = useTranslation();
   const { trackFeatureUsage } = usePostHog();
+  const { connectedWallets, solanaWallet } = useWallet();
 
   // Memoize button styles to prevent unnecessary re-renders
   const buttonStyles = useMemo(
@@ -46,11 +48,14 @@ export const WalletConnectButton = React.memo(function WalletConnectButton() {
       }) => {
         // Enhanced error handling and state management
         const ready = mounted && authenticationStatus !== 'loading';
-        const connected =
+        const evmConnected =
           ready &&
           account &&
           chain &&
           (!authenticationStatus || authenticationStatus === 'authenticated');
+
+        // Check if any wallet is connected (EVM or Solana)
+        const hasAnyConnectedWallet = evmConnected || connectedWallets.length > 0;
 
         // Error state handling
         if (!mounted) {
@@ -87,8 +92,8 @@ export const WalletConnectButton = React.memo(function WalletConnectButton() {
             })}
           >
             {(() => {
-              // Simplified logic: if not connected, show connect button
-              if (!connected || (!account && !chain)) {
+              // Show connect button only if no wallets are connected
+              if (!hasAnyConnectedWallet) {
                 return (
                   <BaseConnectButton
                     onClick={openConnectModal}
@@ -102,6 +107,30 @@ export const WalletConnectButton = React.memo(function WalletConnectButton() {
                   >
                     {t('wallet.connect')}
                   </BaseConnectButton>
+                );
+              }
+
+              // If only Solana is connected (no EVM), show a different UI
+              if (!evmConnected && solanaWallet) {
+                return (
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 bg-bg-card/70 border border-white/10 rounded-full px-4 py-2 text-white font-[var(--font-cyberpunk)] tracking-wide shadow-[0_0_8px_var(--color-neon-cyan)]">
+                      <div className="w-2 h-2 bg-neon-green rounded-full shadow-[0_0_4px_var(--color-neon-green)]"></div>
+                      <span>Solana Connected</span>
+                    </div>
+                    <BaseConnectButton
+                      onClick={openConnectModal}
+                      className={buttonStyles.connect}
+                      ariaLabel={t('wallet.connect')}
+                      onTrack={() =>
+                        trackFeatureUsage('wallet_connect', 'clicked', {
+                          source: 'cyberpunk_button',
+                        })
+                      }
+                    >
+                      {t('wallet.connect')}
+                    </BaseConnectButton>
+                  </div>
                 );
               }
 
@@ -123,6 +152,7 @@ export const WalletConnectButton = React.memo(function WalletConnectButton() {
                 );
               }
 
+              // EVM connected (with or without Solana)
               return (
                 <div className="flex items-center gap-3">
                   <ChainButton
