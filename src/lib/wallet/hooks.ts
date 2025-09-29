@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { useWallet } from '@/context/WalletContext';
-import { WalletType } from './types';
 
 // Main wallet hook (re-export from context)
 export { useWallet };
@@ -9,16 +8,13 @@ export { useWallet };
 export const useWalletConnection = () => {
   const { connect, disconnect, status, currentWallet, error } = useWallet();
 
-  const connectWallet = useCallback(
-    async (type: WalletType) => {
-      try {
-        await connect(type);
-      } catch (err) {
-        console.error('Wallet connection failed:', err);
-      }
-    },
-    [connect],
-  );
+  const connectWallet = useCallback(async () => {
+    try {
+      await connect();
+    } catch (err) {
+      console.error('Wallet connection failed:', err);
+    }
+  }, [connect]);
 
   const disconnectWallet = useCallback(async () => {
     try {
