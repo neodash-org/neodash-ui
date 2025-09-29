@@ -13,15 +13,11 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 
 const WalletConnectionModal: React.FC = () => {
   const { t } = useTranslation();
-  const { isModalOpen, closeModal, openModal, error, setError } = useWallet();
+  const { isModalOpen, closeModal, openModal, error, setError, evmWallet, solanaWallet } =
+    useWallet();
   const [selectedEcosystem, setSelectedEcosystem] = useState<WalletType | null>(null);
   const { disconnect } = useDisconnect();
-  const {
-    publicKey: solanaPublicKey,
-    connected: isSolanaConnected,
-    wallet: solanaWallet,
-    disconnect: disconnectSolana,
-  } = useSolanaWallet();
+  const { disconnect: disconnectSolana } = useSolanaWallet();
   const { width } = useWindowSize();
   const isDesktop = width >= 768; // md breakpoint
   const [isRainbowKitOpen, setIsRainbowKitOpen] = useState(false);
@@ -71,15 +67,21 @@ const WalletConnectionModal: React.FC = () => {
   };
 
   const renderContent = (isMobile: boolean = false) => {
+    // Get wallet states from WalletContext
+    const isSolanaConnectedFromContext = !!solanaWallet;
+
     return (
       <ConnectButton.Custom>
         {({ account, chain, openChainModal, authenticationStatus, mounted }) => {
           const ready = mounted && authenticationStatus !== 'loading';
-          const evmConnected =
+          const evmConnectedFromRainbowKit =
             ready &&
             account &&
             chain &&
             (!authenticationStatus || authenticationStatus === 'authenticated');
+
+          // Use context state as primary source of truth
+          const evmConnected = evmConnectedFromRainbowKit && !!evmWallet;
 
           // If EVM is connected, show connection status and management options
           if (evmConnected) {
@@ -211,7 +213,7 @@ const WalletConnectionModal: React.FC = () => {
                 <Separator />
 
                 {/* Solana Wallet Management */}
-                {isSolanaConnected && solanaPublicKey && (
+                {isSolanaConnectedFromContext && solanaWallet && (
                   <>
                     <Card
                       className="dark:bg-gradient-to-br dark:from-neon-pink/5 dark:to-neon-cyan/5 dark:border-neon-pink/30 dark:shadow-[0_0_16px_var(--color-neon-pink-44)]"
@@ -232,12 +234,12 @@ const WalletConnectionModal: React.FC = () => {
                                 className={`text-sm text-gray-600 dark:text-gray-300 font-mono ${isMobile ? 'truncate' : 'break-all'} flex-1`}
                               >
                                 {isMobile
-                                  ? `${solanaPublicKey.toBase58().slice(0, 8)}...${solanaPublicKey.toBase58().slice(-8)}`
-                                  : solanaPublicKey.toBase58()}
+                                  ? `${solanaWallet.address.slice(0, 8)}...${solanaWallet.address.slice(-8)}`
+                                  : solanaWallet.address}
                               </p>
                               <button
                                 onClick={() => {
-                                  navigator.clipboard.writeText(solanaPublicKey.toBase58());
+                                  navigator.clipboard.writeText(solanaWallet.address);
                                 }}
                                 className="w-6 h-6 rounded bg-green-100 dark:bg-neon-green/10 border border-green-300 dark:border-neon-green/30 hover:bg-green-200 dark:hover:bg-neon-green/20 hover:border-green-400 dark:hover:border-neon-green hover:shadow-[0_0_8px_var(--color-green-500)] dark:hover:shadow-[0_0_8px_var(--color-neon-green)] transition-all duration-300 flex items-center justify-center flex-shrink-0"
                                 data-testid="copy-solana-address-icon"
@@ -258,7 +260,7 @@ const WalletConnectionModal: React.FC = () => {
                               </button>
                             </div>
                             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                              {solanaWallet?.adapter.name || 'Solana Wallet'}
+                              {solanaWallet?.name || 'Solana Wallet'}
                             </p>
                           </div>
                         </div>
@@ -286,7 +288,7 @@ const WalletConnectionModal: React.FC = () => {
                 )}
 
                 {/* Additional Ecosystems - only show if not all ecosystems are connected */}
-                {(!evmConnected || !isSolanaConnected) && (
+                {(!evmConnected || !isSolanaConnectedFromContext) && (
                   <div>
                     <EcosystemSelector
                       onSelect={handleEcosystemSelect}
@@ -295,6 +297,7 @@ const WalletConnectionModal: React.FC = () => {
                       data-testid="additional-ecosystem-selector"
                       hideConnectedEcosystems={true}
                       evmConnected={evmConnected}
+                      solanaConnected={isSolanaConnectedFromContext}
                     />
                   </div>
                 )}
