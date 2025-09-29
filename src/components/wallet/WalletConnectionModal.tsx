@@ -70,6 +70,15 @@ const WalletConnectionModal: React.FC = () => {
     // Get wallet states from WalletContext
     const isSolanaConnectedFromContext = !!solanaWallet;
 
+    // Debug logging
+    console.log('🔍 WalletConnectionModal Debug:', {
+      solanaWallet: !!solanaWallet,
+      solanaWalletAddress: solanaWallet?.address,
+      isSolanaConnectedFromContext,
+      condition: isSolanaConnectedFromContext && solanaWallet,
+      timestamp: new Date().toISOString(),
+    });
+
     return (
       <ConnectButton.Custom>
         {({ account, chain, openChainModal, authenticationStatus, mounted }) => {
