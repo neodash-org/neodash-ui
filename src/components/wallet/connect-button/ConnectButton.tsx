@@ -159,7 +159,9 @@ export const WalletConnectButton = React.memo(function WalletConnectButton() {
                     onClick={openChainModal}
                     className={buttonStyles.chain}
                     ariaLabel={`${t('wallet.switchNetwork')}: ${chain?.name || 'Unknown'}`}
-                    chain={chain}
+                    chain={
+                      chain || { name: 'Unknown', iconUrl: '', iconBackground: '', hasIcon: false }
+                    }
                     onTrack={() =>
                       trackFeatureUsage('wallet_network_switch', 'clicked', {
                         source: 'cyberpunk_button',
@@ -172,7 +174,7 @@ export const WalletConnectButton = React.memo(function WalletConnectButton() {
                     onClick={openAccountModal}
                     className={buttonStyles.account}
                     ariaLabel={`${t('wallet.address')}: ${account?.displayName || 'Unknown'}`}
-                    account={account}
+                    account={account || { displayName: 'Unknown', displayBalance: '' }}
                     onTrack={() =>
                       trackFeatureUsage('wallet_account_modal', 'clicked', {
                         source: 'cyberpunk_button',
