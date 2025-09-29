@@ -8,13 +8,13 @@ import { config } from '@/lib/wallet/wagmi';
 // Import RainbowKit styles
 import '@rainbow-me/rainbowkit/styles.css';
 
-const queryClient = new QueryClient();
-
 interface EVMWalletProviderProps {
   children: React.ReactNode;
 }
 
 export function EVMWalletProvider({ children }: EVMWalletProviderProps) {
+  const queryClient = new QueryClient();
+
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
