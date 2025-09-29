@@ -297,7 +297,6 @@ const WalletConnectionModal: React.FC = () => {
                       data-testid="additional-ecosystem-selector"
                       hideConnectedEcosystems={true}
                       evmConnected={evmConnected}
-                      solanaConnected={isSolanaConnectedFromContext}
                     />
                   </div>
                 )}
