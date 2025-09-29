@@ -58,9 +58,29 @@ const walletReducer = (state: ExtendedWalletState, action: WalletAction): Extend
     case 'SET_WALLET':
       return { ...state, currentWallet: action.payload };
     case 'SET_EVM_WALLET':
-      return { ...state, evmWallet: action.payload };
+      const newEvmState = { ...state, evmWallet: action.payload };
+      // Auto-update connected wallets after setting EVM wallet
+      const evmConnectedWallets = [newEvmState.evmWallet, newEvmState.solanaWallet].filter(
+        Boolean,
+      ) as WalletInfo[];
+      return {
+        ...newEvmState,
+        connectedWallets: evmConnectedWallets,
+        status: (evmConnectedWallets.length > 0 ? 'connected' : 'disconnected') as WalletStatus,
+        currentWallet: evmConnectedWallets[0] || null,
+      };
     case 'SET_SOLANA_WALLET':
-      return { ...state, solanaWallet: action.payload };
+      const newSolanaState = { ...state, solanaWallet: action.payload };
+      // Auto-update connected wallets after setting Solana wallet
+      const solanaConnectedWallets = [newSolanaState.evmWallet, newSolanaState.solanaWallet].filter(
+        Boolean,
+      ) as WalletInfo[];
+      return {
+        ...newSolanaState,
+        connectedWallets: solanaConnectedWallets,
+        status: (solanaConnectedWallets.length > 0 ? 'connected' : 'disconnected') as WalletStatus,
+        currentWallet: solanaConnectedWallets[0] || null,
+      };
     case 'UPDATE_CONNECTED_WALLETS':
       const connectedWallets = [state.evmWallet, state.solanaWallet].filter(
         Boolean,
@@ -132,7 +152,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       console.log('🔍 Clearing EVM Wallet');
       dispatch({ type: 'SET_EVM_WALLET', payload: null });
     }
-    dispatch({ type: 'UPDATE_CONNECTED_WALLETS' });
   }, [isEvmConnected, evmAddress, chain]);
 
   // Sync Solana wallet state
@@ -156,7 +175,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       console.log('🔍 Clearing Solana Wallet');
       dispatch({ type: 'SET_SOLANA_WALLET', payload: null });
     }
-    dispatch({ type: 'UPDATE_CONNECTED_WALLETS' });
   }, [isSolanaConnected, solanaPublicKey, solanaWallet]);
 
   const connect = useCallback(async () => {
