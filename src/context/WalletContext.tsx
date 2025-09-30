@@ -95,6 +95,12 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsModalOpen(true);
   }, []);
 
+  const openManagementModal = useCallback(() => {
+    setIsModalOpen(true);
+    // We'll pass this flag through a custom event or context
+    window.dispatchEvent(new CustomEvent('openWalletManagement'));
+  }, []);
+
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
   }, []);
@@ -107,6 +113,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     connect,
     disconnect,
     openModal,
+    openManagementModal,
     closeModal,
     setError,
     isConnected: status === 'connected',

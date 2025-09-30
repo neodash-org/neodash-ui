@@ -1,6 +1,6 @@
 import React from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton, WalletDisconnectButton } from '@solana/wallet-adapter-react-ui';
+import { WalletDisconnectButton } from '@solana/wallet-adapter-react-ui';
 import { Card, Button, Separator } from '@/design-system/components';
 
 interface SolanaWalletSelectorProps {
@@ -14,7 +14,25 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
   onClose,
   'data-testid': dataTestId,
 }) => {
-  const { connected, publicKey, wallet } = useWallet();
+  const { connected, publicKey, wallet, wallets, select, connect } = useWallet();
+
+  // Debug: Log available wallets
+  React.useEffect(() => {
+    console.log(
+      'Available Solana wallets:',
+      wallets.map((w) => w.adapter.name),
+    );
+  }, [wallets]);
+
+  // Auto-close modal after successful connection
+  React.useEffect(() => {
+    if (connected && publicKey) {
+      const timer = setTimeout(() => {
+        onClose();
+      }, 2000); // Close after 2 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [connected, publicKey, onClose]);
 
   if (connected && publicKey) {
     return (
@@ -24,7 +42,7 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
             Solana Wallet Connected
           </h3>
           <p className="text-sm text-gray-600 dark:text-gray-300 dark:drop-shadow-[0_0_4px_var(--color-neon-green)]">
-            Your Solana wallet is successfully connected
+            Your Solana wallet is successfully connected. This modal will close automatically.
           </p>
         </div>
 
@@ -104,10 +122,32 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
               Connect with Phantom, Solflare, or other Solana wallets
             </p>
 
-            {/* Custom styled Solana wallet button */}
-            <div className="flex justify-center">
-              <WalletMultiButton className="!bg-gradient-to-r !from-neon-cyan !to-neon-pink !text-white !border-none !rounded-full !font-[var(--font-cyberpunk)] !px-6 !py-2 !shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] !tracking-wide !transition !hover:scale-105" />
-            </div>
+            {/* Manual wallet selection with proper confirmation flow */}
+            {wallets.length > 0 && (
+              <div className="flex flex-wrap gap-2 justify-center">
+                {wallets.map((wallet) => (
+                  <Button
+                    key={wallet.adapter.name}
+                    variant="outline"
+                    size="md"
+                    onClick={async () => {
+                      try {
+                        // First select the wallet and wait for it to complete
+                        await select(wallet.adapter.name);
+
+                        // Then connect with confirmation
+                        await connect();
+                      } catch (error) {
+                        console.error('Wallet connection failed:', error);
+                      }
+                    }}
+                    className="!bg-gradient-to-r !from-neon-cyan !to-neon-pink !text-white !border-none !rounded-full !font-[var(--font-cyberpunk)] !px-6 !py-2 !shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] !tracking-wide !transition !hover:scale-105"
+                  >
+                    Connect {wallet.adapter.name}
+                  </Button>
+                ))}
+              </div>
+            )}
           </div>
         </Card>
       </div>

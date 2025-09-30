@@ -16,6 +16,7 @@ const WalletConnectionModal: React.FC = () => {
   const { isModalOpen, closeModal, openModal, error, setError, evmWallet, solanaWallet } =
     useWallet();
   const [selectedEcosystem, setSelectedEcosystem] = useState<WalletType | null>(null);
+  const [isManagementMode, setIsManagementMode] = useState(false);
   const { disconnect } = useDisconnect();
   const { disconnect: disconnectSolana } = useSolanaWallet();
   const { width } = useWindowSize();
@@ -32,9 +33,10 @@ const WalletConnectionModal: React.FC = () => {
 
       setIsRainbowKitOpen(isNowOpen);
 
-      // If RainbowKit just closed and we clicked switch, reopen our modal
+      // If RainbowKit just closed and we clicked switch, reopen our modal in management mode
       if (wasOpen && !isNowOpen && switchClicked) {
         setSwitchClicked(false);
+        setIsManagementMode(true); // Keep management mode when reopening
         setTimeout(() => {
           openModal();
         }, 100);
@@ -55,6 +57,31 @@ const WalletConnectionModal: React.FC = () => {
     }
   }, [isRainbowKitOpen]);
 
+  // Listen for management modal event
+  React.useEffect(() => {
+    const handleOpenManagement = () => {
+      setIsManagementMode(true);
+    };
+
+    window.addEventListener('openWalletManagement', handleOpenManagement);
+    return () => window.removeEventListener('openWalletManagement', handleOpenManagement);
+  }, []);
+
+  // Auto-set management mode if wallets are connected when modal opens
+  React.useEffect(() => {
+    if (isModalOpen) {
+      // If we have connected wallets, automatically set management mode
+      const hasConnectedWallets = evmWallet || solanaWallet;
+      if (hasConnectedWallets && !isManagementMode) {
+        console.log('Auto-setting management mode because wallets are connected');
+        setIsManagementMode(true);
+      }
+    } else {
+      // Reset when modal closes
+      setIsManagementMode(false);
+    }
+  }, [isModalOpen, evmWallet, solanaWallet, isManagementMode]);
+
   const handleEcosystemSelect = (type: WalletType | null) => {
     setSelectedEcosystem(type);
     setError(null);
@@ -62,6 +89,7 @@ const WalletConnectionModal: React.FC = () => {
 
   const handleClose = () => {
     setSelectedEcosystem(null);
+    setIsManagementMode(false);
     setError(null);
     closeModal();
   };
@@ -83,8 +111,8 @@ const WalletConnectionModal: React.FC = () => {
           // Use context state as primary source of truth
           const evmConnected = evmConnectedFromRainbowKit && !!evmWallet;
 
-          // If any wallet is connected, show wallet management
-          if (evmConnected || isSolanaConnectedFromContext) {
+          // Show wallet management only if explicitly in management mode AND wallets are connected
+          if (isManagementMode && (evmConnected || isSolanaConnectedFromContext)) {
             return (
               <div className="space-y-4">
                 <div className="text-center">
@@ -324,14 +352,7 @@ const WalletConnectionModal: React.FC = () => {
 
   return (
     <ConnectButton.Custom>
-      {({ account, chain, authenticationStatus, mounted }) => {
-        const ready = mounted && authenticationStatus !== 'loading';
-        const evmConnected =
-          ready &&
-          account &&
-          chain &&
-          (!authenticationStatus || authenticationStatus === 'authenticated');
-
+      {() => {
         if (isDesktop) {
           return (
             <Dialog modal={false} open={isModalOpen} onOpenChange={closeModal}>
@@ -342,10 +363,10 @@ const WalletConnectionModal: React.FC = () => {
               >
                 <DialogHeader>
                   <DialogTitle className="dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:text-white dark:text-2xl dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)]">
-                    {evmConnected ? t('wallet.walletManagement') : t('wallet.connect')}
+                    {isManagementMode ? t('wallet.walletManagement') : t('wallet.connect')}
                   </DialogTitle>
                   <p id="wallet-modal-description" className="sr-only">
-                    {evmConnected ? t('wallet.manageWallets') : t('wallet.selectEcosystem')}
+                    {isManagementMode ? t('wallet.manageWallets') : t('wallet.selectEcosystem')}
                   </p>
                 </DialogHeader>
                 {error && (
@@ -400,10 +421,10 @@ const WalletConnectionModal: React.FC = () => {
                   </svg>
                 </button>
                 <DrawerTitle className="dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:text-white dark:text-2xl dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)]">
-                  {evmConnected ? t('wallet.walletManagement') : t('wallet.connect')}
+                  {isManagementMode ? t('wallet.walletManagement') : t('wallet.connect')}
                 </DrawerTitle>
                 <p id="wallet-drawer-description" className="sr-only">
-                  {evmConnected ? t('wallet.manageWallets') : t('wallet.selectEcosystem')}
+                  {isManagementMode ? t('wallet.manageWallets') : t('wallet.selectEcosystem')}
                 </p>
               </DrawerHeader>
               <div className="px-4 flex-1 overflow-y-auto">

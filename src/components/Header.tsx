@@ -21,9 +21,15 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
   const { isDark, toggleTheme } = useTheme();
   const { trackFeatureUsage, trackThemeChange } = usePostHog();
   const { t } = useTranslation();
-  const { openModal, isConnected } = useWallet();
+  const { openModal, openManagementModal, isConnected } = useWallet();
+  const [mounted, setMounted] = React.useState(false);
 
   const title = getPageTitle(pathname);
+
+  // Prevent hydration mismatch by only rendering client-side state after mount
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="flex items-center justify-between gap-4 md:gap-8 flex-wrap px-4 py-5 pt-4 pb-6">
@@ -81,7 +87,11 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
         <div
           onClick={() => {
             trackFeatureUsage('wallet_connection', 'modal_opened', { location: 'header_mobile' });
-            openModal();
+            if (mounted && isConnected) {
+              openManagementModal();
+            } else {
+              openModal();
+            }
           }}
           data-testid="mobile-wallet-icon"
           className="md:hidden flex w-8 h-8 rounded-full bg-gradient-to-r from-neon-cyan to-neon-pink items-center justify-center text-white shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] cursor-pointer hover:scale-110 transition-transform"
@@ -94,14 +104,18 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
           <Button
             onClick={() => {
               trackFeatureUsage('wallet_connection', 'modal_opened', { location: 'header' });
-              openModal();
+              if (isConnected) {
+                openManagementModal();
+              } else {
+                openModal();
+              }
             }}
             variant="primary"
             size="md"
             className="bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-full font-[var(--font-cyberpunk)] px-6 py-2 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] tracking-wide transition hover:scale-105"
             data-testid="connect-wallet-button"
           >
-            {isConnected ? 'Manage Wallets' : t('wallet.connect')}
+            {mounted ? (isConnected ? 'Manage Wallets' : t('wallet.connect')) : t('wallet.connect')}
           </Button>
         </div>
 
