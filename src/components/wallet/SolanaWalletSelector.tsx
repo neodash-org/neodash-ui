@@ -16,12 +16,22 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
 }) => {
   const { connected, publicKey, wallet, wallets, select, connect } = useWallet();
 
-  // Debug: Log available wallets
-  React.useEffect(() => {
+  // Filter to only show installed and available Solana wallets
+  const availableWallets = React.useMemo(() => {
+    const validWallets = wallets.filter((wallet) => {
+      const name = wallet.adapter.name.toLowerCase();
+      // Only include known Solana wallets that are actually available
+      return (
+        ['phantom', 'solflare', 'backpack', 'glow'].includes(name) &&
+        wallet.adapter.readyState === 'Installed'
+      );
+    });
+
     console.log(
-      'Available Solana wallets:',
-      wallets.map((w) => w.adapter.name),
+      'Installed Solana wallets:',
+      validWallets.map((w) => w.adapter.name),
     );
+    return validWallets;
   }, [wallets]);
 
   // Auto-close modal after successful connection
@@ -123,9 +133,9 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
             </p>
 
             {/* Manual wallet selection with proper confirmation flow */}
-            {wallets.length > 0 && (
+            {availableWallets.length > 0 ? (
               <div className="flex flex-wrap gap-2 justify-center">
-                {wallets.map((wallet) => (
+                {availableWallets.map((wallet) => (
                   <Button
                     key={wallet.adapter.name}
                     variant="outline"
@@ -146,6 +156,37 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
                     Connect {wallet.adapter.name}
                   </Button>
                 ))}
+              </div>
+            ) : (
+              <div className="text-center py-6">
+                <div className="text-6xl mb-4">🔌</div>
+                <p className="text-gray-500 dark:text-gray-400 mb-4 text-lg">
+                  No Solana wallets installed
+                </p>
+                <p className="text-sm text-gray-400 mb-6">
+                  Install a Solana wallet extension to connect
+                </p>
+                <div className="space-y-3">
+                  <p className="text-sm font-medium text-gray-300">Recommended:</p>
+                  <div className="flex flex-col gap-2 max-w-xs mx-auto">
+                    <a
+                      href="https://phantom.app"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block px-4 py-2 bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 border border-neon-cyan/30 rounded-lg hover:border-neon-cyan hover:shadow-[0_0_8px_var(--color-neon-cyan)] transition-all"
+                    >
+                      📱 Phantom (Most Popular)
+                    </a>
+                    <a
+                      href="https://solflare.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block px-4 py-2 bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 border border-neon-cyan/30 rounded-lg hover:border-neon-cyan hover:shadow-[0_0_8px_var(--color-neon-cyan)] transition-all"
+                    >
+                      ⚡ Solflare
+                    </a>
+                  </div>
+                </div>
               </div>
             )}
           </div>
