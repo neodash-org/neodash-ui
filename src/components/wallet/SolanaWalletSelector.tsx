@@ -142,13 +142,27 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
                     size="md"
                     onClick={async () => {
                       try {
+                        console.log(`Attempting to connect ${wallet.adapter.name}...`);
+
                         // First select the wallet and wait for it to complete
                         await select(wallet.adapter.name);
+                        console.log(`${wallet.adapter.name} selected successfully`);
+
+                        // Small delay to ensure selection is processed
+                        await new Promise((resolve) => setTimeout(resolve, 100));
 
                         // Then connect with confirmation
                         await connect();
+                        console.log(`${wallet.adapter.name} connected successfully`);
                       } catch (error) {
                         console.error('Wallet connection failed:', error);
+                        // Don't show error to user if it's just a selection timing issue
+                        if (
+                          error instanceof Error &&
+                          !error.message.includes('WalletNotSelectedError')
+                        ) {
+                          console.error('Unexpected wallet error:', error);
+                        }
                       }
                     }}
                     className="!bg-gradient-to-r !from-neon-cyan !to-neon-pink !text-white !border-none !rounded-full !font-[var(--font-cyberpunk)] !px-6 !py-2 !shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] !tracking-wide !transition !hover:scale-105"
