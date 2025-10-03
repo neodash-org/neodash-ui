@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import EcosystemSelector from '../EcosystemSelector';
+import { EcosystemSelector } from '../ecosystem';
 import { WalletProvider } from '@/context/WalletContext';
 
 // Mock RainbowKit

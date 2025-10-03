@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Card, Button, Separator } from '@/design-system/components';
 import { useWallet } from '@/lib/wallet/hooks';
 import { WalletType } from '@/lib/wallet/types';
-import EcosystemSelector from './EcosystemSelector';
+import { EcosystemSelector } from './ecosystem';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useDisconnect } from 'wagmi';
 import { useWallet as useSolanaWallet } from '@solana/wallet-adapter-react';
 import { useTranslation } from 'react-i18next';
 import { useWindowSize } from 'usehooks-ts';
+import { AUTH_STATUS } from '@/lib/wallet/auth-constants';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 
@@ -101,12 +102,12 @@ const WalletConnectionModal: React.FC = () => {
     return (
       <ConnectButton.Custom>
         {({ account, chain, openChainModal, authenticationStatus, mounted }) => {
-          const ready = mounted && authenticationStatus !== 'loading';
+          const ready = mounted && authenticationStatus !== AUTH_STATUS.LOADING;
           const evmConnectedFromRainbowKit =
             ready &&
             account &&
             chain &&
-            (!authenticationStatus || authenticationStatus === 'authenticated');
+            (!authenticationStatus || authenticationStatus === AUTH_STATUS.AUTHENTICATED);
 
           // Use context state as primary source of truth
           const evmConnected = evmConnectedFromRainbowKit && !!evmWallet;
