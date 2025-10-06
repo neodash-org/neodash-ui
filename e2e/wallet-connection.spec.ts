@@ -17,7 +17,7 @@ test.describe('Wallet Connection Flow', () => {
 
     // Check that modal opens
     await expect(page.getByTestId('wallet-connection-modal')).toBeVisible();
-    await expect(page.getByText('Connect Wallet')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Connect Wallet', exact: true })).toBeVisible();
   });
 
   test('should display ecosystem selector in modal', async ({ page }) => {
@@ -26,7 +26,8 @@ test.describe('Wallet Connection Flow', () => {
 
     // Check ecosystem selector is visible
     await expect(page.getByTestId('ecosystem-selector')).toBeVisible();
-    await expect(page.getByText('Choose Your Ecosystem')).toBeVisible();
+    // The modal title shows "Connect Wallet", not "Choose Your Ecosystem"
+    await expect(page.getByRole('heading', { name: 'Connect Wallet', exact: true })).toBeVisible();
   });
 
   test('should display both EVM and Solana ecosystem cards', async ({ page }) => {
@@ -59,8 +60,8 @@ test.describe('Wallet Connection Flow', () => {
     await page.getByTestId('solana-ecosystem-card').click();
 
     // Check that Solana wallet selector is shown
-    await expect(page.getByText('Connect to Solana')).toBeVisible();
-    await expect(page.getByText('Select a wallet to connect to Solana')).toBeVisible();
+    await expect(page.getByText('Connect Solana Wallet')).toBeVisible();
+    await expect(page.getByText('Choose your preferred Solana wallet')).toBeVisible();
   });
 
   test('should close modal when close button is clicked', async ({ page }) => {
@@ -92,12 +93,13 @@ test.describe('Wallet Connection Flow', () => {
     await page.getByTestId('connect-wallet-button').click();
     await page.getByTestId('solana-ecosystem-card').click();
 
-    // Click back button
-    await page.getByRole('button', { name: 'Back' }).click();
+    // Click back button (it's an icon button with data-testid)
+    await page.getByTestId('back-button').click();
 
     // Check that we're back to ecosystem selector
     await expect(page.getByTestId('ecosystem-selector')).toBeVisible();
-    await expect(page.getByText('Choose Your Ecosystem')).toBeVisible();
+    // The modal title shows "Connect Wallet", not "Choose Your Ecosystem"
+    await expect(page.getByRole('heading', { name: 'Connect Wallet', exact: true })).toBeVisible();
   });
 });
 
@@ -109,21 +111,21 @@ test.describe('Wallet Connection - Mobile', () => {
   });
 
   test('should display connect wallet button in mobile header', async ({ page }) => {
-    // Check that connect wallet button is visible on mobile
-    await expect(page.getByTestId('connect-wallet-button')).toBeVisible();
+    // Check that mobile wallet icon is visible on mobile (not the desktop button)
+    await expect(page.getByTestId('mobile-wallet-icon')).toBeVisible();
   });
 
   test('should open modal on mobile when button is clicked', async ({ page }) => {
-    // Click connect wallet button
-    await page.getByTestId('connect-wallet-button').click();
+    // Click mobile wallet icon
+    await page.getByTestId('mobile-wallet-icon').click();
 
     // Check that modal opens
     await expect(page.getByTestId('wallet-connection-modal')).toBeVisible();
   });
 
   test('should display ecosystem cards in mobile modal', async ({ page }) => {
-    // Open modal
-    await page.getByTestId('connect-wallet-button').click();
+    // Open modal using mobile wallet icon
+    await page.getByTestId('mobile-wallet-icon').click();
 
     // Check ecosystem cards are visible on mobile
     await expect(page.getByTestId('evm-ecosystem-card')).toBeVisible();

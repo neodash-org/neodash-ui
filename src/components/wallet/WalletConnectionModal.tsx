@@ -358,6 +358,7 @@ const WalletConnectionModal: React.FC = () => {
           return (
             <Dialog modal={false} open={isModalOpen} onOpenChange={closeModal}>
               <DialogContent
+                data-testid="wallet-connection-modal"
                 className={`sm:max-w-md dark:bg-bg-card/80 dark:border-neon-cyan/30 dark:shadow-[0_0_32px_var(--color-neon-cyan-88),0_0_64px_var(--color-neon-pink-44)] dark:backdrop-blur-lg ${isRainbowKitOpen ? 'pointer-events-none' : ''}`}
                 aria-hidden={isRainbowKitOpen || undefined}
                 aria-describedby="wallet-modal-description"
@@ -401,6 +402,7 @@ const WalletConnectionModal: React.FC = () => {
         return (
           <Drawer open={isModalOpen} onOpenChange={closeModal}>
             <DrawerContent
+              data-testid="wallet-connection-modal"
               className={`dark:bg-bg-card/95 dark:border-neon-cyan/30 dark:shadow-[0_0_32px_var(--color-neon-cyan-88),0_0_64px_var(--color-neon-pink-44)] max-h-[50vh] sm:max-h-[60vh] flex flex-col ${isRainbowKitOpen ? 'pointer-events-none' : ''}`}
               aria-hidden={isRainbowKitOpen || undefined}
               aria-describedby="wallet-drawer-description"
