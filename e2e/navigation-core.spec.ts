@@ -106,8 +106,7 @@ test.describe('Core Navigation Tests', () => {
     // Notification icon should be visible
     await expect(page.getByTestId('notification-icon')).toBeVisible();
 
-    // Connect wallet button should be visible in mobile menu
-    await page.getByTestId('mobile-menu-button').click();
-    await expect(page.getByRole('button', { name: /connect wallet/i })).toBeVisible();
+    // Mobile wallet icon should be visible in header (not in mobile menu)
+    await expect(page.getByTestId('mobile-wallet-icon')).toBeVisible();
   });
 });

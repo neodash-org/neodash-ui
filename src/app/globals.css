@@ -436,3 +436,21 @@ main {
     @apply bg-background text-foreground;
   }
 }
+
+/* Ensure RainbowKit modal stacks above our custom dialogs and captures interaction */
+.rk-open [data-slot='dialog-overlay'] {
+  pointer-events: none !important;
+}
+
+/* Keep Wallet Management mounted but visually hidden while RainbowKit is open */
+.rk-open [data-slot='dialog-content'] {
+  visibility: hidden !important;
+}
+
+[data-rk] {
+  z-index: 1005 !important;
+}
+
+[data-rk] [role='dialog'] {
+  z-index: 1006 !important;
+}

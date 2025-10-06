@@ -1,4 +1,8 @@
 {
+  "app": {
+    "name": "NeoDash"
+  },
+
   "common": {
     "loading": "読み込み中...",
     "error": "エラー",
@@ -8,7 +12,8 @@
     "save": "保存",
     "delete": "削除",
     "edit": "編集",
-    "close": "閉じる"
+    "close": "閉じる",
+    "language": "言語"
   },
   "navigation": {
     "dashboard": "ダッシュボード",
@@ -61,8 +66,36 @@
   "wallet": {
     "connect": "ウォレット接続",
     "disconnect": "切断",
+    "connecting": "接続中...",
     "connected": "接続済み",
-    "balance": "残高"
+    "notConnected": "未接続",
+    "selectWallet": "ウォレット選択",
+    "metamask": "MetaMask",
+    "phantom": "Phantom",
+    "walletConnect": "WalletConnect",
+    "address": "アドレス",
+    "balance": "残高",
+    "switchNetwork": "ネットワーク切り替え",
+    "wrongNetwork": "間違ったネットワーク",
+    "chooseEcosystem": "エコシステムを選択",
+    "selectEcosystem": "接続したいブロックチェーンエコシステムを選択してください",
+    "ethereum": "Ethereum",
+    "solana": "Solana",
+    "ethereumDescription": "EthereumおよびEVM互換チェーンに接続",
+    "solanaDescription": "Solanaブロックチェーンに接続",
+    "comingSoon": "近日公開",
+    "walletConnection": "{ecosystem}のウォレット接続は近日利用可能になります。",
+    "backToSelection": "エコシステム選択に戻る",
+    "walletConnected": "ウォレット接続済み",
+    "walletSuccessfullyConnected": "ウォレットが正常に接続されました",
+    "walletManagement": "ウォレット管理",
+    "connectedWallets": "接続されたウォレット",
+    "manageWallets": "接続されたウォレットを管理し、追加のエコシステムに接続",
+    "manageWalletsDetailed": "接続されたウォレットを管理し、詳細情報を表示",
+    "ethereumConnected": "Ethereum接続済み",
+    "copyAddress": "アドレスをコピー",
+    "addressCopied": "アドレスがクリップボードにコピーされました",
+    "connectAdditionalEcosystems": "追加エコシステムに接続"
   },
   "notifications": {
     "title": "通知",
@@ -80,5 +113,12 @@
     "collapseSidebar": "サイドバーを折りたたむ",
     "toggleTheme": "テーマを切り替え",
     "refresh": "更新"
+  },
+  "footer": {
+    "termsOfUse": "利用規約",
+    "termsOfUseShort": "ToU",
+    "privacyPolicy": "プライバシーポリシー",
+    "privacyPolicyShort": "PP",
+    "allRightsReserved": "全著作権所有"
   }
 }

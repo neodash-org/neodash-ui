@@ -1,4 +1,8 @@
 {
+  "app": {
+    "name": "NeoDash"
+  },
+
   "common": {
     "loading": "加载中...",
     "error": "错误",
@@ -8,7 +12,8 @@
     "save": "保存",
     "delete": "删除",
     "edit": "编辑",
-    "close": "关闭"
+    "close": "关闭",
+    "language": "语言"
   },
   "navigation": {
     "dashboard": "仪表板",
@@ -61,8 +66,36 @@
   "wallet": {
     "connect": "连接钱包",
     "disconnect": "断开连接",
+    "connecting": "连接中...",
     "connected": "已连接",
-    "balance": "余额"
+    "notConnected": "未连接",
+    "selectWallet": "选择钱包",
+    "metamask": "MetaMask",
+    "phantom": "Phantom",
+    "walletConnect": "WalletConnect",
+    "address": "地址",
+    "balance": "余额",
+    "switchNetwork": "切换网络",
+    "wrongNetwork": "错误的网络",
+    "chooseEcosystem": "选择您的生态系统",
+    "selectEcosystem": "选择您要连接的区块链生态系统",
+    "ethereum": "Ethereum",
+    "solana": "Solana",
+    "ethereumDescription": "连接到以太坊和EVM兼容链",
+    "solanaDescription": "连接到Solana区块链",
+    "comingSoon": "即将推出",
+    "walletConnection": "{ecosystem}的钱包连接即将推出。",
+    "backToSelection": "返回生态系统选择",
+    "walletConnected": "钱包已连接",
+    "walletSuccessfullyConnected": "您的钱包已成功连接",
+    "walletManagement": "钱包管理",
+    "connectedWallets": "已连接的钱包",
+    "manageWallets": "管理您已连接的钱包并连接到其他生态系统",
+    "manageWalletsDetailed": "管理您已连接的钱包并查看详细信息",
+    "ethereumConnected": "以太坊已连接",
+    "copyAddress": "复制地址",
+    "addressCopied": "地址已复制到剪贴板",
+    "connectAdditionalEcosystems": "连接其他生态系统"
   },
   "notifications": {
     "title": "通知",
@@ -80,5 +113,12 @@
     "collapseSidebar": "收起侧边栏",
     "toggleTheme": "切换主题",
     "refresh": "刷新"
+  },
+  "footer": {
+    "termsOfUse": "使用条款",
+    "termsOfUseShort": "ToU",
+    "privacyPolicy": "隐私政策",
+    "privacyPolicyShort": "PP",
+    "allRightsReserved": "版权所有"
   }
 }

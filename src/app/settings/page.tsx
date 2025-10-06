@@ -4,7 +4,7 @@ const SettingsPage = () => (
   <div className="max-w-4xl mx-auto px-4 py-5 flex flex-col gap-8">
     {/* Settings Header */}
     <section className="flex flex-col gap-4">
-      <h2 className="text-neon-cyan text-2xl font-bold font-[var(--font-cyberpunk)] tracking-wider">
+      <h2 className="text-neon-cyan text-2xl font-[var(--font-cyberpunk)] tracking-wider">
         Settings
       </h2>
       <p className="text-white/70">Customize your Neodash experience</p>
@@ -12,12 +12,12 @@ const SettingsPage = () => (
 
     {/* Profile Settings */}
     <section className="neodash-card bg-bg-card/70 border border-white/10 rounded-2xl shadow-[0_4px_32px_var(--color-neon-cyan-88)] backdrop-blur-lg p-6">
-      <h3 className="text-neon-cyan text-xl font-bold font-[var(--font-cyberpunk)] mb-6 tracking-wide">
+      <h3 className="text-neon-cyan text-xl font-[var(--font-cyberpunk)] mb-6 tracking-wide">
         Profile Settings
       </h3>
       <div className="space-y-6">
         <div className="flex items-center gap-6">
-          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-neon-pink to-neon-cyan shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] flex items-center justify-center font-bold text-white text-2xl tracking-wider font-[var(--font-cyberpunk)]">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-neon-pink to-neon-cyan shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] flex items-center justify-center text-white text-2xl tracking-wider font-[var(--font-cyberpunk)]">
             N
           </div>
           <div className="flex-1">
@@ -49,7 +49,7 @@ const SettingsPage = () => (
 
     {/* Preferences */}
     <section className="neodash-card bg-bg-card/70 border border-white/10 rounded-2xl shadow-[0_4px_32px_var(--color-neon-cyan-88)] backdrop-blur-lg p-6">
-      <h3 className="text-neon-cyan text-xl font-bold font-[var(--font-cyberpunk)] mb-6 tracking-wide">
+      <h3 className="text-neon-cyan text-xl font-[var(--font-cyberpunk)] mb-6 tracking-wide">
         Preferences
       </h3>
       <div className="space-y-6">
@@ -85,7 +85,7 @@ const SettingsPage = () => (
 
     {/* Security */}
     <section className="neodash-card bg-bg-card/70 border border-white/10 rounded-2xl shadow-[0_4px_32px_var(--color-neon-cyan-88)] backdrop-blur-lg p-6">
-      <h3 className="text-neon-cyan text-xl font-bold font-[var(--font-cyberpunk)] mb-6 tracking-wide">
+      <h3 className="text-neon-cyan text-xl font-[var(--font-cyberpunk)] mb-6 tracking-wide">
         Security
       </h3>
       <div className="space-y-4">
@@ -103,7 +103,7 @@ const SettingsPage = () => (
 
     {/* Data & Privacy */}
     <section className="neodash-card bg-bg-card/70 border border-white/10 rounded-2xl shadow-[0_4px_32px_var(--color-neon-cyan-88)] backdrop-blur-lg p-6">
-      <h3 className="text-neon-cyan text-xl font-bold font-[var(--font-cyberpunk)] mb-6 tracking-wide">
+      <h3 className="text-neon-cyan text-xl font-[var(--font-cyberpunk)] mb-6 tracking-wide">
         Data & Privacy
       </h3>
       <div className="space-y-4">
@@ -121,7 +121,7 @@ const SettingsPage = () => (
 
     {/* Danger Zone */}
     <section className="neodash-card bg-red-500/10 border border-red-500/20 rounded-2xl shadow-[0_4px_32px_var(--color-red-500-88)] backdrop-blur-lg p-6">
-      <h3 className="text-red-400 text-xl font-bold font-[var(--font-cyberpunk)] mb-6 tracking-wide">
+      <h3 className="text-red-400 text-xl font-[var(--font-cyberpunk)] mb-6 tracking-wide">
         Danger Zone
       </h3>
       <div className="space-y-4">

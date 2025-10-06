@@ -7,8 +7,11 @@ test.describe('UI Behavior and Error Handling', () => {
   });
 
   test('should toggle theme when clicking theme toggle button', async ({ page }) => {
-    // Wait for page to load
+    // Wait for page to load and mount
     await page.waitForLoadState('networkidle');
+
+    // Wait for theme toggle to be visible and have data-theme attribute
+    await page.waitForSelector('[data-testid="theme-toggle"][data-theme]', { timeout: 5000 });
 
     // Get initial theme from the header theme toggle button
     const initialTheme = await page
@@ -20,7 +23,7 @@ test.describe('UI Behavior and Error Handling', () => {
     await page.click('[data-testid="theme-toggle"]');
 
     // Wait for theme change
-    await page.waitForTimeout(100);
+    await page.waitForTimeout(300);
 
     // Verify theme changed on the header button
     const newTheme = await page.locator('[data-testid="theme-toggle"]').getAttribute('data-theme');

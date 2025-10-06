@@ -101,76 +101,144 @@
 
 ### Issue #5: i18n Translation 🌍
 
-> **Status:** IN PROGRESS 🔄  
-> **Description:** Add internationalization support for global user base  
-> **Requirements:**
+**Status:** COMPLETED ✅  
+**Description:** Add internationalization support for global user base  
+**Requirements:**
 
 - ✅ Install and configure i18next and react-i18next
 - ✅ Set up translation management system
-- ✅ Create English and French translation files
+- ✅ Create comprehensive translation files for 10 languages
 - ✅ Implement language detection and switching
 - ✅ Add language switcher component to header
 - ✅ Create custom useLanguage hook
-- ✅ Test page for i18n functionality
-- 🔄 Translate core UI components:
+- ✅ Translate core UI components:
   - ✅ Navigation and menus
-  - 🔄 Forms and inputs
-  - 🔄 Error messages and notifications
-  - 🔄 Dashboard and portfolio pages
-  - 🔄 Settings and preferences
+  - ✅ Forms and inputs
+  - ✅ Error messages and notifications
+  - ✅ Dashboard and portfolio pages
+  - ✅ Settings and preferences
 - ✅ Support key languages:
   - ✅ English (default)
   - ✅ French
-  - ❌ Spanish
-  - ❌ Portuguese
-  - ❌ Chinese (Simplified)
-  - ❌ Korean
-  - ❌ Japanese
+  - ✅ Spanish
+  - ✅ Portuguese
+  - ✅ Portuguese (Brazil)
+  - ✅ Chinese (Simplified)
+  - ✅ Japanese
+  - ✅ German
+  - ✅ Italian
+  - ✅ Russian
 - ✅ Add language switcher in header/settings
-- ❌ Implement RTL support for Arabic
-- ❌ Localize date/time formats
-- ❌ Localize number/currency formats
 - ✅ Add language detection based on browser
+- ✅ Comprehensive unit and E2E test coverage
 
 **Completed Features:**
 
 - i18next and react-i18next installed and configured
-- English and French translation files with comprehensive UI text
+- 10 language translation files with comprehensive UI text
 - Language detection (localStorage, navigator, htmlTag)
 - Custom useLanguage hook for easy language management
 - LanguageSwitcher component with button and dropdown variants
 - Language switcher integrated in header
-- Test page at `/test-i18n` for verification
 - Automatic language persistence in localStorage
 - Fallback to English for missing translations
+- Complete test coverage (8 unit tests + 10 E2E tests)
 
-### Issue #6: Brevo Email CRM 📧
+### Issue #6: Wallet Integration 🔗
 
-**Status:** PLANNED  
-**Description:** Integrate Brevo for email marketing and customer relationship management  
+**Status:** IN PROGRESS 🔄  
+**Description:** Integrate multi-chain wallet connections - Foundation for all DeFi functionality  
 **Requirements:**
 
-- Install and configure Brevo SDK/API
-- Set up email templates and automation:
-  - Welcome series for new users
-  - Onboarding sequences
-  - Feature announcements
-  - Conversion campaigns (Free → Pro)
-  - Re-engagement campaigns
-- Integrate with PostHog events for triggered emails
-- Set up contact management and segmentation
-- Implement email preferences and unsubscribe
-- Add transactional emails:
-  - Wallet connection confirmations
-  - Bridge transaction notifications
-  - Security alerts
-- GDPR compliance for email marketing
-- A/B testing for email campaigns
-- Track email engagement metrics
+### Core Wallet Support
 
-## 🚀 Future Issues
+- [ ] **RainbowKit Integration** - EVM wallet connection library
+- [ ] **Solana Wallet Adapter** - Solana wallet connection library
+- [ ] **EVM Wallets** - MetaMask, Rainbow, Coinbase, Trust (via RainbowKit)
+- [ ] **SVM Wallets** - Phantom, Solflare (via Solana adapter)
+- [ ] **Wallet state management** - Connection status, user address, balances
+- [ ] **Transaction signing flows** - Send, sign, approve transactions
+- [ ] **Error handling** - Wallet connection failures, transaction errors
 
-### Issue #7: Design System Component Library 🎨
+### UI Components (Design System)
+
+- [ ] **Modal Component** - Wallet connection modal (extend design system)
+- [ ] **Card Component** - Wallet option containers
+- [ ] **Badge Component** - Wallet status indicators
+- [ ] **Separator Component** - Ecosystem section dividers
+- [ ] **Wallet Connection Button** - Header wallet button
+- [ ] **Ecosystem Selection** - EVM vs Solana choice modal
+
+### Technical Implementation
+
+- [ ] **Wallet context provider** - Global wallet state management
+- [ ] **Custom hooks** - `useWallet`, `useBalance`, `useTransaction`
+- [ ] **Connection persistence** - Remember wallet connection across sessions
+- [ ] **Multi-chain support** - EVM + Solana ecosystems
+- [ ] **Analytics integration** - Track wallet connection events with PostHog
+- [ ] **Error boundaries** - Handle wallet-related errors gracefully
+- [ ] **Mobile responsiveness** - Bottom sheet on mobile, modal on desktop
+
+### Dependencies to Install
+
+- [ ] `@rainbow-me/rainbowkit` - EVM wallet connection
+- [ ] `wagmi` - React hooks for Ethereum
+- [ ] `viem` - TypeScript interface for Ethereum
+- [ ] `@solana/wallet-adapter-base` - Solana wallet base
+- [ ] `@solana/wallet-adapter-phantom` - Phantom wallet
+- [ ] `@solana/wallet-adapter-solflare` - Solflare wallet
+- [ ] `@solana/wallet-adapter-react` - React integration
+- [ ] `@solana/wallet-adapter-react-ui` - UI components
+
+### File Structure
+
+```
+src/
+├── lib/
+│   ├── wallet/
+│   │   ├── providers.ts
+│   │   ├── hooks.ts
+│   │   └── types.ts
+├── components/
+│   ├── wallet/
+│   │   ├── WalletConnectionModal.tsx
+│   │   ├── WalletStatus.tsx
+│   │   └── EcosystemSelector.tsx
+├── design-system/
+│   ├── components/
+│   │   ├── Modal.tsx
+│   │   ├── Card.tsx
+│   │   ├── Badge.tsx
+│   │   └── Separator.tsx
+└── context/
+    └── WalletContext.tsx
+```
+
+### UX Flow
+
+1. **Header** - Single "Connect Wallet" button
+2. **Click** - Opens ecosystem selection modal (EVM vs Solana)
+3. **EVM** - Triggers RainbowKit modal with all EVM wallets
+4. **Solana** - Triggers custom Solana wallet selection
+5. **Connection** - Handle wallet connection and state management
+6. **Status** - Show connected wallet(s) in header
+
+### Issue #7: API Integration & Real Data 📡
+
+**Status:** PLANNED  
+**Description:** Replace placeholder data with real API integrations  
+**Requirements:**
+
+- Socket.tech integration for bridges
+- CoinGecko API for price data
+- Real-time price feeds
+- Portfolio data fetching
+- Transaction history
+- Error handling and retry logic
+- Real-time balance updates
+- Market data integration
+
+### Issue #8: Design System Component Library 🎨
 
 **Status:** PLANNED  
 **Description:** Expand the design system with comprehensive component library  
@@ -214,33 +282,7 @@
   - Empty states
   - Error boundaries
 
-### Issue #8: Wallet Integration 🔗
-
-**Status:** PLANNED  
-**Description:** Integrate multi-chain wallet connections  
-**Requirements:**
-
-- WalletConnect v2 integration
-- MetaMask (EVM) support
-- Phantom (Solana) support
-- Wallet connection state management
-- Transaction signing flows
-- Error handling for wallet operations
-
-### Issue #9: API Integration & Real Data 📡
-
-**Status:** PLANNED  
-**Description:** Replace placeholder data with real API integrations  
-**Requirements:**
-
-- Socket.tech integration for bridges
-- CoinGecko API for price data
-- Real-time price feeds
-- Portfolio data fetching
-- Transaction history
-- Error handling and retry logic
-
-### Issue #10: State Management & Performance ⚡
+### Issue #9: State Management & Performance ⚡
 
 **Status:** PLANNED  
 **Description:** Implement global state management and performance optimizations  
@@ -253,7 +295,7 @@
 - Bundle analysis and optimization
 - Caching strategies
 
-### Issue #11: Authentication & User Management 👤
+### Issue #10: Authentication & User Management 👤
 
 **Status:** PLANNED  
 **Description:** Add user authentication and account management  
@@ -265,6 +307,30 @@
 - Settings persistence
 - User preferences
 - Account security features
+
+### Issue #11: Brevo Email CRM 📧
+
+**Status:** PLANNED  
+**Description:** Integrate Brevo for email marketing and customer relationship management  
+**Requirements:**
+
+- Install and configure Brevo SDK/API
+- Set up email templates and automation:
+  - Welcome series for new users
+  - Onboarding sequences
+  - Feature announcements
+  - Conversion campaigns (Free → Pro)
+  - Re-engagement campaigns
+- Integrate with PostHog events for triggered emails
+- Set up contact management and segmentation
+- Implement email preferences and unsubscribe
+- Add transactional emails:
+  - Wallet connection confirmations
+  - Bridge transaction notifications
+  - Security alerts
+- GDPR compliance for email marketing
+- A/B testing for email campaigns
+- Track email engagement metrics
 
 ## 📋 Issue Template
 

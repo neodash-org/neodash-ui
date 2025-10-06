@@ -1,4 +1,7 @@
 {
+  "app": {
+    "name": "NeoDash"
+  },
   "common": {
     "loading": "Laden...",
     "error": "Fehler",
@@ -8,7 +11,8 @@
     "save": "Speichern",
     "delete": "Löschen",
     "edit": "Bearbeiten",
-    "close": "Schließen"
+    "close": "Schließen",
+    "language": "Sprache"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -61,8 +65,36 @@
   "wallet": {
     "connect": "Wallet verbinden",
     "disconnect": "Trennen",
+    "connecting": "Verbinden...",
     "connected": "Verbunden",
-    "balance": "Saldo"
+    "notConnected": "Nicht verbunden",
+    "selectWallet": "Wallet auswählen",
+    "metamask": "MetaMask",
+    "phantom": "Phantom",
+    "walletConnect": "WalletConnect",
+    "address": "Adresse",
+    "balance": "Saldo",
+    "switchNetwork": "Netzwerk wechseln",
+    "wrongNetwork": "Falsches Netzwerk",
+    "chooseEcosystem": "Wählen Sie Ihr Ökosystem",
+    "selectEcosystem": "Wählen Sie das Blockchain-Ökosystem aus, mit dem Sie sich verbinden möchten",
+    "ethereum": "Ethereum",
+    "solana": "Solana",
+    "ethereumDescription": "Mit Ethereum und EVM-kompatiblen Ketten verbinden",
+    "solanaDescription": "Mit der Solana-Blockchain verbinden",
+    "comingSoon": "Demnächst verfügbar",
+    "walletConnection": "Wallet-Verbindung für {ecosystem} wird bald verfügbar sein.",
+    "backToSelection": "Zurück zur Ökosystem-Auswahl",
+    "walletConnected": "Wallet verbunden",
+    "walletSuccessfullyConnected": "Ihr Wallet wurde erfolgreich verbunden",
+    "walletManagement": "Wallet-Verwaltung",
+    "connectedWallets": "Verbundene Wallets",
+    "manageWallets": "Verwalten Sie Ihre verbundenen Wallets und verbinden Sie sich mit zusätzlichen Ökosystemen",
+    "manageWalletsDetailed": "Verwalten Sie Ihre verbundenen Wallets und sehen Sie detaillierte Informationen",
+    "ethereumConnected": "Ethereum verbunden",
+    "copyAddress": "Adresse kopieren",
+    "addressCopied": "Adresse in die Zwischenablage kopiert",
+    "connectAdditionalEcosystems": "Zusätzliche Ökosysteme verbinden"
   },
   "notifications": {
     "title": "Benachrichtigungen",
@@ -80,5 +112,12 @@
     "collapseSidebar": "Seitenleiste einklappen",
     "toggleTheme": "Design wechseln",
     "refresh": "Aktualisieren"
+  },
+  "footer": {
+    "termsOfUse": "Nutzungsbedingungen",
+    "termsOfUseShort": "AGB",
+    "privacyPolicy": "Datenschutzrichtlinie",
+    "privacyPolicyShort": "DS",
+    "allRightsReserved": "Alle Rechte vorbehalten"
   }
 }

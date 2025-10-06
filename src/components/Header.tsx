@@ -4,10 +4,12 @@ import React from 'react';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useTheme, usePostHog } from '@/hooks';
-import { Moon, Sun, Bell } from 'lucide-react';
+import { Moon, Sun, Bell, Wallet } from 'lucide-react';
 import { getPageTitle } from '@/utils/pageTitle';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { useTranslation } from 'react-i18next';
+import { useWallet } from '@/context/WalletContext';
+import { Button } from '@/design-system/components';
 
 interface HeaderProps {
   onMobileMenuToggle: () => void;
@@ -19,8 +21,15 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
   const { isDark, toggleTheme } = useTheme();
   const { trackFeatureUsage, trackThemeChange } = usePostHog();
   const { t } = useTranslation();
+  const { openModal, openManagementModal, isConnected } = useWallet();
+  const [mounted, setMounted] = React.useState(false);
 
   const title = getPageTitle(pathname);
+
+  // Prevent hydration mismatch by only rendering client-side state after mount
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="flex items-center justify-between gap-4 md:gap-8 flex-wrap px-4 py-5 pt-4 pb-6">
@@ -28,7 +37,7 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
       <div className="flex items-center gap-4">
         {/* NEODASH Logo - Only visible on mobile */}
         <div className="md:hidden w-8 h-8">
-          <Image src="/neodash-icon.svg" alt="NEODASH" width={32} height={32} />
+          <Image src="/neodash-icon.svg" alt={t('app.name')} width={32} height={32} />
         </div>
 
         {/* Route Title - Only visible on desktop */}
@@ -39,27 +48,32 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
 
       {/* Right side: Actions */}
       <div className="flex items-center gap-3 md:gap-5">
-        {/* Dark Mode Toggle - Using Lucide icons */}
+        {/* Dark Mode Toggle - Hidden on mobile, visible on desktop */}
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
             const newTheme = isDark ? 'light' : 'dark';
             trackThemeChange(isDark ? 'dark' : 'light', newTheme, { source: 'header' });
             toggleTheme();
           }}
           data-testid="theme-toggle"
-          data-theme={isDark ? 'dark' : 'light'}
-          className="w-8 h-8 md:w-8 md:h-8 bg-bg-card/70 border border-white/10 rounded-full flex items-center justify-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95"
+          data-theme={mounted ? (isDark ? 'dark' : 'light') : undefined}
+          className="hidden md:flex w-8 h-8 bg-bg-card/70 border border-white/10 rounded-full items-center justify-center cursor-pointer shadow-[0_0_8px_var(--color-neon-cyan)] transition-all duration-300 hover:scale-105 active:scale-95"
           aria-label={t('actions.toggleTheme')}
+          type="button"
         >
           {isDark ? (
-            <Moon className="w-4 h-4 md:w-4 md:h-4 text-neon-cyan" />
+            <Moon className="w-4 h-4 text-neon-cyan" />
           ) : (
-            <Sun className="w-4 h-4 md:w-4 md:h-4 text-neon-yellow" />
+            <Sun className="w-4 h-4 text-neon-yellow" />
           )}
         </button>
 
-        {/* Language Switcher */}
-        <LanguageSwitcher variant="dropdown" size="md" />
+        {/* Language Switcher - Hidden on mobile, visible on desktop */}
+        <div className="hidden md:block">
+          <LanguageSwitcher variant="dropdown" size="md" />
+        </div>
 
         {/* Notification Icon - Visible on both mobile and desktop */}
         <div
@@ -70,27 +84,59 @@ const Header: React.FC<HeaderProps> = ({ onMobileMenuToggle, isMobileMenuOpen })
           <Bell className="w-4 h-4 text-neon-cyan" />
         </div>
 
-        {/* Connect Wallet - Hidden on mobile, visible on desktop */}
-        <button
-          onClick={() =>
-            trackFeatureUsage('wallet_connection', 'attempted', { location: 'header' })
-          }
-          className="hidden md:flex bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-full font-[var(--font-cyberpunk)] text-sm md:text-base px-4 md:px-6 py-2 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] cursor-pointer tracking-wide transition hover:scale-105"
+        {/* Wallet Icon - Visible on mobile only */}
+        <div
+          onClick={() => {
+            trackFeatureUsage('wallet_connection', 'modal_opened', { location: 'header_mobile' });
+            if (mounted && isConnected) {
+              openManagementModal();
+            } else {
+              openModal();
+            }
+          }}
+          data-testid="mobile-wallet-icon"
+          className="md:hidden flex w-8 h-8 rounded-full bg-gradient-to-r from-neon-cyan to-neon-pink items-center justify-center text-white shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] cursor-pointer hover:scale-110 transition-transform"
         >
-          {t('wallet.connect')}
-        </button>
+          <Wallet className="w-4 h-4 text-white" />
+        </div>
+
+        {/* Wallet Section - Hidden on mobile, visible on desktop */}
+        <div className="hidden md:flex">
+          <Button
+            onClick={() => {
+              trackFeatureUsage('wallet_connection', 'modal_opened', { location: 'header' });
+              if (isConnected) {
+                openManagementModal();
+              } else {
+                openModal();
+              }
+            }}
+            variant="primary"
+            size="md"
+            className="bg-gradient-to-r from-neon-cyan to-neon-pink text-white border-none rounded-full font-[var(--font-cyberpunk)] px-6 py-2 shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] tracking-wide transition hover:scale-105"
+            data-testid="connect-wallet-button"
+          >
+            {mounted ? (isConnected ? 'Manage Wallets' : t('wallet.connect')) : t('wallet.connect')}
+          </Button>
+        </div>
 
         {/* Mobile Menu Button - Only visible on mobile, positioned on the right */}
         <button
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
             trackFeatureUsage('mobile_menu', isMobileMenuOpen ? 'closed' : 'opened', {
               location: 'header',
             });
-            onMobileMenuToggle();
+            // Délai pour éviter le conflit avec le theme toggle
+            setTimeout(() => {
+              onMobileMenuToggle();
+            }, 50);
           }}
           data-testid="mobile-menu-button"
           className="md:hidden w-10 h-10 bg-bg-card/70 border border-white/10 rounded-lg flex items-center justify-center text-neon-cyan hover:bg-neon-cyan/20 transition-all duration-300 hover:scale-105"
           aria-label={isMobileMenuOpen ? t('actions.closeMenu') : t('actions.openMenu')}
+          type="button"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path

@@ -1,4 +1,8 @@
 {
+  "app": {
+    "name": "NeoDash"
+  },
+
   "common": {
     "loading": "Cargando...",
     "error": "Error",
@@ -8,7 +12,8 @@
     "save": "Guardar",
     "delete": "Eliminar",
     "edit": "Editar",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "language": "Idioma"
   },
   "navigation": {
     "dashboard": "Panel de Control",
@@ -61,8 +66,36 @@
   "wallet": {
     "connect": "Conectar Cartera",
     "disconnect": "Desconectar",
+    "connecting": "Conectando...",
     "connected": "Conectado",
-    "balance": "Balance"
+    "notConnected": "No Conectado",
+    "selectWallet": "Seleccionar Cartera",
+    "metamask": "MetaMask",
+    "phantom": "Phantom",
+    "walletConnect": "WalletConnect",
+    "address": "Dirección",
+    "balance": "Saldo",
+    "switchNetwork": "Cambiar Red",
+    "wrongNetwork": "Red Incorrecta",
+    "chooseEcosystem": "Elige tu Ecosistema",
+    "selectEcosystem": "Selecciona el ecosistema blockchain al que quieres conectarte",
+    "ethereum": "Ethereum",
+    "solana": "Solana",
+    "ethereumDescription": "Conectar a Ethereum y cadenas compatibles con EVM",
+    "solanaDescription": "Conectar a la blockchain de Solana",
+    "comingSoon": "Próximamente",
+    "walletConnection": "La conexión de cartera para {ecosystem} estará disponible pronto.",
+    "backToSelection": "Volver a la Selección de Ecosistema",
+    "walletConnected": "Cartera Conectada",
+    "walletSuccessfullyConnected": "Tu cartera se ha conectado exitosamente",
+    "walletManagement": "Gestión de Carteras",
+    "connectedWallets": "Carteras Conectadas",
+    "manageWallets": "Gestiona tus carteras conectadas y conéctate a ecosistemas adicionales",
+    "manageWalletsDetailed": "Gestiona tus carteras conectadas y consulta información detallada",
+    "ethereumConnected": "Ethereum Conectado",
+    "copyAddress": "Copiar Dirección",
+    "addressCopied": "Dirección copiada al portapapeles",
+    "connectAdditionalEcosystems": "Conectar Ecosistemas Adicionales"
   },
   "notifications": {
     "title": "Notificaciones",
@@ -80,5 +113,12 @@
     "collapseSidebar": "Contraer Barra Lateral",
     "toggleTheme": "Cambiar Tema",
     "refresh": "Actualizar"
+  },
+  "footer": {
+    "termsOfUse": "Términos de uso",
+    "termsOfUseShort": "ToU",
+    "privacyPolicy": "Política de privacidad",
+    "privacyPolicyShort": "PP",
+    "allRightsReserved": "Todos los derechos reservados"
   }
 }

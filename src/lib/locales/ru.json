@@ -1,4 +1,8 @@
 {
+  "app": {
+    "name": "NeoDash"
+  },
+
   "common": {
     "loading": "Загрузка...",
     "error": "Ошибка",
@@ -8,7 +12,8 @@
     "save": "Сохранить",
     "delete": "Удалить",
     "edit": "Редактировать",
-    "close": "Закрыть"
+    "close": "Закрыть",
+    "language": "Язык"
   },
   "navigation": {
     "dashboard": "Панель управления",
@@ -61,8 +66,36 @@
   "wallet": {
     "connect": "Подключить кошелек",
     "disconnect": "Отключить",
+    "connecting": "Подключение...",
     "connected": "Подключен",
-    "balance": "Баланс"
+    "notConnected": "Не подключен",
+    "selectWallet": "Выбрать кошелек",
+    "metamask": "MetaMask",
+    "phantom": "Phantom",
+    "walletConnect": "WalletConnect",
+    "address": "Адрес",
+    "balance": "Баланс",
+    "switchNetwork": "Сменить сеть",
+    "wrongNetwork": "Неправильная сеть",
+    "chooseEcosystem": "Выберите вашу экосистему",
+    "selectEcosystem": "Выберите блокчейн-экосистему, к которой хотите подключиться",
+    "ethereum": "Ethereum",
+    "solana": "Solana",
+    "ethereumDescription": "Подключиться к Ethereum и EVM-совместимым сетям",
+    "solanaDescription": "Подключиться к блокчейну Solana",
+    "comingSoon": "Скоро",
+    "walletConnection": "Подключение кошелька для {ecosystem} будет доступно в ближайшее время.",
+    "backToSelection": "Вернуться к выбору экосистемы",
+    "walletConnected": "Кошелек подключен",
+    "walletSuccessfullyConnected": "Ваш кошелек успешно подключен",
+    "walletManagement": "Управление кошельками",
+    "connectedWallets": "Подключенные кошельки",
+    "manageWallets": "Управляйте подключенными кошельками и подключайтесь к дополнительным экосистемам",
+    "manageWalletsDetailed": "Управляйте подключенными кошельками и просматривайте подробную информацию",
+    "ethereumConnected": "Ethereum подключен",
+    "copyAddress": "Копировать адрес",
+    "addressCopied": "Адрес скопирован в буфер обмена",
+    "connectAdditionalEcosystems": "Подключить дополнительные экосистемы"
   },
   "notifications": {
     "title": "Уведомления",
@@ -80,5 +113,12 @@
     "collapseSidebar": "Свернуть боковую панель",
     "toggleTheme": "Переключить тему",
     "refresh": "Обновить"
+  },
+  "footer": {
+    "termsOfUse": "Условия использования",
+    "termsOfUseShort": "ToU",
+    "privacyPolicy": "Политика конфиденциальности",
+    "privacyPolicyShort": "PP",
+    "allRightsReserved": "Все права защищены"
   }
 }

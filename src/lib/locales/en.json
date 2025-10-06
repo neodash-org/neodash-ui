@@ -1,4 +1,7 @@
 {
+  "app": {
+    "name": "NeoDash"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",
@@ -18,7 +21,8 @@
     "sort": "Sort",
     "refresh": "Refresh",
     "retry": "Retry",
-    "reload": "Reload"
+    "reload": "Reload",
+    "language": "Language"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -101,7 +105,29 @@
     "walletConnect": "WalletConnect",
     "address": "Address",
     "balance": "Balance",
-    "switchNetwork": "Switch Network"
+    "switchNetwork": "Switch Network",
+    "wrongNetwork": "Wrong Network",
+    "chooseEcosystem": "Choose Your Ecosystem",
+    "selectEcosystem": "Select the blockchain ecosystem you want to connect to",
+    "ethereum": "Ethereum",
+    "solana": "Solana",
+    "ethereumDescription": "Connect to Ethereum and EVM-compatible chains",
+    "solanaDescription": "Connect to Solana blockchain",
+    "comingSoon": "Coming Soon",
+    "walletConnection": "Wallet connection for {ecosystem} will be available soon.",
+    "backToSelection": "Back to Ecosystem Selection",
+    "walletConnected": "Wallet Connected",
+    "walletSuccessfullyConnected": "Your wallet is successfully connected",
+    "walletManagement": "Wallet Management",
+    "connectedWallets": "Connected Wallets",
+    "manageWallets": "Manage your connected wallets and connect to additional ecosystems",
+    "manageWalletsDetailed": "Manage your connected wallets and view detailed information",
+    "ethereumConnected": "Ethereum Connected",
+    "solanaConnected": "Solana Connected",
+    "copyAddress": "Copy Address",
+    "copy": "Copy",
+    "addressCopied": "Address copied to clipboard",
+    "connectAdditionalEcosystems": "Connect Additional Ecosystems"
   },
   "notifications": {
     "title": "Notifications",
@@ -127,5 +153,12 @@
     "collapseSidebar": "Collapse sidebar",
     "openMenu": "Open menu",
     "closeMenu": "Close menu"
+  },
+  "footer": {
+    "termsOfUse": "Terms of Use",
+    "termsOfUseShort": "ToU",
+    "privacyPolicy": "Privacy Policy",
+    "privacyPolicyShort": "PP",
+    "allRightsReserved": "All rights reserved"
   }
 }

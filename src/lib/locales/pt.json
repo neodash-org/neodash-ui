@@ -1,4 +1,8 @@
 {
+  "app": {
+    "name": "NeoDash"
+  },
+
   "common": {
     "loading": "A carregar...",
     "error": "Erro",
@@ -8,7 +12,8 @@
     "save": "Guardar",
     "delete": "Eliminar",
     "edit": "Editar",
-    "close": "Fechar"
+    "close": "Fechar",
+    "language": "Idioma"
   },
   "navigation": {
     "dashboard": "Painel de Controlo",
@@ -61,8 +66,36 @@
   "wallet": {
     "connect": "Ligar Carteira",
     "disconnect": "Desligar",
+    "connecting": "Conectando...",
     "connected": "Ligado",
-    "balance": "Saldo"
+    "notConnected": "Não Ligado",
+    "selectWallet": "Selecionar Carteira",
+    "metamask": "MetaMask",
+    "phantom": "Phantom",
+    "walletConnect": "WalletConnect",
+    "address": "Endereço",
+    "balance": "Saldo",
+    "switchNetwork": "Trocar Rede",
+    "wrongNetwork": "Rede Incorreta",
+    "chooseEcosystem": "Escolha seu Ecossistema",
+    "selectEcosystem": "Selecione o ecossistema blockchain ao qual deseja se conectar",
+    "ethereum": "Ethereum",
+    "solana": "Solana",
+    "ethereumDescription": "Conectar ao Ethereum e cadeias compatíveis com EVM",
+    "solanaDescription": "Conectar à blockchain Solana",
+    "comingSoon": "Em Breve",
+    "walletConnection": "A conexão da carteira para {ecosystem} estará disponível em breve.",
+    "backToSelection": "Voltar à Seleção de Ecossistema",
+    "walletConnected": "Carteira Conectada",
+    "walletSuccessfullyConnected": "Sua carteira foi conectada com sucesso",
+    "walletManagement": "Gerenciamento de Carteiras",
+    "connectedWallets": "Carteiras Conectadas",
+    "manageWallets": "Gerencie suas carteiras conectadas e conecte-se a ecossistemas adicionais",
+    "manageWalletsDetailed": "Gerencie suas carteiras conectadas e visualize informações detalhadas",
+    "ethereumConnected": "Ethereum Conectado",
+    "copyAddress": "Copiar Endereço",
+    "addressCopied": "Endereço copiado para a área de transferência",
+    "connectAdditionalEcosystems": "Conectar Ecossistemas Adicionais"
   },
   "notifications": {
     "title": "Notificações",
@@ -80,5 +113,12 @@
     "collapseSidebar": "Recolher Barra Lateral",
     "toggleTheme": "Alterar Tema",
     "refresh": "Atualizar"
+  },
+  "footer": {
+    "termsOfUse": "Termos de uso",
+    "termsOfUseShort": "ToU",
+    "privacyPolicy": "Política de privacidade",
+    "privacyPolicyShort": "PP",
+    "allRightsReserved": "Todos os direitos reservados"
   }
 }

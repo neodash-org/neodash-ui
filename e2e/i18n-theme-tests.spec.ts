@@ -40,6 +40,9 @@ test.describe('i18n and Theme Integration Tests', () => {
     });
 
     test('should toggle between light and dark themes', async ({ page }) => {
+      // Wait for theme toggle to be mounted with data-theme attribute
+      await page.waitForSelector('[data-testid="theme-toggle"][data-theme]', { timeout: 5000 });
+
       const themeToggle = page.getByTestId('theme-toggle');
 
       // Get initial theme

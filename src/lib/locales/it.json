@@ -1,4 +1,8 @@
 {
+  "app": {
+    "name": "NeoDash"
+  },
+
   "common": {
     "loading": "Caricamento...",
     "error": "Errore",
@@ -8,7 +12,8 @@
     "save": "Salva",
     "delete": "Elimina",
     "edit": "Modifica",
-    "close": "Chiudi"
+    "close": "Chiudi",
+    "language": "Lingua"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -61,8 +66,36 @@
   "wallet": {
     "connect": "Connetti Wallet",
     "disconnect": "Disconnetti",
+    "connecting": "Connessione...",
     "connected": "Connesso",
-    "balance": "Saldo"
+    "notConnected": "Non Connesso",
+    "selectWallet": "Seleziona Wallet",
+    "metamask": "MetaMask",
+    "phantom": "Phantom",
+    "walletConnect": "WalletConnect",
+    "address": "Indirizzo",
+    "balance": "Saldo",
+    "switchNetwork": "Cambia Rete",
+    "wrongNetwork": "Rete Sbagliata",
+    "chooseEcosystem": "Scegli il Tuo Ecosistema",
+    "selectEcosystem": "Seleziona l'ecosistema blockchain a cui vuoi connetterti",
+    "ethereum": "Ethereum",
+    "solana": "Solana",
+    "ethereumDescription": "Connetti a Ethereum e catene compatibili EVM",
+    "solanaDescription": "Connetti alla blockchain Solana",
+    "comingSoon": "Prossimamente",
+    "walletConnection": "La connessione del wallet per {ecosystem} sarà disponibile presto.",
+    "backToSelection": "Torna alla Selezione Ecosistema",
+    "walletConnected": "Wallet Connesso",
+    "walletSuccessfullyConnected": "Il tuo wallet è stato connesso con successo",
+    "walletManagement": "Gestione Wallet",
+    "connectedWallets": "Wallet Connessi",
+    "manageWallets": "Gestisci i tuoi wallet connessi e connettiti a ecosistemi aggiuntivi",
+    "manageWalletsDetailed": "Gestisci i tuoi wallet connessi e visualizza informazioni dettagliate",
+    "ethereumConnected": "Ethereum Connesso",
+    "copyAddress": "Copia Indirizzo",
+    "addressCopied": "Indirizzo copiato negli appunti",
+    "connectAdditionalEcosystems": "Connetti Ecosistemi Aggiuntivi"
   },
   "notifications": {
     "title": "Notifiche",
@@ -80,5 +113,12 @@
     "collapseSidebar": "Comprimi Barra Laterale",
     "toggleTheme": "Cambia Tema",
     "refresh": "Aggiorna"
+  },
+  "footer": {
+    "termsOfUse": "Termini di utilizzo",
+    "termsOfUseShort": "ToU",
+    "privacyPolicy": "Informativa sulla privacy",
+    "privacyPolicyShort": "PP",
+    "allRightsReserved": "Tutti i diritti riservati"
   }
 }

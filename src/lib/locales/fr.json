@@ -1,4 +1,7 @@
 {
+  "app": {
+    "name": "NeoDash"
+  },
   "common": {
     "loading": "Chargement...",
     "error": "Erreur",
@@ -18,7 +21,8 @@
     "sort": "Trier",
     "refresh": "Actualiser",
     "retry": "Réessayer",
-    "reload": "Recharger"
+    "reload": "Recharger",
+    "language": "Langue"
   },
   "navigation": {
     "dashboard": "Tableau de bord",
@@ -101,7 +105,27 @@
     "walletConnect": "WalletConnect",
     "address": "Adresse",
     "balance": "Solde",
-    "switchNetwork": "Changer de réseau"
+    "switchNetwork": "Changer de réseau",
+    "wrongNetwork": "Mauvais réseau",
+    "chooseEcosystem": "Choisissez votre écosystème",
+    "selectEcosystem": "Sélectionnez l'écosystème blockchain auquel vous voulez vous connecter",
+    "ethereum": "Ethereum",
+    "solana": "Solana",
+    "ethereumDescription": "Se connecter à Ethereum et aux chaînes compatibles EVM",
+    "solanaDescription": "Se connecter à la blockchain Solana",
+    "comingSoon": "Bientôt disponible",
+    "walletConnection": "La connexion de portefeuille pour {ecosystem} sera bientôt disponible.",
+    "backToSelection": "Retour à la sélection d'écosystème",
+    "walletConnected": "Portefeuille connecté",
+    "walletSuccessfullyConnected": "Votre portefeuille est connecté avec succès",
+    "walletManagement": "Gestion des portefeuilles",
+    "connectedWallets": "Portefeuilles Connectés",
+    "manageWallets": "Gérez vos portefeuilles connectés et connectez-vous à des écosystèmes supplémentaires",
+    "manageWalletsDetailed": "Gérez vos portefeuilles connectés et consultez des informations détaillées",
+    "ethereumConnected": "Ethereum connecté",
+    "copyAddress": "Copier l'adresse",
+    "addressCopied": "Adresse copiée dans le presse-papiers",
+    "connectAdditionalEcosystems": "Connecter des écosystèmes supplémentaires"
   },
   "notifications": {
     "title": "Notifications",
@@ -127,5 +151,12 @@
     "collapseSidebar": "Réduire la barre latérale",
     "openMenu": "Ouvrir le menu",
     "closeMenu": "Fermer le menu"
+  },
+  "footer": {
+    "termsOfUse": "Conditions d'utilisation",
+    "termsOfUseShort": "CGU",
+    "privacyPolicy": "Politique de confidentialité",
+    "privacyPolicyShort": "PP",
+    "allRightsReserved": "Tous droits réservés"
   }
 }
