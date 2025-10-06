@@ -37,9 +37,9 @@ test.describe('Wallet Connection Flow', () => {
     await expect(page.getByTestId('evm-ecosystem-card')).toBeVisible();
     await expect(page.getByTestId('solana-ecosystem-card')).toBeVisible();
 
-    // Check ecosystem names
-    await expect(page.getByText('Ethereum')).toBeVisible();
-    await expect(page.getByText('Solana')).toBeVisible();
+    // Check ecosystem names using role to avoid duplicate text matches
+    await expect(page.getByRole('heading', { name: 'Ethereum', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Solana', exact: true })).toBeVisible();
   });
 
   test('should display ecosystem descriptions', async ({ page }) => {
