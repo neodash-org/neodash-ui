@@ -1,3 +1,33 @@
+# NeoDash Environment Variables
+
+# Sentry Error Tracking
 SENTRY_DSN=
+
+# PostHog Analytics
 NEXT_PUBLIC_POSTHOG_KEY=
 NEXT_PUBLIC_POSTHOG_HOST=https://eu.i.posthog.com
+
+# WalletConnect
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=2b8a2eba47be02b3f633537d77198fc6
+
+# API Keys for Real Data Integration (Issue #7)
+
+# CoinGecko API (Free tier: 50 calls/minute)
+NEXT_PUBLIC_COINGECKO_API_KEY=
+
+# Socket.tech API (Free tier: 1000 calls/month)
+NEXT_PUBLIC_SOCKET_API_KEY=
+
+# Moralis API (Free tier: 100,000 calls/month)
+NEXT_PUBLIC_MORALIS_API_KEY=
+
+# Alchemy API (Free tier: 300M compute units/month)
+NEXT_PUBLIC_ALCHEMY_API_KEY=
+
+# Helius API (Free tier: 100,000 credits/month)
+NEXT_PUBLIC_HELIUS_API_KEY=
+
+# Optional: Additional APIs
+# NEXT_PUBLIC_1INCH_API_KEY=
+# NEXT_PUBLIC_ZERION_API_KEY=
+# NEXT_PUBLIC_DEBANK_API_KEY=
