@@ -18,8 +18,13 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({ 
   // You can also provide a custom RPC endpoint.
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
-  const wallets = useMemo(
-    () => [
+  const wallets = useMemo(() => {
+    // Only create wallets on client-side to avoid SSR issues
+    if (typeof window === 'undefined') {
+      return [];
+    }
+
+    return [
       new PhantomWalletAdapter({
         network: network,
       }),
@@ -32,9 +37,8 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({ 
       new GlowWalletAdapter({
         network: network,
       }),
-    ],
-    [network],
-  );
+    ];
+  }, [network]);
 
   return (
     <ConnectionProvider endpoint={endpoint}>

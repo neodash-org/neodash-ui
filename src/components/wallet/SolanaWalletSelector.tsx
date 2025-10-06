@@ -144,14 +144,13 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
                       try {
                         console.log(`Attempting to connect ${wallet.adapter.name}...`);
 
-                        // First select the wallet and wait for it to complete
-                        await select(wallet.adapter.name);
-                        console.log(`${wallet.adapter.name} selected successfully`);
+                        // Select the wallet first (don't await)
+                        select(wallet.adapter.name);
 
-                        // Small delay to ensure selection is processed
-                        await new Promise((resolve) => setTimeout(resolve, 100));
+                        // Wait for wallet to be ready
+                        await new Promise((resolve) => setTimeout(resolve, 300));
 
-                        // Then connect with confirmation
+                        // Then connect
                         await connect();
                         console.log(`${wallet.adapter.name} connected successfully`);
                       } catch (error) {

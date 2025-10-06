@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -13,7 +14,7 @@ interface EVMWalletProviderProps {
 }
 
 export function EVMWalletProvider({ children }: EVMWalletProviderProps) {
-  const queryClient = new QueryClient();
+  const queryClient = useMemo(() => new QueryClient(), []);
 
   return (
     <WagmiProvider config={config}>
