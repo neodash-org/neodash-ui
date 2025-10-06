@@ -1,8 +1,12 @@
 import React from 'react';
+import type { WalletName } from '@solana/wallet-adapter-base';
 
-export function useSolanaConnectFlow(select: (name: string) => void, connect: () => Promise<void>) {
+export function useSolanaConnectFlow(
+  select: (name: WalletName | null) => void,
+  connect: () => Promise<void>,
+) {
   const connectWallet = React.useCallback(
-    async (adapterName: string) => {
+    async (adapterName: WalletName) => {
       try {
         // Select the wallet first (do not await)
         select(adapterName);
