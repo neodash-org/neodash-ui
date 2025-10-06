@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, Button, Separator } from '@/design-system/components';
+import { useTranslation } from 'react-i18next';
 import { WalletDisconnectButton } from '@solana/wallet-adapter-react-ui';
 
 interface ConnectedWalletCardProps {
@@ -13,16 +14,17 @@ export const ConnectedWalletCard: React.FC<ConnectedWalletCardProps> = ({
   address,
   onClose,
 }) => {
+  const { t } = useTranslation();
   const short = `${address.slice(0, 4)}...${address.slice(-4)}`;
 
   return (
     <div className="space-y-4">
       <div className="text-center">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:drop-shadow-[0_0_8px_var(--color-neon-green)] mb-2">
-          Solana Wallet Connected
+          {t('wallet.solanaConnected')}
         </h3>
         <p className="text-sm text-gray-600 dark:text-gray-300 dark:drop-shadow-[0_0_4px_var(--color-neon-green)]">
-          Your Solana wallet is successfully connected. This modal will close automatically.
+          {t('wallet.walletSuccessfullyConnected')}
         </p>
       </div>
 
@@ -51,7 +53,7 @@ export const ConnectedWalletCard: React.FC<ConnectedWalletCardProps> = ({
           onClick={onClose}
           className="dark:border-neon-cyan/30 dark:hover:border-neon-cyan dark:hover:shadow-[0_0_8px_var(--color-neon-cyan)] dark:hover:scale-105"
         >
-          Close
+          {t('common.close')}
         </Button>
       </div>
     </div>

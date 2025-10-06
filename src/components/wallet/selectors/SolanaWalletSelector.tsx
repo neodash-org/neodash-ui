@@ -2,6 +2,7 @@ import React from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Card, Button } from '@/design-system/components';
 import { SelectorHeader } from './components/SelectorHeader';
+import { useTranslation } from 'react-i18next';
 import { ConnectedWalletCard } from './components/ConnectedWalletCard';
 import { useSolanaWalletList } from './hooks/useSolanaWalletList';
 import { useSolanaConnectFlow } from './hooks/useSolanaConnectFlow';
@@ -17,6 +18,7 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
   onClose,
   'data-testid': dataTestId,
 }) => {
+  const { t } = useTranslation();
   const { connected, publicKey, wallet, wallets, select, connect } = useWallet();
   const availableWallets = useSolanaWalletList(wallets);
   const { connectWallet } = useSolanaConnectFlow(select, connect);
@@ -34,7 +36,7 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
   if (connected && publicKey) {
     return (
       <ConnectedWalletCard
-        walletName={wallet?.adapter.name || 'Solana Wallet'}
+        walletName={wallet?.adapter.name || t('wallet.solana')}
         address={publicKey.toString()}
         onClose={onClose}
       />
@@ -44,8 +46,8 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
   return (
     <div className="space-y-4" data-testid={dataTestId || 'solana-wallet-selector'}>
       <SelectorHeader
-        title="Connect Solana Wallet"
-        subtitle="Choose your preferred Solana wallet"
+        title={t('wallet.solana')}
+        subtitle={t('wallet.selectWallet')}
         onBack={onBack}
       />
 
@@ -56,10 +58,10 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
               🟣
             </div>
             <h4 className="text-lg font-semibold text-gray-900 dark:text-white dark:font-[var(--font-cyberpunk)] dark:tracking-wide dark:drop-shadow-[0_0_8px_var(--color-neon-cyan)] mb-2">
-              Solana Wallets
+              {t('wallet.solana')}
             </h4>
             <p className="text-gray-600 dark:text-gray-300 dark:drop-shadow-[0_0_4px_var(--color-neon-cyan)] mb-4">
-              Connect with Phantom, Solflare, or other Solana wallets
+              {t('wallet.selectWallet')}
             </p>
 
             {/* Manual wallet selection with proper confirmation flow */}
@@ -81,7 +83,7 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
                     }}
                     className="!bg-gradient-to-r !from-neon-cyan !to-neon-pink !text-white !border-none !rounded-full !font-[var(--font-cyberpunk)] !px-6 !py-2 !shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)] !tracking-wide !transition !hover:scale-105"
                   >
-                    Connect {wallet.adapter.name}
+                    {t('wallet.connect')} {wallet.adapter.name}
                   </Button>
                 ))}
               </div>
@@ -89,13 +91,11 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
               <div className="text-center py-6">
                 <div className="text-6xl mb-4">🔌</div>
                 <p className="text-gray-500 dark:text-gray-400 mb-4 text-lg">
-                  No Solana wallets installed
+                  {t('wallet.notConnected')}
                 </p>
-                <p className="text-sm text-gray-400 mb-6">
-                  Install a Solana wallet extension to connect
-                </p>
+                <p className="text-sm text-gray-400 mb-6">{t('wallet.selectWallet')}</p>
                 <div className="space-y-3">
-                  <p className="text-sm font-medium text-gray-300">Recommended:</p>
+                  <p className="text-sm font-medium text-gray-300">{t('wallet.recommended')}</p>
                   <div className="flex flex-col gap-2 max-w-xs mx-auto">
                     <a
                       href="https://phantom.app"
@@ -103,7 +103,7 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
                       rel="noopener noreferrer"
                       className="block px-4 py-2 bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 border border-neon-cyan/30 rounded-lg hover:border-neon-cyan hover:shadow-[0_0_8px_var(--color-neon-cyan)] transition-all"
                     >
-                      📱 Phantom (Most Popular)
+                      📱 {t('wallet.phantom')}
                     </a>
                     <a
                       href="https://solflare.com"
@@ -111,7 +111,7 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
                       rel="noopener noreferrer"
                       className="block px-4 py-2 bg-gradient-to-r from-neon-cyan/20 to-neon-pink/20 border border-neon-cyan/30 rounded-lg hover:border-neon-cyan hover:shadow-[0_0_8px_var(--color-neon-cyan)] transition-all"
                     >
-                      ⚡ Solflare
+                      ⚡ {t('wallet.solflare')}
                     </a>
                   </div>
                 </div>
