@@ -32,7 +32,7 @@ i18n
     },
 
     // Debug mode (disable in production)
-    debug: process.env.NODE_ENV === 'development',
+    debug: false, // Disable debug logs to reduce console noise
 
     // Interpolation options
     interpolation: {
