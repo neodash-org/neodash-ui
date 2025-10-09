@@ -16,11 +16,15 @@ export const SolanaWalletCard: React.FC<SolanaWalletCardProps> = ({
   onClose,
 }) => {
   const { t } = useTranslation();
-  const { disconnect } = useSolanaWallet();
+  const { disconnect } = useWallet();
 
-  const handleDisconnect = () => {
-    disconnect();
-    onClose();
+  const handleDisconnect = async () => {
+    try {
+      await disconnect('solana');
+      onClose();
+    } catch (error) {
+      console.error('Failed to disconnect Solana wallet:', error);
+    }
   };
 
   return (
