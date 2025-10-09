@@ -1,41 +1,48 @@
-import { useState, useEffect, useCallback } from 'react';
-import { CoinGeckoService } from '@/lib/api/services/coingecko';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { priceAggregator } from '@/lib/api/services/priceAggregator';
 import { SocketService } from '@/lib/api/services/socket';
 import { PortfolioService } from '@/lib/api/services/portfolio';
-import { CoinGeckoPrice, PortfolioData, BridgeQuote, Transaction } from '@/lib/api/types';
+import { AggregatedPrice, PortfolioData, BridgeQuote, Transaction } from '@/lib/api/types';
 
-// Hook for fetching cryptocurrency prices
-export const usePrices = (coinIds: string[], refreshInterval = 60000) => {
-  const [prices, setPrices] = useState<CoinGeckoPrice[]>([]);
+// CTO-Level Price Hooks
+export const usePrices = (symbols: string[], refreshInterval = 300000) => {
+  const [prices, setPrices] = useState<{ [symbol: string]: AggregatedPrice }>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Memoize symbols to prevent infinite loops
+  const symbolsKey = symbols.join(',');
+  const memoizedSymbols = useMemo(() => symbols, [symbols, symbolsKey]);
 
   const fetchPrices = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await CoinGeckoService.getPrices(coinIds);
+      const data = await priceAggregator.getPrices(memoizedSymbols);
       setPrices(data);
     } catch (err) {
+      console.error('usePrices error:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch prices');
     } finally {
       setLoading(false);
     }
-  }, [coinIds]);
+  }, [memoizedSymbols]);
 
   useEffect(() => {
     fetchPrices();
 
     const interval = setInterval(fetchPrices, refreshInterval);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+    };
   }, [fetchPrices, refreshInterval]);
 
   return { prices, loading, error, refetch: fetchPrices };
 };
 
-// Hook for fetching single coin price
-export const usePrice = (coinId: string, refreshInterval = 30000) => {
-  const [price, setPrice] = useState<CoinGeckoPrice | null>(null);
+// Hook for single price with metrics
+export const usePrice = (symbol: string, refreshInterval = 300000) => {
+  const [price, setPrice] = useState<AggregatedPrice | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,14 +50,14 @@ export const usePrice = (coinId: string, refreshInterval = 30000) => {
     try {
       setLoading(true);
       setError(null);
-      const data = await CoinGeckoService.getPrice(coinId);
+      const data = await priceAggregator.getPriceWithMetrics(symbol);
       setPrice(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch price');
     } finally {
       setLoading(false);
     }
-  }, [coinId]);
+  }, [symbol]);
 
   useEffect(() => {
     fetchPrice();
@@ -60,6 +67,35 @@ export const usePrice = (coinId: string, refreshInterval = 30000) => {
   }, [fetchPrice, refreshInterval]);
 
   return { price, loading, error, refetch: fetchPrice };
+};
+
+// Hook for trending coins
+export const useTrendingCoins = (limit = 10, refreshInterval = 600000) => {
+  const [trending, setTrending] = useState<AggregatedPrice[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchTrending = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await priceAggregator.getTrendingCoins(limit);
+      setTrending(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch trending coins');
+    } finally {
+      setLoading(false);
+    }
+  }, [limit]);
+
+  useEffect(() => {
+    fetchTrending();
+
+    const interval = setInterval(fetchTrending, refreshInterval);
+    return () => clearInterval(interval);
+  }, [fetchTrending, refreshInterval]);
+
+  return { trending, loading, error, refetch: fetchTrending };
 };
 
 // Hook for fetching portfolio data
@@ -100,45 +136,6 @@ export const usePortfolio = (
   return { portfolio, loading, error, refetch: fetchPortfolio };
 };
 
-// Hook for fetching bridge quote
-export const useBridgeQuote = () => {
-  const [quote, setQuote] = useState<BridgeQuote | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const getQuote = useCallback(
-    async (
-      fromChainId: number,
-      toChainId: number,
-      fromTokenAddress: string,
-      toTokenAddress: string,
-      amount: string,
-      userAddress: string,
-    ) => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await SocketService.getBridgeQuote(
-          fromChainId,
-          toChainId,
-          fromTokenAddress,
-          toTokenAddress,
-          amount,
-          userAddress,
-        );
-        setQuote(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to get bridge quote');
-      } finally {
-        setLoading(false);
-      }
-    },
-    [],
-  );
-
-  return { quote, loading, error, getQuote };
-};
-
 // Hook for fetching transaction history
 export const useTransactionHistory = (
   address?: string,
@@ -172,6 +169,47 @@ export const useTransactionHistory = (
   }, [fetchTransactions]);
 
   return { transactions, loading, error, refetch: fetchTransactions };
+};
+
+// Socket.tech Hooks for bridge functionality
+
+// Hook for getting bridge quotes
+export const useBridgeQuote = () => {
+  const [quote, setQuote] = useState<BridgeQuote | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const getQuote = useCallback(
+    async (
+      fromChainId: number,
+      toChainId: number,
+      fromTokenAddress: string,
+      toTokenAddress: string,
+      amount: string,
+      userAddress: string,
+    ) => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await SocketService.getBridgeQuote(
+          fromChainId,
+          toChainId,
+          fromTokenAddress,
+          toTokenAddress,
+          amount,
+          userAddress,
+        );
+        setQuote(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to get quote');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [],
+  );
+
+  return { quote, loading, error, getQuote };
 };
 
 // Hook for fetching supported chains

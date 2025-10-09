@@ -60,7 +60,6 @@ export function useWalletModal() {
       // This allows users to connect additional wallets even when some are already connected
       const hasConnectedWallets = evmWallet || solanaWallet;
       if (hasConnectedWallets && !isManagementMode && selectedEcosystem === null) {
-        console.log('Auto-setting management mode because wallets are connected');
         setIsManagementMode(true);
       }
     } else {

@@ -1,4 +1,4 @@
 // API Services Export
-export * from './coingecko';
+export * from './priceAggregator';
 export * from './socket';
 export * from './portfolio';

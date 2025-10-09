@@ -12,8 +12,9 @@ NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=2b8a2eba47be02b3f633537d77198fc6
 
 # API Keys for Real Data Integration (Issue #7)
 
-# CoinGecko API (Free tier: 50 calls/minute)
-NEXT_PUBLIC_COINGECKO_API_KEY=
+# Price Aggregator (No API keys needed - uses free APIs)
+# Binance, Coinbase, CryptoCompare, CoinPaprika
+# NEXT_PUBLIC_COINGECKO_API_KEY= (removed - using free aggregator instead)
 
 # Socket.tech API (Free tier: 1000 calls/month)
 NEXT_PUBLIC_SOCKET_API_KEY=
