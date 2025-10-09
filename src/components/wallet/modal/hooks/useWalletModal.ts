@@ -56,9 +56,10 @@ export function useWalletModal() {
   // Auto-set management mode if wallets are connected when modal opens
   useEffect(() => {
     if (isModalOpen) {
-      // If we have connected wallets, automatically set management mode
+      // Only auto-set management mode if we're not already in connection mode
+      // This allows users to connect additional wallets even when some are already connected
       const hasConnectedWallets = evmWallet || solanaWallet;
-      if (hasConnectedWallets && !isManagementMode) {
+      if (hasConnectedWallets && !isManagementMode && selectedEcosystem === null) {
         console.log('Auto-setting management mode because wallets are connected');
         setIsManagementMode(true);
       }
@@ -66,11 +67,15 @@ export function useWalletModal() {
       // Reset when modal closes
       setIsManagementMode(false);
     }
-  }, [isModalOpen, evmWallet, solanaWallet, isManagementMode]);
+  }, [isModalOpen, evmWallet, solanaWallet, isManagementMode, selectedEcosystem]);
 
   const handleEcosystemSelect = (type: WalletType | null) => {
     setSelectedEcosystem(type);
     setError(null);
+    // When selecting an ecosystem, switch to connection mode
+    if (type !== null) {
+      setIsManagementMode(false);
+    }
   };
 
   const handleClose = () => {
