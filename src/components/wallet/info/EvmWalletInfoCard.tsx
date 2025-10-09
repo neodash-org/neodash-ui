@@ -1,6 +1,7 @@
 import React from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Card, Badge, Separator } from '@/design-system/components';
+import Image from 'next/image';
 
 export const EvmWalletInfoCard: React.FC = () => {
   return (
@@ -59,10 +60,11 @@ export const EvmWalletInfoCard: React.FC = () => {
                       }}
                     >
                       {chain.iconUrl && (
-                        <img
+                        <Image
                           alt={chain.name ?? 'Chain icon'}
                           src={chain.iconUrl}
-                          style={{ width: 16, height: 16 }}
+                          width={16}
+                          height={16}
                         />
                       )}
                     </div>
