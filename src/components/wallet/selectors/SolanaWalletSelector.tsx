@@ -76,7 +76,9 @@ const SolanaWalletSelector: React.FC<SolanaWalletSelectorProps> = ({
                       const res = await connectWallet(wallet.adapter.name);
                       if (!res.ok) {
                         const error = res.error as Error;
-                        if (!error?.message?.includes('WalletNotSelectedError')) {
+                        // Only log non-retryable errors
+                        if (!error?.message?.includes('WalletNotSelectedError') && 
+                            !error?.message?.includes('User rejected')) {
                           console.error('Wallet connection failed:', error);
                         }
                       }
