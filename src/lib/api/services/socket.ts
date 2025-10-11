@@ -97,6 +97,7 @@ export class SocketService {
       chainId: number;
     }[]
   > {
+    // Correct endpoint: /token-lists/{chainId}
     const response = await socketClient.get<{
       result: {
         address: string;
@@ -106,9 +107,7 @@ export class SocketService {
         icon: string;
         chainId: number;
       }[];
-    }>('/supported/tokens', {
-      chainId: chainId.toString(),
-    });
+    }>(`/token-lists/${chainId}`);
 
     if (!response.success || !response.data) {
       throw new Error(
@@ -120,6 +119,8 @@ export class SocketService {
   }
 
   // Get bridge status
+  // WARNING: This endpoint is not officially documented in Bungee Legacy API
+  // May need verification or replacement with a different status tracking method
   static async getBridgeStatus(routeId: string): Promise<{
     status: 'pending' | 'completed' | 'failed';
     transactionHash?: string;
@@ -145,6 +146,8 @@ export class SocketService {
   }
 
   // Get bridge history for a user
+  // WARNING: This endpoint is not officially documented in Bungee Legacy API
+  // May need verification or replacement with a different history tracking method
   static async getBridgeHistory(
     userAddress: string,
     limit: number = 50,

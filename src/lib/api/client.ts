@@ -121,12 +121,6 @@ export const socketClient = new ApiClient(
   API_CONFIG.TIMEOUTS.BRIDGE,
 );
 
-export const moralisClient = new ApiClient(
-  API_CONFIG.MORALIS.BASE_URL,
-  API_CONFIG.MORALIS.API_KEY,
-  API_CONFIG.TIMEOUTS.DEFAULT,
-);
-
 export const alchemyClient = new ApiClient(
   API_CONFIG.ALCHEMY.BASE_URL,
   API_CONFIG.ALCHEMY.API_KEY,

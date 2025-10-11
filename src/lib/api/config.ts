@@ -13,19 +13,13 @@ export const API_CONFIG = {
     API_KEY: process.env.NEXT_PUBLIC_SOCKET_API_KEY,
   },
 
-  // Moralis API for blockchain data
-  MORALIS: {
-    BASE_URL: 'https://deep-index.moralis.io/api/v2',
-    API_KEY: process.env.NEXT_PUBLIC_MORALIS_API_KEY,
-  },
-
-  // Alchemy API for Ethereum data
+  // Alchemy API for EVM chains (RPC + Portfolio)
   ALCHEMY: {
     BASE_URL: 'https://eth-mainnet.g.alchemy.com/v2',
     API_KEY: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
   },
 
-  // Helius API for Solana data
+  // Helius API for Solana (RPC + Portfolio)
   HELIUS: {
     BASE_URL: 'https://api.helius.xyz/v0',
     API_KEY: process.env.NEXT_PUBLIC_HELIUS_API_KEY,

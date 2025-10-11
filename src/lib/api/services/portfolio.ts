@@ -1,59 +1,86 @@
-import { moralisClient, heliusClient } from '../client';
+import { heliusClient } from '../client';
 import { PortfolioData, TokenBalance, Transaction } from '../types';
+import { API_CONFIG } from '../config';
 
 // Portfolio API Service for fetching user portfolio data
 export class PortfolioService {
-  // Get EVM portfolio data (Ethereum, Polygon, etc.)
+  // Get EVM portfolio data using Alchemy (Ethereum, Polygon, etc.)
   static async getEvmPortfolio(
     address: string,
     chainIds: number[] = [1, 137, 42161, 10, 8453], // Ethereum, Polygon, Arbitrum, Optimism, Base
   ): Promise<PortfolioData> {
     const allTokens: TokenBalance[] = [];
-    let totalValueUsd = 0;
+    const totalValueUsd = 0;
 
     for (const chainId of chainIds) {
       try {
-        const response = await moralisClient.get<{
-          result: {
-            token_address: string;
-            symbol: string;
-            name: string;
-            decimals: number;
-            balance: string;
-            balance_formatted: string;
-            possible_spam: boolean;
-            verified_contract: boolean;
-            balance_24h: string;
-            balance_24h_formatted: string;
-            usd_price: number;
-            usd_price_24h: number;
-            usd_value: number;
-            usd_value_24h: number;
-            logo: string;
-            thumbnail: string;
-          }[];
-        }>(`/${address}/erc20`, {
-          chain: this.getChainName(chainId),
-          exclude_spam: 'true',
-          exclude_unverified_contracts: 'true',
+        // Alchemy's getTokenBalances endpoint
+        const alchemyUrl = this.getAlchemyUrl(chainId);
+        const response = await fetch(alchemyUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            method: 'alchemy_getTokenBalances',
+            params: [address],
+            id: 1,
+          }),
         });
 
-        if (response.success && response.data) {
-          const tokens = response.data.result.map((token) => ({
-            tokenAddress: token.token_address,
-            symbol: token.symbol,
-            name: token.name,
-            decimals: token.decimals,
-            balance: token.balance,
-            balanceFormatted: token.balance_formatted,
-            priceUsd: token.usd_price,
-            valueUsd: token.usd_value,
-            chainId,
-            logoURI: token.logo || token.thumbnail,
-          }));
+        if (!response.ok) {
+          throw new Error(`Alchemy API error: ${response.status}`);
+        }
 
-          allTokens.push(...tokens);
-          totalValueUsd += tokens.reduce((sum, token) => sum + token.valueUsd, 0);
+        const data = await response.json();
+
+        if (data.result && data.result.tokenBalances) {
+          // Fetch metadata for each token
+          for (const tokenBalance of data.result.tokenBalances) {
+            if (tokenBalance.tokenBalance === '0x0') continue; // Skip zero balances
+
+            try {
+              const metadataResponse = await fetch(alchemyUrl, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  jsonrpc: '2.0',
+                  method: 'alchemy_getTokenMetadata',
+                  params: [tokenBalance.contractAddress],
+                  id: 1,
+                }),
+              });
+
+              const metadata = await metadataResponse.json();
+
+              if (metadata.result) {
+                const balance = BigInt(tokenBalance.tokenBalance);
+                const decimals = metadata.result.decimals || 18;
+                const balanceFormatted = (Number(balance) / Math.pow(10, decimals)).toString();
+
+                allTokens.push({
+                  tokenAddress: tokenBalance.contractAddress,
+                  symbol: metadata.result.symbol || 'UNKNOWN',
+                  name: metadata.result.name || 'Unknown Token',
+                  decimals,
+                  balance: balance.toString(),
+                  balanceFormatted,
+                  priceUsd: 0, // Alchemy doesn't provide prices - need to fetch separately
+                  valueUsd: 0,
+                  chainId,
+                  logoURI: metadata.result.logo,
+                });
+              }
+            } catch (metadataError) {
+              console.warn(
+                `Failed to fetch metadata for token ${tokenBalance.contractAddress}:`,
+                metadataError,
+              );
+            }
+          }
         }
       } catch (error) {
         console.warn(`Failed to fetch portfolio for chain ${chainId}:`, error);
@@ -186,7 +213,7 @@ export class PortfolioService {
     };
   }
 
-  // Get transaction history
+  // Get transaction history using Alchemy
   static async getTransactionHistory(
     address: string,
     chainIds: number[] = [1, 137, 42161, 10, 8453],
@@ -196,39 +223,60 @@ export class PortfolioService {
 
     for (const chainId of chainIds) {
       try {
-        const response = await moralisClient.get<{
-          result: {
-            hash: string;
-            from_address: string;
-            to_address: string;
-            value: string;
-            gas: string;
-            gas_price: string;
-            block_number: string;
-            block_hash: string;
-            block_timestamp: string;
-            receipt_status: string;
-          }[];
-        }>(`/${address}`, {
-          chain: this.getChainName(chainId),
-          limit: limit.toString(),
+        const alchemyUrl = this.getAlchemyUrl(chainId);
+        const response = await fetch(alchemyUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            method: 'alchemy_getAssetTransfers',
+            params: [
+              {
+                fromAddress: address,
+                category: ['external', 'internal', 'erc20', 'erc721', 'erc1155'],
+                maxCount: `0x${limit.toString(16)}`,
+                excludeZeroValue: true,
+                withMetadata: true,
+              },
+            ],
+            id: 1,
+          }),
         });
 
-        if (response.success && response.data) {
-          const transactions = response.data.result.map((tx) => ({
-            hash: tx.hash,
-            from: tx.from_address,
-            to: tx.to_address,
-            value: tx.value,
-            gasUsed: tx.gas,
-            gasPrice: tx.gas_price,
-            blockNumber: parseInt(tx.block_number),
-            blockHash: tx.block_hash,
-            timestamp: parseInt(tx.block_timestamp) * 1000,
-            chainId,
-            status: (tx.receipt_status === '1' ? 'confirmed' : 'failed') as 'confirmed' | 'failed',
-            type: 'send' as const,
-          }));
+        if (!response.ok) {
+          throw new Error(`Alchemy API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.result && data.result.transfers) {
+          const transactions = data.result.transfers.map(
+            (tx: {
+              hash: string;
+              from: string;
+              to: string;
+              value: number;
+              blockNum: string;
+              metadata: { blockTimestamp: string };
+              category: string;
+              asset: string;
+            }) => ({
+              hash: tx.hash,
+              from: tx.from,
+              to: tx.to || '',
+              value: tx.value?.toString() || '0',
+              gasUsed: '0',
+              gasPrice: '0',
+              blockNumber: parseInt(tx.blockNum, 16),
+              blockHash: '',
+              timestamp: new Date(tx.metadata.blockTimestamp).getTime(),
+              chainId,
+              status: 'confirmed' as const,
+              type: 'send' as const,
+            }),
+          );
 
           allTransactions.push(...transactions);
         }
@@ -252,5 +300,22 @@ export class PortfolioService {
       43114: 'avalanche',
     };
     return chainMap[chainId] || 'eth';
+  }
+
+  private static getAlchemyUrl(chainId: number): string {
+    const apiKey = API_CONFIG.ALCHEMY.API_KEY;
+
+    // Alchemy network mapping
+    const networkMap: Record<number, string> = {
+      1: 'eth-mainnet',
+      137: 'polygon-mainnet',
+      42161: 'arb-mainnet',
+      10: 'opt-mainnet',
+      8453: 'base-mainnet',
+      11155111: 'eth-sepolia', // Sepolia testnet
+    };
+
+    const network = networkMap[chainId] || 'eth-mainnet';
+    return `https://${network}.g.alchemy.com/v2/${apiKey}`;
   }
 }
