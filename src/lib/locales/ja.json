@@ -93,6 +93,9 @@
     "manageWallets": "接続されたウォレットを管理し、追加のエコシステムに接続",
     "manageWalletsDetailed": "接続されたウォレットを管理し、詳細情報を表示",
     "ethereumConnected": "Ethereum接続済み",
+    "solanaConnected": "Solana接続済み",
+    "recommended": "おすすめ:",
+    "solflare": "Solflare",
     "copyAddress": "アドレスをコピー",
     "addressCopied": "アドレスがクリップボードにコピーされました",
     "connectAdditionalEcosystems": "追加エコシステムに接続"

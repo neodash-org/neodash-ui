@@ -20,7 +20,7 @@ export interface WalletState {
 
 export interface WalletContextType extends WalletState {
   connect: () => Promise<void>;
-  disconnect: () => Promise<void>;
+  disconnect: (type?: WalletType) => Promise<void>;
   openModal: () => void;
   openManagementModal: () => void;
   closeModal: () => void;
