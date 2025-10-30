@@ -93,6 +93,9 @@
     "manageWallets": "Gestiona tus carteras conectadas y conéctate a ecosistemas adicionales",
     "manageWalletsDetailed": "Gestiona tus carteras conectadas y consulta información detallada",
     "ethereumConnected": "Ethereum Conectado",
+    "solanaConnected": "Solana Conectado",
+    "recommended": "Recomendado:",
+    "solflare": "Solflare",
     "copyAddress": "Copiar Dirección",
     "addressCopied": "Dirección copiada al portapapeles",
     "connectAdditionalEcosystems": "Conectar Ecosistemas Adicionales"

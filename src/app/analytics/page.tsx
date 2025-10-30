@@ -4,34 +4,34 @@ const AnalyticsPage = () => (
   <div className="max-w-7xl mx-auto px-4 py-5 flex flex-col gap-8">
     {/* Analytics Header */}
     <section className="flex flex-col gap-4">
-      <h2 className="text-neon-cyan text-2xl font-bold font-[var(--font-cyberpunk)] tracking-wider">
+      <h2 className="text-neon-cyan text-2xl font-bold [font-family:var(--font-cyberpunk)] tracking-wider">
         Analytics Dashboard
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="neodash-card bg-bg-card/70 border border-white/10 rounded-2xl shadow-[0_4px_32px_var(--color-neon-cyan-88)] backdrop-blur-lg p-6">
           <div className="text-white/70 text-sm mb-2">Total Volume</div>
-          <div className="text-neon-yellow text-2xl font-bold font-[var(--font-cyberpunk)]">
+          <div className="text-neon-yellow text-2xl font-bold [font-family:var(--font-cyberpunk)]">
             $2.4M
           </div>
           <div className="text-neon-green text-sm mt-2">+18.5% vs last month</div>
         </div>
         <div className="neodash-card bg-bg-card/70 border border-white/10 rounded-2xl shadow-[0_4px_32px_var(--color-neon-cyan-88)] backdrop-blur-lg p-6">
           <div className="text-white/70 text-sm mb-2">Active Users</div>
-          <div className="text-neon-yellow text-2xl font-bold font-[var(--font-cyberpunk)]">
+          <div className="text-neon-yellow text-2xl font-bold [font-family:var(--font-cyberpunk)]">
             1,247
           </div>
           <div className="text-neon-green text-sm mt-2">+12.3% vs last month</div>
         </div>
         <div className="neodash-card bg-bg-card/70 border border-white/10 rounded-2xl shadow-[0_4px_32px_var(--color-neon-cyan-88)] backdrop-blur-lg p-6">
           <div className="text-white/70 text-sm mb-2">Success Rate</div>
-          <div className="text-neon-yellow text-2xl font-bold font-[var(--font-cyberpunk)]">
+          <div className="text-neon-yellow text-2xl font-bold [font-family:var(--font-cyberpunk)]">
             98.7%
           </div>
           <div className="text-neon-green text-sm mt-2">+2.1% vs last month</div>
         </div>
         <div className="neodash-card bg-bg-card/70 border border-white/10 rounded-2xl shadow-[0_4px_32px_var(--color-neon-cyan-88)] backdrop-blur-lg p-6">
           <div className="text-white/70 text-sm mb-2">Avg. Response</div>
-          <div className="text-neon-yellow text-2xl font-bold font-[var(--font-cyberpunk)]">
+          <div className="text-neon-yellow text-2xl font-bold [font-family:var(--font-cyberpunk)]">
             2.3s
           </div>
           <div className="text-neon-green text-sm mt-2">-15.2% vs last month</div>
@@ -41,7 +41,7 @@ const AnalyticsPage = () => (
 
     {/* Performance Chart */}
     <section className="neodash-card bg-bg-card/70 border border-white/10 rounded-2xl shadow-[0_4px_32px_var(--color-neon-cyan-88)] backdrop-blur-lg p-8">
-      <h3 className="text-neon-cyan text-xl font-bold font-[var(--font-cyberpunk)] mb-6 tracking-wide">
+      <h3 className="text-neon-cyan text-xl font-bold [font-family:var(--font-cyberpunk)] mb-6 tracking-wide">
         Portfolio Performance (30 Days)
       </h3>
       <div className="flex items-center justify-center min-h-[400px]">
@@ -54,7 +54,7 @@ const AnalyticsPage = () => (
     {/* Trading Volume Analysis */}
     <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="neodash-card bg-bg-card/70 border border-white/10 rounded-2xl shadow-[0_4px_32px_var(--color-neon-cyan-88)] backdrop-blur-lg p-6">
-        <h3 className="text-neon-cyan text-xl font-bold font-[var(--font-cyberpunk)] mb-6 tracking-wide">
+        <h3 className="text-neon-cyan text-xl font-bold [font-family:var(--font-cyberpunk)] mb-6 tracking-wide">
           Trading Volume by Asset
         </h3>
         <div className="space-y-4">
@@ -98,7 +98,7 @@ const AnalyticsPage = () => (
       </div>
 
       <div className="neodash-card bg-bg-card/70 border border-white/10 rounded-2xl shadow-[0_4px_32px_var(--color-neon-cyan-88)] backdrop-blur-lg p-6">
-        <h3 className="text-neon-cyan text-xl font-bold font-[var(--font-cyberpunk)] mb-6 tracking-wide">
+        <h3 className="text-neon-cyan text-xl font-bold [font-family:var(--font-cyberpunk)] mb-6 tracking-wide">
           Risk Metrics
         </h3>
         <div className="space-y-6">
@@ -135,24 +135,24 @@ const AnalyticsPage = () => (
 
     {/* Market Sentiment */}
     <section className="neodash-card bg-bg-card/70 border border-white/10 rounded-2xl shadow-[0_4px_32px_var(--color-neon-cyan-88)] backdrop-blur-lg p-6">
-      <h3 className="text-neon-cyan text-xl font-bold font-[var(--font-cyberpunk)] mb-6 tracking-wide">
+      <h3 className="text-neon-cyan text-xl font-bold [font-family:var(--font-cyberpunk)] mb-6 tracking-wide">
         Market Sentiment Analysis
       </h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="text-center p-4 bg-white/5 rounded-lg">
-          <div className="text-neon-green text-3xl font-bold font-[var(--font-cyberpunk)] mb-2">
+          <div className="text-neon-green text-3xl font-bold [font-family:var(--font-cyberpunk)] mb-2">
             Bullish
           </div>
           <div className="text-white/70 text-sm">65% of signals</div>
         </div>
         <div className="text-center p-4 bg-white/5 rounded-lg">
-          <div className="text-white text-3xl font-bold font-[var(--font-cyberpunk)] mb-2">
+          <div className="text-white text-3xl font-bold [font-family:var(--font-cyberpunk)] mb-2">
             Neutral
           </div>
           <div className="text-white/70 text-sm">25% of signals</div>
         </div>
         <div className="text-center p-4 bg-white/5 rounded-lg">
-          <div className="text-neon-pink text-3xl font-bold font-[var(--font-cyberpunk)] mb-2">
+          <div className="text-neon-pink text-3xl font-bold [font-family:var(--font-cyberpunk)] mb-2">
             Bearish
           </div>
           <div className="text-white/70 text-sm">10% of signals</div>

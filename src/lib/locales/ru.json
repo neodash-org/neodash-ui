@@ -93,6 +93,9 @@
     "manageWallets": "Управляйте подключенными кошельками и подключайтесь к дополнительным экосистемам",
     "manageWalletsDetailed": "Управляйте подключенными кошельками и просматривайте подробную информацию",
     "ethereumConnected": "Ethereum подключен",
+    "solanaConnected": "Solana подключен",
+    "recommended": "Рекомендуется:",
+    "solflare": "Solflare",
     "copyAddress": "Копировать адрес",
     "addressCopied": "Адрес скопирован в буфер обмена",
     "connectAdditionalEcosystems": "Подключить дополнительные экосистемы"

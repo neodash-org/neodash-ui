@@ -1,231 +1,245 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import {
+  useBridgeQuote,
+  useSupportedChains,
+  useSupportedTokens,
+  useUsdForSymbol,
+} from '@/hooks/useApi';
+import { useBridgeWalletDefaults } from '@/hooks/bridge';
+//
+import { BridgeHeader } from '@/components/bridge/BridgeHeader';
+import { SupportedChains } from '@/components/bridge/SupportedChains';
+import { BridgeForm } from '@/components/bridge/BridgeForm';
+import { QuoteSummary } from '@/components/bridge/QuoteSummary';
+import { useToast } from '@/components/shared/Toast';
+import { useAccount, useSwitchChain, useWalletClient } from 'wagmi';
 
 export default function BridgePage() {
+  const { show } = useToast();
+  const searchParams = useSearchParams();
+  const { chainId: walletChainId, isConnected: isEvmConnected, address: evmAddress } = useAccount();
+  const { switchChainAsync } = useSwitchChain();
+  const { data: walletClient } = useWalletClient();
+  const { fromChainId, setFromChainId, userAddress, isConnected } = useBridgeWalletDefaults(1);
+  const [toChainId, setToChainId] = useState<number>(137);
+  const [amount, setAmount] = useState<string>('1000000000000000');
+
+  const {
+    chains,
+    loading: chainsLoading,
+    error: chainsError,
+    refetch: refetchChains,
+  } = useSupportedChains();
+  const {
+    tokens: fromTokens,
+    loading: fromTokensLoading,
+    error: fromTokensError,
+    refetch: refetchFromTokens,
+  } = useSupportedTokens(fromChainId);
+  const {
+    tokens: toTokens,
+    loading: toTokensLoading,
+    error: toTokensError,
+    refetch: refetchToTokens,
+  } = useSupportedTokens(toChainId);
+  const { quote, loading: quoteLoading, getQuote } = useBridgeQuote();
+
+  // Defaults for native tokens
+  const [fromTokenAddress, setFromTokenAddress] = useState<string>(
+    '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  );
+  const [toTokenAddress, setToTokenAddress] = useState<string>(
+    '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  );
+
+  // Prefill from URL query params
+  useEffect(() => {
+    if (!searchParams) return;
+    const fromChain = searchParams.get('fromChainId');
+    const toChain = searchParams.get('toChainId');
+    const fromToken = searchParams.get('fromTokenAddress');
+    const toToken = searchParams.get('toTokenAddress');
+    const amt = searchParams.get('amount');
+
+    if (fromChain) setFromChainId(Number(fromChain));
+    if (toChain) setToChainId(Number(toChain));
+    if (fromToken) setFromTokenAddress(fromToken);
+    if (toToken) setToTokenAddress(toToken);
+    if (amt) setAmount(amt);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
+  useEffect(() => {
+    // Ensure native defaults remain selected when chain changes
+    setFromTokenAddress('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+  }, [fromChainId]);
+
+  const canQuote = useMemo(() => {
+    return (
+      !!fromChainId &&
+      !!toChainId &&
+      !!fromTokenAddress &&
+      !!toTokenAddress &&
+      amount.length > 0 &&
+      userAddress.length > 0
+    );
+  }, [fromChainId, toChainId, fromTokenAddress, toTokenAddress, amount, userAddress]);
+
+  // -------------------- USD COMPUTATIONS --------------------
+  const selectedFromToken = useMemo(
+    () => fromTokens.find((t) => t.address.toLowerCase() === fromTokenAddress.toLowerCase()),
+    [fromTokens, fromTokenAddress],
+  );
+  const selectedToToken = useMemo(
+    () => toTokens.find((t) => t.address.toLowerCase() === toTokenAddress.toLowerCase()),
+    [toTokens, toTokenAddress],
+  );
+
+  const nativeSymbolByChain: Record<number, string> = {
+    1: 'ETH',
+    10: 'ETH',
+    137: 'MATIC',
+    42161: 'ETH',
+    8453: 'ETH',
+  };
+
+  const fromSymbol = selectedFromToken?.symbol || nativeSymbolByChain[fromChainId] || 'ETH';
+  const toSymbol = selectedToToken?.symbol || nativeSymbolByChain[toChainId] || 'ETH';
+
+  const fromDecimals = selectedFromToken?.decimals ?? 18;
+  const toDecimals = selectedToToken?.decimals ?? 18;
+
+  const humanFromAmount = useMemo(() => {
+    const n = Number(amount);
+    if (!isFinite(n)) return 0;
+    return n / Math.pow(10, fromDecimals);
+  }, [amount, fromDecimals]);
+
+  const humanToAmount = useMemo(() => {
+    const n = quote?.toAmount ? Number(quote.toAmount) : 0;
+    if (!isFinite(n)) return 0;
+    return n / Math.pow(10, toDecimals);
+  }, [quote?.toAmount, toDecimals]);
+
+  const { valueUsd: fromUsd } = useUsdForSymbol(fromSymbol, humanFromAmount, null);
+  const { valueUsd: toUsd } = useUsdForSymbol(toSymbol, humanToAmount, null);
+  const gasUsd = quote?.gasFees?.amountInUsd ?? null;
+
+  // Debounced auto-quote
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (!canQuote) return;
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      void getQuote(fromChainId, toChainId, fromTokenAddress, toTokenAddress, amount, userAddress);
+    }, 500);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canQuote, fromChainId, toChainId, fromTokenAddress, toTokenAddress, amount, userAddress]);
+
+  const handleQuote = async () => {
+    if (!canQuote) return;
+    await getQuote(fromChainId, toChainId, fromTokenAddress, toTokenAddress, amount, userAddress);
+  };
+
+  const canExecute = useMemo(
+    () => isConnected && !!quote && !quoteLoading,
+    [isConnected, quote, quoteLoading],
+  );
+
+  //
+
+  const handleExecuteTxs = async () => {
+    try {
+      if (!canExecute || !quote) return;
+      if (!walletClient || !isEvmConnected) {
+        show({ variant: 'warning', title: 'Wallet not connected' });
+        return;
+      }
+      if (walletChainId !== fromChainId) {
+        await switchChainAsync({ chainId: fromChainId });
+      }
+      const txs = quote.userTxs || [];
+      for (const tx of txs) {
+        await walletClient.sendTransaction({
+          account: evmAddress as `0x${string}`,
+          to: tx.txData.to as `0x${string}`,
+          data: tx.txData.data as `0x${string}`,
+          // Convert hex string value to bigint safely
+          value: (typeof tx.txData.value === 'string' && tx.txData.value.startsWith('0x')
+            ? BigInt(tx.txData.value)
+            : BigInt(0)) as bigint,
+        });
+      }
+      show({ variant: 'success', title: 'Transactions sent' });
+    } catch (e) {
+      show({
+        variant: 'error',
+        title: 'Execute failed',
+        description: e instanceof Error ? e.message : 'Unknown error',
+      });
+    }
+  };
+
   return (
-    <div className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-8">
-      {/* Bridge Header */}
-      <section className="flex flex-col gap-4">
-        <h2 className="text-neon-cyan text-2xl font-bold font-[var(--font-cyberpunk)] tracking-wider">
-          Bridge
-        </h2>
-        <p className="text-white/70">Transfer assets between different blockchain networks</p>
-      </section>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white p-8">
+      <div className="max-w-4xl mx-auto">
+        <BridgeHeader />
 
-      {/* Bridge Interface */}
-      <section className="neodash-card bg-bg-card/70 border border-white/10 rounded-2xl shadow-[0_4px_32px_var(--color-neon-cyan-88)] backdrop-blur-lg p-8">
-        {/* Network Selection */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {/* Source Network */}
-          <div>
-            <label className="block text-white/70 text-sm font-medium mb-3">From Network</label>
-            <div className="relative">
-              <select className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-neon-cyan focus:outline-none appearance-none">
-                <option>Ethereum (ETH)</option>
-                <option>Polygon (MATIC)</option>
-                <option>Binance Smart Chain (BSC)</option>
-                <option>Arbitrum (ARB)</option>
-                <option>Optimism (OP)</option>
-              </select>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <svg
-                  className="w-5 h-5 text-white/50"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
+        <SupportedChains
+          chains={chains}
+          loading={chainsLoading}
+          error={chainsError}
+          onRetry={refetchChains}
+        />
 
-          {/* Destination Network */}
-          <div>
-            <label className="block text-white/70 text-sm font-medium mb-3">To Network</label>
-            <div className="relative">
-              <select className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-neon-cyan focus:outline-none appearance-none">
-                <option>Polygon (MATIC)</option>
-                <option>Ethereum (ETH)</option>
-                <option>Binance Smart Chain (BSC)</option>
-                <option>Arbitrum (ARB)</option>
-                <option>Optimism (OP)</option>
-              </select>
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <svg
-                  className="w-5 h-5 text-white/50"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
+        <BridgeForm
+          isConnected={isConnected}
+          chains={chains}
+          chainsLoading={chainsLoading}
+          fromChainId={fromChainId}
+          setFromChainId={setFromChainId}
+          toChainId={toChainId}
+          setToChainId={setToChainId}
+          fromTokens={fromTokens}
+          toTokens={toTokens}
+          fromTokensLoading={fromTokensLoading}
+          toTokensLoading={toTokensLoading}
+          fromTokensError={fromTokensError}
+          toTokensError={toTokensError}
+          refetchFromTokens={refetchFromTokens}
+          refetchToTokens={refetchToTokens}
+          fromTokenAddress={fromTokenAddress}
+          setFromTokenAddress={setFromTokenAddress}
+          toTokenAddress={toTokenAddress}
+          setToTokenAddress={setToTokenAddress}
+          amount={amount}
+          setAmount={setAmount}
+          canQuote={canQuote}
+          quoteLoading={quoteLoading}
+          onQuote={handleQuote}
+          onExecute={handleExecuteTxs}
+          canExecute={canExecute}
+        />
 
-        {/* Asset Selection */}
-        <div className="mb-8">
-          <label className="block text-white/70 text-sm font-medium mb-3">Asset to Bridge</label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-center p-4 bg-white/5 rounded-lg border border-white/10 hover:border-neon-cyan/50 transition-colors cursor-pointer">
-              <div className="w-10 h-10 bg-neon-yellow rounded-full mr-3"></div>
-              <div className="flex-1">
-                <p className="text-white font-medium">Ethereum</p>
-                <p className="text-white/60 text-sm">ETH</p>
-              </div>
-              <div className="text-right">
-                <p className="text-white font-medium">12.456</p>
-                <p className="text-white/60 text-sm">$18,234.56</p>
-              </div>
-            </div>
-            <div className="flex items-center p-4 bg-white/5 rounded-lg border border-white/10 hover:border-neon-cyan/50 transition-colors cursor-pointer">
-              <div className="w-10 h-10 bg-neon-cyan rounded-full mr-3"></div>
-              <div className="flex-1">
-                <p className="text-white font-medium">USD Coin</p>
-                <p className="text-white/60 text-sm">USDC</p>
-              </div>
-              <div className="text-right">
-                <p className="text-white font-medium">5,000</p>
-                <p className="text-white/60 text-sm">$5,000.00</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Amount Input */}
-        <div className="mb-8">
-          <label className="block text-white/70 text-sm font-medium mb-3">Amount to Bridge</label>
-          <div className="relative">
-            <input
-              type="number"
-              placeholder="0.0"
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/50 focus:border-neon-cyan focus:outline-none text-right text-lg"
-            />
-            <div className="absolute inset-y-0 left-0 flex items-center pl-4">
-              <span className="text-white/60">ETH</span>
-            </div>
-            <button className="absolute inset-y-0 right-0 flex items-center pr-4 text-neon-cyan hover:text-neon-cyan/80 text-sm font-medium">
-              MAX
-            </button>
-          </div>
-          <div className="flex justify-between text-sm text-white/60 mt-2">
-            <span>Available: 12.456 ETH</span>
-            <span>≈ $18,234.56</span>
-          </div>
-        </div>
-
-        {/* Bridge Details */}
-        <div className="bg-white/5 rounded-lg p-4 mb-8">
-          <h3 className="text-white font-medium mb-3">Bridge Details</h3>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-white/60">Bridge Fee:</span>
-              <span className="text-white">0.001 ETH</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-white/60">Estimated Time:</span>
-              <span className="text-white">5-10 minutes</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-white/60">You&apos;ll Receive:</span>
-              <span className="text-white">12.455 ETH (Polygon)</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Bridge Button */}
-        <button className="w-full px-6 py-4 bg-gradient-to-r from-neon-cyan to-neon-pink text-white rounded-lg hover:scale-105 transition-all duration-300 font-bold font-[var(--font-cyberpunk)] text-lg shadow-[0_0_12px_var(--color-neon-cyan),0_0_24px_var(--color-neon-pink)]">
-          Bridge Assets
-        </button>
-
-        {/* Security Notice */}
-        <div className="mt-6 p-4 bg-neon-yellow/10 border border-neon-yellow/20 rounded-lg">
-          <div className="flex items-start">
-            <span className="text-neon-yellow mr-2">⚠️</span>
-            <div className="text-sm text-neon-yellow/80">
-              <p className="font-medium mb-1">Security Notice</p>
-              <p>
-                Always verify the destination address and network before bridging. Bridge
-                transactions cannot be reversed once initiated.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Recent Bridge Transactions */}
-      <section className="neodash-card bg-bg-card/70 border border-white/10 rounded-2xl shadow-[0_4px_32px_var(--color-neon-cyan-88)] backdrop-blur-lg p-6">
-        <h3 className="text-neon-cyan text-xl font-bold font-[var(--font-cyberpunk)] mb-6 tracking-wide">
-          Recent Bridge Transactions
-        </h3>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
-            <div className="flex items-center">
-              <div className="w-8 h-8 bg-neon-green/20 rounded-full flex items-center justify-center mr-3">
-                <svg
-                  className="w-4 h-4 text-neon-green"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-              <div>
-                <p className="text-white font-medium">ETH → Polygon</p>
-                <p className="text-white/60 text-sm">2.5 ETH • 2 hours ago</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-neon-green text-sm font-medium">Completed</p>
-              <p className="text-white/60 text-xs">Tx: 0x1234...5678</p>
-            </div>
-          </div>
-          <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg border border-white/10">
-            <div className="flex items-center">
-              <div className="w-8 h-8 bg-neon-cyan/20 rounded-full flex items-center justify-center mr-3">
-                <svg
-                  className="w-4 h-4 text-neon-cyan"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <p className="text-white font-medium">USDC → BSC</p>
-                <p className="text-white/60 text-sm">1,000 USDC • 1 day ago</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-neon-cyan text-sm font-medium">Processing</p>
-              <p className="text-white/60 text-xs">Tx: 0xabcd...efgh</p>
-            </div>
-          </div>
-        </div>
-      </section>
+        {quote && (
+          <QuoteSummary
+            routeId={quote.routeId}
+            fromAmount={quote.fromAmount}
+            toAmount={quote.toAmount}
+            fromUsd={fromUsd ?? undefined}
+            toUsd={toUsd ?? undefined}
+            gasAmount={quote.gasFees?.amount ?? null}
+            gasSymbol={quote.gasFees?.token?.symbol ?? null}
+            gasUsd={gasUsd}
+          />
+        )}
+      </div>
     </div>
   );
 }

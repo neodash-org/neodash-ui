@@ -4,7 +4,7 @@ import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { WalletReadyState } from '@solana/wallet-adapter-base';
 import { Button } from '@/design-system/components';
 import { usePostHog } from '@/hooks';
-import SolanaWalletSelector from './SolanaWalletSelector';
+import SolanaWalletSelector from '../selectors/SolanaWalletSelector';
 import { Modal } from '@/design-system/components';
 
 const SolanaWalletConnector: React.FC = () => {
