@@ -1,3 +1,128 @@
+'use client';
+
+import React, { useCallback, useMemo, useState } from 'react';
+import { useAccount } from 'wagmi';
+import { Button } from '@/src/design-system/components/Button';
+import { Card } from '@/src/design-system/components/Card';
+import { Separator } from '@/src/design-system/components/Separator';
+import { useBridgeQuote, useSupportedChains, useSupportedTokens } from '@/src/hooks/useApi';
+import ChainSelect from '@/src/components/bridge/ChainSelect';
+import TokenSelect from '@/src/components/bridge/TokenSelect';
+import AmountInput from '@/src/components/bridge/AmountInput';
+import QuoteSummary from '@/src/components/bridge/QuoteSummary';
+
+export default function BridgePage() {
+  const { address, isConnected } = useAccount();
+
+  const [fromChainId, setFromChainId] = useState<number>(1);
+  const [toChainId, setToChainId] = useState<number>(137);
+  const [fromTokenAddress, setFromTokenAddress] = useState<string>(
+    '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+  );
+  const [toTokenAddress, setToTokenAddress] = useState<string>(
+    '0x0000000000000000000000000000000000001010',
+  );
+  const [amount, setAmount] = useState<string>('');
+
+  const { chains, loading: chainsLoading } = useSupportedChains();
+  const { tokens: fromTokens, loading: fromTokensLoading } = useSupportedTokens(fromChainId);
+  const { tokens: toTokens, loading: toTokensLoading } = useSupportedTokens(toChainId);
+  const { quote, loading: quoteLoading, error: quoteError, getQuote } = useBridgeQuote();
+
+  const canRequestQuote = useMemo(() => {
+    return Boolean(
+      fromChainId &&
+        toChainId &&
+        fromTokenAddress &&
+        toTokenAddress &&
+        Number(amount) > 0 &&
+        address,
+    );
+  }, [fromChainId, toChainId, fromTokenAddress, toTokenAddress, amount, address]);
+
+  const handleGetQuote = useCallback(async () => {
+    if (!canRequestQuote || !address) return;
+    await getQuote(fromChainId, toChainId, fromTokenAddress, toTokenAddress, amount, address);
+  }, [
+    canRequestQuote,
+    address,
+    getQuote,
+    fromChainId,
+    toChainId,
+    fromTokenAddress,
+    toTokenAddress,
+    amount,
+  ]);
+
+  const isLoading = chainsLoading || fromTokensLoading || toTokensLoading;
+
+  return (
+    <div className="max-w-3xl mx-auto w-full px-4 py-8">
+      <h1 className="text-3xl font-semibold mb-6">Bridge</h1>
+      <Card>
+        <div className="p-4 sm:p-6">
+          <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <ChainSelect
+                label="From chain"
+                chains={chains}
+                value={fromChainId}
+                onChange={setFromChainId}
+                loading={isLoading}
+              />
+              <ChainSelect
+                label="To chain"
+                chains={chains}
+                value={toChainId}
+                onChange={setToChainId}
+                loading={isLoading}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <TokenSelect
+                label="From token"
+                tokens={fromTokens}
+                value={fromTokenAddress}
+                onChange={setFromTokenAddress}
+                loading={fromTokensLoading}
+              />
+              <TokenSelect
+                label="To token"
+                tokens={toTokens}
+                value={toTokenAddress}
+                onChange={setToTokenAddress}
+                loading={toTokensLoading}
+              />
+            </div>
+
+            <AmountInput value={amount} onChange={setAmount} disabled={isLoading} />
+
+            <div className="flex items-center gap-3">
+              <Button
+                variant="primary"
+                onClick={handleGetQuote}
+                disabled={!isConnected || !canRequestQuote || quoteLoading}
+              >
+                {quoteLoading ? 'Fetching quote…' : 'Get Quote'}
+              </Button>
+              <span className="text-sm text-muted-foreground">
+                {isConnected
+                  ? `Connected: ${address?.slice(0, 6)}…${address?.slice(-4)}`
+                  : 'Connect wallet to request a quote'}
+              </span>
+            </div>
+
+            <Separator />
+
+            <QuoteSummary quote={quote} error={quoteError} loading={quoteLoading} />
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
 import React from 'react';
 
 export default function BridgePage() {

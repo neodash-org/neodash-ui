@@ -1,8 +1,12 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { priceAggregator } from '@/lib/api/services/priceAggregator';
-import { SocketService } from '@/lib/api/services/socket';
 import { PortfolioService } from '@/lib/api/services/portfolio';
-import { AggregatedPrice, PortfolioData, BridgeQuote, Transaction } from '@/lib/api/types';
+import { AggregatedPrice, PortfolioData, Transaction } from '@/lib/api/types';
+import {
+  useSupportedChains as useSupportedChainsCore,
+  useSupportedTokens as useSupportedTokensCore,
+  useBridgeQuote as useBridgeQuoteCore,
+} from '@/hooks/bridge';
 
 // CTO-Level Price Hooks
 export const usePrices = (symbols: string[], refreshInterval = 300000) => {
@@ -12,7 +16,7 @@ export const usePrices = (symbols: string[], refreshInterval = 300000) => {
 
   // Memoize symbols to prevent infinite loops
   const symbolsKey = symbols.join(',');
-  const memoizedSymbols = useMemo(() => symbols, [symbols, symbolsKey]);
+  const memoizedSymbols = useMemo(() => symbols, [symbolsKey]);
 
   const fetchPrices = useCallback(async () => {
     try {
@@ -21,7 +25,6 @@ export const usePrices = (symbols: string[], refreshInterval = 300000) => {
       const data = await priceAggregator.getPrices(memoizedSymbols);
       setPrices(data);
     } catch (err) {
-      console.error('usePrices error:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch prices');
     } finally {
       setLoading(false);
@@ -171,13 +174,26 @@ export const useTransactionHistory = (
   return { transactions, loading, error, refetch: fetchTransactions };
 };
 
-// Socket.tech Hooks for bridge functionality
+// Socket.tech Hooks (UI shape) — wrappers over advanced hooks in hooks/bridge
 
-// Hook for getting bridge quotes
+export const useSupportedChains = () => {
+  const { data, loading, error, refetch } = useSupportedChainsCore();
+  return useMemo(
+    () => ({ chains: data ?? [], loading, error, refetch }),
+    [data, loading, error, refetch],
+  );
+};
+
+export const useSupportedTokens = (chainId: number) => {
+  const { data, loading, error, refetch } = useSupportedTokensCore(chainId);
+  return useMemo(
+    () => ({ tokens: data ?? [], loading, error, refetch }),
+    [data, loading, error, refetch],
+  );
+};
+
 export const useBridgeQuote = () => {
-  const [quote, setQuote] = useState<BridgeQuote | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { data, loading, error, refetch, setParams } = useBridgeQuoteCore();
 
   const getQuote = useCallback(
     async (
@@ -188,96 +204,90 @@ export const useBridgeQuote = () => {
       amount: string,
       userAddress: string,
     ) => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await SocketService.getBridgeQuote(
-          fromChainId,
-          toChainId,
-          fromTokenAddress,
-          toTokenAddress,
-          amount,
-          userAddress,
-        );
-        setQuote(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to get quote');
-      } finally {
-        setLoading(false);
-      }
+      setParams({ fromChainId, toChainId, fromTokenAddress, toTokenAddress, amount, userAddress });
+      await refetch();
     },
-    [],
+    [setParams, refetch],
   );
 
-  return { quote, loading, error, getQuote };
+  return useMemo(
+    () => ({ quote: data, loading, error, getQuote }),
+    [data, loading, error, getQuote],
+  );
 };
 
-// Hook for fetching supported chains
-export const useSupportedChains = () => {
-  const [chains, setChains] = useState<
-    {
-      chainId: number;
-      name: string;
-      symbol: string;
-      icon: string;
-      isL1: boolean;
-      isL2: boolean;
-    }[]
-  >([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+// USD price utilities (Agent 4 — Price Aggregator Integration)
 
-  const fetchChains = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await SocketService.getSupportedChains();
-      setChains(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch supported chains');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchChains();
-  }, [fetchChains]);
-
-  return { chains, loading, error, refetch: fetchChains };
+type UsdComputationInput = {
+  symbol?: string | null;
+  amount?: string | number | null; // human-readable amount
+  fallbackUsd?: number | null; // e.g., from quote if aggregator lacks USD
 };
 
-// Hook for fetching supported tokens
-export const useSupportedTokens = (chainId: number) => {
-  const [tokens, setTokens] = useState<
-    {
-      address: string;
-      symbol: string;
-      name: string;
-      decimals: number;
-      icon: string;
-      chainId: number;
-    }[]
-  >([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+type UsdComputationResult = {
+  priceUsd: number | null;
+  valueUsd: number | null;
+  usedFallback: boolean;
+};
 
-  const fetchTokens = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await SocketService.getSupportedTokens(chainId);
-      setTokens(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch supported tokens');
-    } finally {
-      setLoading(false);
+// Pure helper to compute USD from price and amount, with safe parsing
+const computeUsdValue = (
+  priceUsd?: number | null,
+  amount?: string | number | null,
+): number | null => {
+  if (priceUsd == null) return null;
+  const amt = typeof amount === 'string' ? Number(amount) : (amount ?? 0);
+  if (!isFinite(amt)) return null;
+  return amt * priceUsd;
+};
+
+// Selector over an AggregatedPrice map. Memoized to avoid re-renders.
+export const useUsdFromAggregatedPrices = (
+  pricesMap: { [symbol: string]: AggregatedPrice } | null | undefined,
+  { symbol, amount, fallbackUsd }: UsdComputationInput,
+): UsdComputationResult => {
+  return useMemo<UsdComputationResult>(() => {
+    const priceEntry = symbol && pricesMap ? pricesMap[symbol] : undefined;
+    const priceUsd = priceEntry?.price ?? null;
+    const valueFromAgg = computeUsdValue(priceUsd, amount);
+
+    if (valueFromAgg != null) {
+      return { priceUsd, valueUsd: valueFromAgg, usedFallback: false };
     }
-  }, [chainId]);
 
-  useEffect(() => {
-    fetchTokens();
-  }, [fetchTokens]);
+    const valueFromFallback = typeof fallbackUsd === 'number' ? fallbackUsd : null;
+    return {
+      priceUsd: priceUsd ?? null,
+      valueUsd: valueFromFallback,
+      usedFallback: valueFromAgg == null && valueFromFallback != null,
+    };
+  }, [pricesMap, symbol, amount, fallbackUsd]);
+};
 
-  return { tokens, loading, error, refetch: fetchTokens };
+// Convenience hook to fetch a single symbol's price and compute USD with fallback
+export const useUsdForSymbol = (
+  symbol: string | undefined,
+  amount: string | number | null,
+  fallbackUsd?: number | null,
+  refreshInterval = 300000,
+): UsdComputationResult & { loading: boolean; error: string | null } => {
+  const { price, loading, error } = usePrice(symbol ?? '', refreshInterval);
+
+  const result = useMemo<UsdComputationResult>(() => {
+    const priceUsd = price?.price ?? null;
+    const valueFromAgg = computeUsdValue(priceUsd, amount);
+
+    if (valueFromAgg != null) {
+      return { priceUsd, valueUsd: valueFromAgg, usedFallback: false };
+    }
+
+    const valueFromFallback = typeof fallbackUsd === 'number' ? fallbackUsd : null;
+    return {
+      priceUsd,
+      valueUsd: valueFromFallback,
+      usedFallback: valueFromAgg == null && valueFromFallback != null,
+    };
+  }, [price, amount, fallbackUsd]);
+
+  return { ...result, loading, error };
 };

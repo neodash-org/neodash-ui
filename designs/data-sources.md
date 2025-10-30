@@ -189,4 +189,50 @@ This document contains all external data sources, APIs, and integrations used in
 
 ---
 
-**Last Updated**: 2025-10-10
+**Last Updated**: 2025-10-30
+
+---
+
+## 🌉 Bridge Flow & Hooks
+
+### Overview
+
+The Bridge feature uses Socket/Bungee for cross-chain quotes and transaction building. The UI composes controlled inputs for chain, token and amount, and derives a quote summary. Execution is disabled until a wallet is connected and a valid quote is available.
+
+### Hook Surfaces (Agent 1/2/3)
+
+These hooks are consumed by the Bridge page and components. Exact signatures may evolve, but the responsibilities and data shapes remain stable.
+
+- useBridgeState (source of truth for bridge UI state)
+  - Inputs: optional URL params to prefill
+  - State: fromChainId, toChainId, fromToken, toToken, amount, userAddress
+  - Derived: isValid, parsedAmount, validationErrors
+  - Effects: sync userAddress and fromChainId with connected EVM wallet (wagmi)
+
+- useSupportedLists
+  - Methods: loadSupportedChains(), loadTokenList(chainId)
+  - Caching: in-memory 10m TTL, request dedupe by key
+
+- useBridgeQuote
+  - Inputs: fromChainId, toChainId, fromToken, toToken, amount, userAddress
+  - Output: quote, loading, error, refetch
+  - Behavior: debounced fetch, cancels stale requests, error surfaced via centralized handler
+
+- useExecuteRoute
+  - Inputs: quote
+  - Output: buildTx(), execute(), txStatus
+
+Environment
+
+- NEXT_PUBLIC_SOCKET_API_KEY (required)
+- Reads from src/lib/api/config.ts at build/runtime; ensure .env.local is configured
+
+Testing
+
+- Use /test-bridge for inspection of raw state and quotes
+- /bridge is production UI; keep both routable during development
+
+Pricing (Agent 4)
+
+- USD values computed via aggregated prices with fallback to quote-provided USD
+- Memoized lookups to avoid unnecessary renders

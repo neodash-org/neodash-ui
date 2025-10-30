@@ -69,21 +69,33 @@ export class SocketService {
     }[]
   > {
     const response = await socketClient.get<{
+      success: boolean;
       result: {
         chainId: number;
         name: string;
-        symbol: string;
-        icon: string;
         isL1: boolean;
-        isL2: boolean;
+        sendingEnabled: boolean;
+        icon: string;
+        receivingEnabled: boolean;
+        currency: {
+          symbol: string;
+        };
       }[];
     }>('/supported/chains');
 
-    if (!response.success || !response.data) {
+    if (!response.success || !response.data || !response.data.result) {
       throw new Error(`Failed to get supported chains: ${response.error?.message}`);
     }
 
-    return response.data.result;
+    // Map the actual API response format
+    return response.data.result.map((chain) => ({
+      chainId: chain.chainId,
+      name: chain.name,
+      symbol: chain.currency.symbol,
+      icon: chain.icon,
+      isL1: chain.isL1,
+      isL2: !chain.isL1,
+    }));
   }
 
   // Get supported tokens for a chain

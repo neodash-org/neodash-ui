@@ -6,11 +6,21 @@ class ApiClient {
   private baseURL: string;
   private apiKey?: string;
   private timeout: number;
+  private apiKeyHeaderName?: string;
+  private apiKeyPrefix?: string;
 
-  constructor(baseURL: string, apiKey?: string, timeout: number = API_CONFIG.TIMEOUTS.DEFAULT) {
+  constructor(
+    baseURL: string,
+    apiKey?: string,
+    timeout: number = API_CONFIG.TIMEOUTS.DEFAULT,
+    apiKeyHeaderName: string = 'Authorization',
+    apiKeyPrefix: string = 'Bearer ',
+  ) {
     this.baseURL = baseURL;
     this.apiKey = apiKey;
     this.timeout = timeout;
+    this.apiKeyHeaderName = apiKeyHeaderName;
+    this.apiKeyPrefix = apiKeyPrefix;
   }
 
   private async makeRequest<T>(
@@ -24,8 +34,9 @@ class ApiClient {
       ...options.headers,
     };
 
-    if (this.apiKey) {
-      (headers as Record<string, string>)['Authorization'] = `Bearer ${this.apiKey}`;
+    if (this.apiKey && this.apiKeyHeaderName) {
+      const value = this.apiKeyPrefix ? `${this.apiKeyPrefix}${this.apiKey}` : this.apiKey;
+      (headers as Record<string, string>)[this.apiKeyHeaderName] = value;
     }
 
     const controller = new AbortController();
@@ -119,6 +130,8 @@ export const socketClient = new ApiClient(
   API_CONFIG.SOCKET.BASE_URL,
   API_CONFIG.SOCKET.API_KEY,
   API_CONFIG.TIMEOUTS.BRIDGE,
+  'API-KEY',
+  '',
 );
 
 export const alchemyClient = new ApiClient(

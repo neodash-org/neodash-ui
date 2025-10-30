@@ -1,17 +1,37 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useBridgeQuote, useSupportedChains, useSupportedTokens } from '@/hooks/useApi';
+import { useBridgeWalletDefaults } from '@/hooks/bridge';
+import { WalletConnectButton } from '@/components/wallet/connect-button';
+import { Skeleton, SkeletonRows } from '@/components/shared/Skeleton';
+import { ErrorState } from '@/components/shared/ErrorState';
+import { useToast } from '@/components/shared/Toast';
 
 export default function TestBridgePage() {
-  const [fromChainId, setFromChainId] = useState<number>(1); // Ethereum
+  const { show } = useToast();
+  const { fromChainId, setFromChainId, userAddress, isConnected } = useBridgeWalletDefaults(1);
   const [toChainId, setToChainId] = useState<number>(137); // Polygon
   const [amount, setAmount] = useState<string>('100');
-  const [userAddress] = useState<string>('0x0000000000000000000000000000000000000000'); // Dummy address for testing
 
-  const { chains, loading: chainsLoading, error: chainsError } = useSupportedChains();
-  const { tokens: fromTokens, loading: fromTokensLoading } = useSupportedTokens(fromChainId);
-  const { tokens: toTokens, loading: toTokensLoading } = useSupportedTokens(toChainId);
+  const {
+    chains,
+    loading: chainsLoading,
+    error: chainsError,
+    refetch: refetchChains,
+  } = useSupportedChains();
+  const {
+    tokens: fromTokens,
+    loading: fromTokensLoading,
+    error: fromTokensError,
+    refetch: refetchFromTokens,
+  } = useSupportedTokens(fromChainId);
+  const {
+    tokens: toTokens,
+    loading: toTokensLoading,
+    error: toTokensError,
+    refetch: refetchToTokens,
+  } = useSupportedTokens(toChainId);
   const { quote, loading: quoteLoading, error: quoteError, getQuote } = useBridgeQuote();
 
   const [fromTokenAddress, setFromTokenAddress] = useState<string>(
@@ -23,12 +43,18 @@ export default function TestBridgePage() {
 
   const handleGetQuote = async () => {
     if (!fromChainId || !toChainId || !fromTokenAddress || !toTokenAddress || !amount) {
-      alert('Please fill all fields');
+      show({ variant: 'warning', title: 'Missing fields', description: 'Please fill all fields' });
       return;
     }
 
     await getQuote(fromChainId, toChainId, fromTokenAddress, toTokenAddress, amount, userAddress);
   };
+
+  useEffect(() => {
+    if (quoteError) {
+      show({ variant: 'error', title: 'Quote failed', description: quoteError });
+    }
+  }, [quoteError, show]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white p-8">
@@ -37,15 +63,12 @@ export default function TestBridgePage() {
 
         {/* Chains Section */}
         <div className="bg-gray-800/50 border border-neon-cyan/30 rounded-lg p-6 mb-6">
-          <h2 className="text-2xl font-semibold mb-4 text-neon-cyan">
-            Supported Chains {chainsLoading && '(Loading...)'}
-          </h2>
-          {chainsError && (
-            <div className="bg-red-900/20 border border-red-500/50 rounded-lg p-4 mb-4">
-              <p className="text-sm text-red-300">Error loading chains: {chainsError}</p>
-            </div>
+          <h2 className="text-2xl font-semibold mb-4 text-neon-cyan">Supported Chains</h2>
+          {chainsLoading && <SkeletonRows count={6} />}
+          {!chainsLoading && chainsError && (
+            <ErrorState title="Error loading chains" onRetry={refetchChains} />
           )}
-          {chains.length > 0 && (
+          {!chainsLoading && !chainsError && chains.length > 0 && (
             <div className="grid grid-cols-2 gap-2 mb-4">
               {chains.slice(0, 10).map((chain) => (
                 <div key={chain.chainId} className="text-sm text-gray-300">
@@ -54,12 +77,20 @@ export default function TestBridgePage() {
               ))}
             </div>
           )}
-          <p className="text-sm text-gray-400 mt-2">Total: {chains.length} chains</p>
+          {!chainsLoading && !chainsError && (
+            <p className="text-sm text-gray-400 mt-2">Total: {chains.length} chains</p>
+          )}
         </div>
 
         {/* Bridge Quote Form */}
         <div className="bg-gray-800/50 border border-neon-cyan/30 rounded-lg p-6 mb-6">
           <h2 className="text-2xl font-semibold mb-4 text-neon-cyan">Get Bridge Quote</h2>
+
+          {!isConnected && (
+            <div className="mb-4">
+              <WalletConnectButton />
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-4 mb-4">
             {/* From Chain */}
@@ -69,6 +100,7 @@ export default function TestBridgePage() {
                 value={fromChainId}
                 onChange={(e) => setFromChainId(Number(e.target.value))}
                 className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2"
+                disabled={chainsLoading}
               >
                 {chains.map((chain) => (
                   <option key={chain.chainId} value={chain.chainId}>
@@ -76,6 +108,11 @@ export default function TestBridgePage() {
                   </option>
                 ))}
               </select>
+              {fromTokensError && (
+                <div className="mt-2">
+                  <ErrorState title="Error loading tokens" onRetry={refetchFromTokens} />
+                </div>
+              )}
             </div>
 
             {/* To Chain */}
@@ -85,6 +122,7 @@ export default function TestBridgePage() {
                 value={toChainId}
                 onChange={(e) => setToChainId(Number(e.target.value))}
                 className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2"
+                disabled={chainsLoading}
               >
                 {chains.map((chain) => (
                   <option key={chain.chainId} value={chain.chainId}>
@@ -92,15 +130,19 @@ export default function TestBridgePage() {
                   </option>
                 ))}
               </select>
+              {toTokensError && (
+                <div className="mt-2">
+                  <ErrorState title="Error loading tokens" onRetry={refetchToTokens} />
+                </div>
+              )}
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-4">
             {/* From Token */}
             <div>
-              <label className="block text-sm font-medium mb-2">
-                From Token {fromTokensLoading && '(Loading...)'}
-              </label>
+              <label className="block text-sm font-medium mb-2">From Token</label>
+              {fromTokensLoading && <Skeleton height={36} />}
               <select
                 value={fromTokenAddress}
                 onChange={(e) => setFromTokenAddress(e.target.value)}
@@ -120,9 +162,8 @@ export default function TestBridgePage() {
 
             {/* To Token */}
             <div>
-              <label className="block text-sm font-medium mb-2">
-                To Token {toTokensLoading && '(Loading...)'}
-              </label>
+              <label className="block text-sm font-medium mb-2">To Token</label>
+              {toTokensLoading && <Skeleton height={36} />}
               <select
                 value={toTokenAddress}
                 onChange={(e) => setToTokenAddress(e.target.value)}
@@ -167,12 +208,7 @@ export default function TestBridgePage() {
         </div>
 
         {/* Quote Error */}
-        {quoteError && (
-          <div className="bg-red-900/20 border border-red-500/50 rounded-lg p-4 mb-6">
-            <h3 className="text-lg font-semibold text-red-400 mb-2">Error</h3>
-            <p className="text-sm text-red-300">{quoteError}</p>
-          </div>
-        )}
+        {quoteError && <ErrorState title="Failed to get quote" />}
 
         {/* Quote Result */}
         {quote && (

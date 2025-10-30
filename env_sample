@@ -18,6 +18,8 @@ NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=2b8a2eba47be02b3f633537d77198fc6
 
 # Socket.tech API (Free tier: 1000 calls/month)
 NEXT_PUBLIC_SOCKET_API_KEY=
+# Get a key from https://docs.bungee.exchange/bungee-legacy/socket-api/introduction
+# For local dev you may use a public test key or your own
 
 # Alchemy API (Free tier: 300M compute units/month)
 # Used for: EVM RPC + Portfolio + Transaction History
