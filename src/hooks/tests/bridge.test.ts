@@ -111,6 +111,11 @@ describe('useBridgeQuote', () => {
       vi.advanceTimersByTime(1000);
     });
 
+    // Flush any remaining timers/microtasks
+    await act(async () => {
+      vi.runAllTimers();
+    });
+
     expect(SocketService.getBridgeQuote).toHaveBeenCalledTimes(1);
   });
 
