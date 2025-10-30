@@ -124,8 +124,6 @@
     "manageWalletsDetailed": "Manage your connected wallets and view detailed information",
     "ethereumConnected": "Ethereum Connected",
     "solanaConnected": "Solana Connected",
-    "recommended": "Recommended:",
-    "solflare": "Solflare",
     "copyAddress": "Copy Address",
     "copy": "Copy",
     "addressCopied": "Address copied to clipboard",

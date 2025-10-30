@@ -43,6 +43,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
+          console.log('ThemeToggle clicked, current theme:', isDark ? 'dark' : 'light');
           const newTheme = isDark ? 'light' : 'dark';
           trackThemeChange(isDark ? 'dark' : 'light', newTheme);
           toggleTheme();

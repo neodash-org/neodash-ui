@@ -72,38 +72,47 @@ export const useWalletBalance = () => {
 export const useWalletTransaction = () => {
   const { currentWallet } = useWallet();
 
-  const sendTransaction = useCallback(async () => {
-    if (!currentWallet) {
-      throw new Error('No wallet connected');
-    }
+  const sendTransaction = useCallback(
+    async (to: string, amount: string) => {
+      if (!currentWallet) {
+        throw new Error('No wallet connected');
+      }
 
-    // TODO: Implement actual transaction logic
-    // This will be implemented when we add RainbowKit and Solana adapters
+      // TODO: Implement actual transaction logic
+      // This will be implemented when we add RainbowKit and Solana adapters
 
-    // Simulate transaction
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+      console.log(`Sending ${amount} to ${to} via ${currentWallet.type} wallet`);
 
-    return {
-      hash: '0x' + Math.random().toString(16).substr(2, 64),
-      success: true,
-    };
-  }, [currentWallet]);
+      // Simulate transaction
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
-  const signMessage = useCallback(async () => {
-    if (!currentWallet) {
-      throw new Error('No wallet connected');
-    }
+      return {
+        hash: '0x' + Math.random().toString(16).substr(2, 64),
+        success: true,
+      };
+    },
+    [currentWallet],
+  );
 
-    // TODO: Implement actual message signing logic
+  const signMessage = useCallback(
+    async (message: string) => {
+      if (!currentWallet) {
+        throw new Error('No wallet connected');
+      }
 
-    // Simulate signing
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      // TODO: Implement actual message signing logic
+      console.log(`Signing message "${message}" with ${currentWallet.type} wallet`);
 
-    return {
-      signature: '0x' + Math.random().toString(16).substr(2, 128),
-      success: true,
-    };
-  }, [currentWallet]);
+      // Simulate signing
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      return {
+        signature: '0x' + Math.random().toString(16).substr(2, 128),
+        success: true,
+      };
+    },
+    [currentWallet],
+  );
 
   return {
     sendTransaction,

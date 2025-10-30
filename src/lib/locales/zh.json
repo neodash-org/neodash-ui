@@ -93,9 +93,6 @@
     "manageWallets": "管理您已连接的钱包并连接到其他生态系统",
     "manageWalletsDetailed": "管理您已连接的钱包并查看详细信息",
     "ethereumConnected": "以太坊已连接",
-    "solanaConnected": "Solana 已连接",
-    "recommended": "推荐：",
-    "solflare": "Solflare",
     "copyAddress": "复制地址",
     "addressCopied": "地址已复制到剪贴板",
     "connectAdditionalEcosystems": "连接其他生态系统"

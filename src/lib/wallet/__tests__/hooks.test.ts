@@ -97,7 +97,7 @@ describe('useWalletTransaction', () => {
     const { result } = renderHook(() => useWalletTransaction());
 
     await act(async () => {
-      const response = await result.current.sendTransaction();
+      const response = await result.current.sendTransaction('0x456...def', '0.1');
       expect(response.success).toBe(true);
       expect(response.hash).toMatch(/^0x[a-f0-9]+$/);
     });

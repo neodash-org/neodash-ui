@@ -4,7 +4,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { ECOSYSTEM_DATA, ECOSYSTEM_TYPES } from '@/lib/wallet/ecosystem-constants';
 import { EvmEcosystemCard } from './EvmEcosystemCard';
 import { SolanaEcosystemCard } from './SolanaEcosystemCard';
-import SolanaWalletSelector from '../selectors/SolanaWalletSelector';
+import SolanaWalletSelector from '../SolanaWalletSelector';
 
 interface EcosystemSelectorProps {
   onSelect: (type: WalletType | null) => void;
