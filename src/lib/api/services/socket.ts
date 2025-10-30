@@ -107,6 +107,7 @@ export class SocketService {
         },
         fromAmount: route.fromAmount,
         toAmount: route.toAmount,
+        userTxs: route.userTxs,
         gasFees: route.gasFees,
         serviceTime: route.serviceTime,
         maxServiceTime: route.maxServiceTime,

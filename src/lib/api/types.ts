@@ -136,6 +136,7 @@ export interface BridgeQuote {
   };
   fromAmount: string;
   toAmount: string;
+  userTxs?: SocketUserTx[];
   gasFees: {
     amount: string;
     amountInUsd: number;

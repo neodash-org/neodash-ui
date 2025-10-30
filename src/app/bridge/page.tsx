@@ -13,10 +13,14 @@ import { WalletConnectButton } from '@/components/wallet/connect-button';
 import { Skeleton, SkeletonRows } from '@/components/shared/Skeleton';
 import { ErrorState } from '@/components/shared/ErrorState';
 import { useToast } from '@/components/shared/Toast';
+import { useAccount, useSwitchChain, useWalletClient } from 'wagmi';
 
 export default function BridgePage() {
   const { show } = useToast();
   const searchParams = useSearchParams();
+  const { chainId: walletChainId, isConnected: isEvmConnected, address: evmAddress } = useAccount();
+  const { switchChainAsync } = useSwitchChain();
+  const { data: walletClient } = useWalletClient();
   const { fromChainId, setFromChainId, userAddress, isConnected } = useBridgeWalletDefaults(1);
   const [toChainId, setToChainId] = useState<number>(137);
   const [amount, setAmount] = useState<string>('1000000000000000');
@@ -165,6 +169,38 @@ export default function BridgePage() {
     });
   };
 
+  const handleExecuteTxs = async () => {
+    try {
+      if (!canExecute || !quote) return;
+      if (!walletClient || !isEvmConnected) {
+        show({ variant: 'warning', title: 'Wallet not connected' });
+        return;
+      }
+      if (walletChainId !== fromChainId) {
+        await switchChainAsync({ chainId: fromChainId });
+      }
+      const txs = quote.userTxs || [];
+      for (const tx of txs) {
+        await walletClient.sendTransaction({
+          account: evmAddress as `0x${string}`,
+          to: tx.txData.to as `0x${string}`,
+          data: tx.txData.data as `0x${string}`,
+          // Convert hex string value to bigint safely
+          value: (typeof tx.txData.value === 'string' && tx.txData.value.startsWith('0x')
+            ? BigInt(tx.txData.value)
+            : BigInt(0)) as bigint,
+        });
+      }
+      show({ variant: 'success', title: 'Transactions sent' });
+    } catch (e) {
+      show({
+        variant: 'error',
+        title: 'Execute failed',
+        description: e instanceof Error ? e.message : 'Unknown error',
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white p-8">
       <div className="max-w-4xl mx-auto">
@@ -303,6 +339,13 @@ export default function BridgePage() {
               className="w-full bg-white/10 text-white py-3 rounded-lg disabled:opacity-50"
             >
               Execute (stub)
+            </button>
+            <button
+              onClick={handleExecuteTxs}
+              disabled={!canExecute}
+              className="mt-2 w-full bg-white/10 text-white py-3 rounded-lg disabled:opacity-50"
+            >
+              Execute via wallet
             </button>
           </div>
         </div>
