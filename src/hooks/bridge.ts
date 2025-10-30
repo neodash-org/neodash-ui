@@ -10,6 +10,27 @@ export type UseBridgeWalletDefaultsResult = {
   isConnected: boolean;
 };
 
+export function isValidHexAddress(address: string): boolean {
+  return /^0x[a-fA-F0-9]{40}$/.test(address);
+}
+
+export function validateBridgeInputs(params: {
+  fromChainId: number;
+  toChainId: number;
+  fromTokenAddress: string;
+  toTokenAddress: string;
+  amount: string;
+  userAddress: string;
+}): void {
+  const { fromChainId, toChainId, fromTokenAddress, toTokenAddress, amount, userAddress } = params;
+  if (!Number.isInteger(fromChainId) || fromChainId <= 0) throw new Error('Invalid fromChainId');
+  if (!Number.isInteger(toChainId) || toChainId <= 0) throw new Error('Invalid toChainId');
+  if (!isValidHexAddress(fromTokenAddress)) throw new Error('Invalid fromTokenAddress');
+  if (!isValidHexAddress(toTokenAddress)) throw new Error('Invalid toTokenAddress');
+  if (!/^[0-9]+$/.test(amount) || amount === '0') throw new Error('Invalid amount');
+  if (!isValidHexAddress(userAddress)) throw new Error('Invalid userAddress');
+}
+
 /**
  * Keeps bridge defaults in sync with the connected EVM wallet.
  * - fromChainId follows wallet.chainId and updates on network change

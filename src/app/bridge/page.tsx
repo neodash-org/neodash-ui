@@ -1,13 +1,22 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { useBridgeQuote, useSupportedChains, useSupportedTokens } from '@/hooks/useApi';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import {
+  useBridgeQuote,
+  useSupportedChains,
+  useSupportedTokens,
+  useUsdForSymbol,
+} from '@/hooks/useApi';
 import { useBridgeWalletDefaults } from '@/hooks/bridge';
 import { WalletConnectButton } from '@/components/wallet/connect-button';
 import { Skeleton, SkeletonRows } from '@/components/shared/Skeleton';
 import { ErrorState } from '@/components/shared/ErrorState';
+import { useToast } from '@/components/shared/Toast';
 
 export default function BridgePage() {
+  const { show } = useToast();
+  const searchParams = useSearchParams();
   const { fromChainId, setFromChainId, userAddress, isConnected } = useBridgeWalletDefaults(1);
   const [toChainId, setToChainId] = useState<number>(137);
   const [amount, setAmount] = useState<string>('1000000000000000');
@@ -40,6 +49,23 @@ export default function BridgePage() {
     '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
   );
 
+  // Prefill from URL query params
+  useEffect(() => {
+    if (!searchParams) return;
+    const fromChain = searchParams.get('fromChainId');
+    const toChain = searchParams.get('toChainId');
+    const fromToken = searchParams.get('fromTokenAddress');
+    const toToken = searchParams.get('toTokenAddress');
+    const amt = searchParams.get('amount');
+
+    if (fromChain) setFromChainId(Number(fromChain));
+    if (toChain) setToChainId(Number(toChain));
+    if (fromToken) setFromTokenAddress(fromToken);
+    if (toToken) setToTokenAddress(toToken);
+    if (amt) setAmount(amt);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
   useEffect(() => {
     // Ensure native defaults remain selected when chain changes
     setFromTokenAddress('0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
@@ -56,9 +82,87 @@ export default function BridgePage() {
     );
   }, [fromChainId, toChainId, fromTokenAddress, toTokenAddress, amount, userAddress]);
 
+  // -------------------- USD COMPUTATIONS --------------------
+  const selectedFromToken = useMemo(
+    () => fromTokens.find((t) => t.address.toLowerCase() === fromTokenAddress.toLowerCase()),
+    [fromTokens, fromTokenAddress],
+  );
+  const selectedToToken = useMemo(
+    () => toTokens.find((t) => t.address.toLowerCase() === toTokenAddress.toLowerCase()),
+    [toTokens, toTokenAddress],
+  );
+
+  const nativeSymbolByChain: Record<number, string> = {
+    1: 'ETH',
+    10: 'ETH',
+    137: 'MATIC',
+    42161: 'ETH',
+    8453: 'ETH',
+  };
+
+  const fromSymbol = selectedFromToken?.symbol || nativeSymbolByChain[fromChainId] || 'ETH';
+  const toSymbol = selectedToToken?.symbol || nativeSymbolByChain[toChainId] || 'ETH';
+
+  const fromDecimals = selectedFromToken?.decimals ?? 18;
+  const toDecimals = selectedToToken?.decimals ?? 18;
+
+  const humanFromAmount = useMemo(() => {
+    const n = Number(amount);
+    if (!isFinite(n)) return 0;
+    return n / Math.pow(10, fromDecimals);
+  }, [amount, fromDecimals]);
+
+  const humanToAmount = useMemo(() => {
+    const n = quote?.toAmount ? Number(quote.toAmount) : 0;
+    if (!isFinite(n)) return 0;
+    return n / Math.pow(10, toDecimals);
+  }, [quote?.toAmount, toDecimals]);
+
+  const { valueUsd: fromUsd } = useUsdForSymbol(fromSymbol, humanFromAmount, null);
+  const { valueUsd: toUsd } = useUsdForSymbol(toSymbol, humanToAmount, null);
+  const gasUsd = quote?.gasFees?.amountInUsd ?? null;
+
+  // Debounced auto-quote
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (!canQuote) return;
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      void getQuote(fromChainId, toChainId, fromTokenAddress, toTokenAddress, amount, userAddress);
+    }, 500);
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canQuote, fromChainId, toChainId, fromTokenAddress, toTokenAddress, amount, userAddress]);
+
   const handleQuote = async () => {
     if (!canQuote) return;
     await getQuote(fromChainId, toChainId, fromTokenAddress, toTokenAddress, amount, userAddress);
+  };
+
+  const canExecute = useMemo(
+    () => isConnected && !!quote && !quoteLoading,
+    [isConnected, quote, quoteLoading],
+  );
+
+  const handleExecute = () => {
+    if (!canExecute || !quote) return;
+    const payload = {
+      routeId: quote.routeId,
+      fromChainId,
+      toChainId,
+      fromTokenAddress,
+      toTokenAddress,
+      fromAmount: amount,
+      userAddress,
+    };
+    console.log('Execute bridge payload:', payload);
+    show({
+      variant: 'info',
+      title: 'Execute (stub)',
+      description: 'Prepared transaction payload logged to console.',
+    });
   };
 
   return (
@@ -191,6 +295,16 @@ export default function BridgePage() {
           >
             {quoteLoading ? 'Loading Quote...' : 'Get Quote'}
           </button>
+
+          <div className="mt-3">
+            <button
+              onClick={handleExecute}
+              disabled={!canExecute}
+              className="w-full bg-white/10 text-white py-3 rounded-lg disabled:opacity-50"
+            >
+              Execute (stub)
+            </button>
+          </div>
         </div>
 
         {quoteError && <ErrorState title="Failed to get quote" />}
@@ -205,12 +319,27 @@ export default function BridgePage() {
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-400">From Amount</span>
-                <span className="font-mono">{quote.fromAmount}</span>
+                <span className="font-mono">
+                  {quote.fromAmount}
+                  {fromUsd != null ? `  ($${fromUsd.toFixed(2)})` : ''}
+                </span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-400">To Amount</span>
-                <span className="font-mono text-neon-cyan">{quote.toAmount}</span>
+                <span className="font-mono text-neon-cyan">
+                  {quote.toAmount}
+                  {toUsd != null ? `  ($${toUsd.toFixed(2)})` : ''}
+                </span>
               </div>
+              {quote.gasFees && (
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-400">Estimated Gas</span>
+                  <span className="font-mono">
+                    {quote.gasFees.amount} {quote.gasFees.token?.symbol || ''}
+                    {gasUsd != null ? `  ($${gasUsd.toFixed?.(2) ?? gasUsd})` : ''}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         )}

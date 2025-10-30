@@ -49,6 +49,11 @@ Behavior:
 - Uses connected EVM wallet to autofill `userAddress` and `fromChainId`
 - Execute is disabled until a wallet is connected AND a valid quote is present
 
+USD Display:
+
+- USD values for from/to/gas are computed via aggregated prices with fallback to quote-provided USD when aggregator lacks data.
+- Hooks: `usePrices`, `useUsdFromAggregatedPrices`, `useUsdForSymbol` in `src/hooks/useApi.ts`.
+
 URL Prefill:
 
 - `/bridge?fromChainId=1&toChainId=137&fromToken=ETH&toToken=USDC&amount=0.1`
@@ -60,6 +65,17 @@ Testing locally:
 3. Visit `/bridge` and/or `/test-bridge`
 4. Connect an EVM wallet (RainbowKit/wagmi)
 5. Change networks; `fromChainId` should update automatically
+
+Troubleshooting:
+
+- Missing API key: Ensure `NEXT_PUBLIC_SOCKET_API_KEY` is set in `.env.local`
+- No prices: Aggregator fetches every 5 minutes; force refresh by reloading or calling `refetch`
+- Debounce: Quotes are debounced (~400–600ms). Rapid typing will delay fetching until idle
+
+Tests:
+
+- Unit (Vitest): `pnpm test` — bridge debounce and auto-quote covered in `src/hooks/tests/bridge.test.ts`
+- E2E (Playwright): `pnpm test:e2e` — bridge flow spec in `e2e/bridge-flow.spec.ts`
 
 ## Scripts
 

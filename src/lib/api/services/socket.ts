@@ -1,6 +1,44 @@
 import { socketClient } from '../client';
 import { SocketRoute, BridgeQuote } from '../types';
 
+// In-memory inflight request dedupe
+const inflightRequests: Map<string, Promise<unknown>> = new Map();
+
+type ErrorWithCode = Error & { code?: string };
+function withCode(error: Error, code: string): ErrorWithCode {
+  const e = error as ErrorWithCode;
+  e.code = code;
+  return e;
+}
+
+function makeKey(endpoint: string, params?: Record<string, unknown>) {
+  return `${endpoint}?${params ? JSON.stringify(params) : ''}`;
+}
+
+function validatePositiveInt(name: string, value: number) {
+  if (!Number.isInteger(value) || value <= 0) {
+    throw Object.assign(new Error(`${name} must be a positive integer`), {
+      code: 'VALIDATION_ERROR',
+    });
+  }
+}
+
+function validateNonEmptyHex(name: string, value: string) {
+  if (!value || typeof value !== 'string' || !/^0x[a-fA-F0-9]{40}$/.test(value)) {
+    throw Object.assign(new Error(`${name} must be a valid 0x address`), {
+      code: 'VALIDATION_ERROR',
+    });
+  }
+}
+
+function validateAmountString(amount: string) {
+  if (!/^[0-9]+$/.test(amount) || amount === '0') {
+    throw Object.assign(new Error('amount must be a positive integer string'), {
+      code: 'VALIDATION_ERROR',
+    });
+  }
+}
+
 // Socket.tech API Service for bridge functionality
 export class SocketService {
   // Get bridge quote
@@ -12,7 +50,15 @@ export class SocketService {
     amount: string,
     userAddress: string,
   ): Promise<BridgeQuote> {
-    const response = await socketClient.get<SocketRoute>('/quote', {
+    // Validate inputs
+    validatePositiveInt('fromChainId', fromChainId);
+    validatePositiveInt('toChainId', toChainId);
+    validateNonEmptyHex('fromTokenAddress', fromTokenAddress);
+    validateNonEmptyHex('toTokenAddress', toTokenAddress);
+    validateAmountString(amount);
+    validateNonEmptyHex('userAddress', userAddress);
+
+    const params = {
       fromChainId: fromChainId.toString(),
       toChainId: toChainId.toString(),
       fromTokenAddress,
@@ -24,37 +70,56 @@ export class SocketService {
       uniqueRoutesPerBridge: 'true',
       sort: 'output',
       singleTxOnly: 'false',
-    });
+    } as const;
 
-    if (!response.success || !response.data) {
-      throw new Error(`Failed to get bridge quote: ${response.error?.message}`);
+    const key = makeKey('/quote', params as unknown as Record<string, unknown>);
+    if (inflightRequests.has(key)) {
+      return inflightRequests.get(key) as Promise<BridgeQuote>;
     }
 
-    const route = response.data;
+    const promise = (async () => {
+      const response = await socketClient.get<SocketRoute>('/quote', { ...params });
 
-    return {
-      routeId: route.routeId,
-      fromChainId: route.fromChainId,
-      toChainId: route.toChainId,
-      fromToken: {
-        address: route.fromTokenAddress,
-        symbol: '', // Will be populated by token info
-        name: '',
-        decimals: 18,
-      },
-      toToken: {
-        address: route.toTokenAddress,
-        symbol: '',
-        name: '',
-        decimals: 18,
-      },
-      fromAmount: route.fromAmount,
-      toAmount: route.toAmount,
-      gasFees: route.gasFees,
-      serviceTime: route.serviceTime,
-      maxServiceTime: route.maxServiceTime,
-      bridgeRoute: route.bridgeRoute,
-    };
+      if (!response.success || !response.data) {
+        const err = new Error(
+          `Failed to get bridge quote: ${response.error?.message || 'Unknown error'}`,
+        );
+        throw withCode(err, 'QUOTE_ERROR');
+      }
+
+      const route = response.data;
+
+      return {
+        routeId: route.routeId,
+        fromChainId: route.fromChainId,
+        toChainId: route.toChainId,
+        fromToken: {
+          address: route.fromTokenAddress,
+          symbol: '',
+          name: '',
+          decimals: 18,
+        },
+        toToken: {
+          address: route.toTokenAddress,
+          symbol: '',
+          name: '',
+          decimals: 18,
+        },
+        fromAmount: route.fromAmount,
+        toAmount: route.toAmount,
+        gasFees: route.gasFees,
+        serviceTime: route.serviceTime,
+        maxServiceTime: route.maxServiceTime,
+        bridgeRoute: route.bridgeRoute,
+      } as BridgeQuote;
+    })();
+
+    inflightRequests.set(key, promise);
+    try {
+      return await promise;
+    } finally {
+      inflightRequests.delete(key);
+    }
   }
 
   // Get supported chains
@@ -68,34 +133,60 @@ export class SocketService {
       isL2: boolean;
     }[]
   > {
-    const response = await socketClient.get<{
-      success: boolean;
-      result: {
-        chainId: number;
-        name: string;
-        isL1: boolean;
-        sendingEnabled: boolean;
-        icon: string;
-        receivingEnabled: boolean;
-        currency: {
+    const key = makeKey('/supported/chains');
+    if (inflightRequests.has(key)) {
+      return inflightRequests.get(key) as Promise<
+        {
+          chainId: number;
+          name: string;
           symbol: string;
-        };
-      }[];
-    }>('/supported/chains');
-
-    if (!response.success || !response.data || !response.data.result) {
-      throw new Error(`Failed to get supported chains: ${response.error?.message}`);
+          icon: string;
+          isL1: boolean;
+          isL2: boolean;
+        }[]
+      >;
     }
 
-    // Map the actual API response format
-    return response.data.result.map((chain) => ({
-      chainId: chain.chainId,
-      name: chain.name,
-      symbol: chain.currency.symbol,
-      icon: chain.icon,
-      isL1: chain.isL1,
-      isL2: !chain.isL1,
-    }));
+    const promise = (async () => {
+      const response = await socketClient.get<{
+        success: boolean;
+        result: {
+          chainId: number;
+          name: string;
+          isL1: boolean;
+          sendingEnabled: boolean;
+          icon: string;
+          receivingEnabled: boolean;
+          currency: {
+            symbol: string;
+          };
+        }[];
+      }>('/supported/chains');
+
+      if (!response.success || !response.data || !response.data.result) {
+        const err = new Error(
+          `Failed to get supported chains: ${response.error?.message || 'Unknown error'}`,
+        );
+        throw withCode(err, 'CHAINS_ERROR');
+      }
+
+      // Map the actual API response format
+      return response.data.result.map((chain) => ({
+        chainId: chain.chainId,
+        name: chain.name,
+        symbol: chain.currency.symbol,
+        icon: chain.icon,
+        isL1: chain.isL1,
+        isL2: !chain.isL1,
+      }));
+    })();
+
+    inflightRequests.set(key, promise);
+    try {
+      return await promise;
+    } finally {
+      inflightRequests.delete(key);
+    }
   }
 
   // Get supported tokens for a chain
@@ -109,25 +200,52 @@ export class SocketService {
       chainId: number;
     }[]
   > {
-    // Correct endpoint: /token-lists/{chainId}
-    const response = await socketClient.get<{
-      result: {
-        address: string;
-        symbol: string;
-        name: string;
-        decimals: number;
-        icon: string;
-        chainId: number;
-      }[];
-    }>(`/token-lists/${chainId}`);
+    validatePositiveInt('chainId', chainId);
 
-    if (!response.success || !response.data) {
-      throw new Error(
-        `Failed to get supported tokens for chain ${chainId}: ${response.error?.message}`,
-      );
+    const endpoint = `/token-lists/${chainId}`;
+    const key = makeKey(endpoint);
+    if (inflightRequests.has(key)) {
+      return inflightRequests.get(key) as Promise<
+        {
+          address: string;
+          symbol: string;
+          name: string;
+          decimals: number;
+          icon: string;
+          chainId: number;
+        }[]
+      >;
     }
 
-    return response.data.result;
+    const promise = (async () => {
+      // Correct endpoint: /token-lists/{chainId}
+      const response = await socketClient.get<{
+        result: {
+          address: string;
+          symbol: string;
+          name: string;
+          decimals: number;
+          icon: string;
+          chainId: number;
+        }[];
+      }>(endpoint);
+
+      if (!response.success || !response.data) {
+        const err = new Error(
+          `Failed to get supported tokens for chain ${chainId}: ${response.error?.message || 'Unknown error'}`,
+        );
+        throw withCode(err, 'TOKENS_ERROR');
+      }
+
+      return response.data.result;
+    })();
+
+    inflightRequests.set(key, promise);
+    try {
+      return await promise;
+    } finally {
+      inflightRequests.delete(key);
+    }
   }
 
   // Get bridge status

@@ -160,8 +160,9 @@ This document contains all external data sources, APIs, and integrations used in
 ### Testing
 
 - Use public test API keys for development
-- Mock data available for offline development
-- Integration tests in `src/lib/api/__tests__/`
+- Mock `SocketService` in unit tests for deterministic quotes
+- Unit tests for bridge debounce/auto-quote: `src/hooks/tests/bridge.test.ts`
+- E2E bridge flow: `e2e/bridge-flow.spec.ts` (skips if `/bridge` not yet available)
 
 ---
 
