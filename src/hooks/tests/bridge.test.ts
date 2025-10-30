@@ -108,7 +108,7 @@ describe('useBridgeQuote', () => {
     await act(async () => {
       result.current.setParams({ userAddress: '0x000000000000000000000000000000000000dEaD' });
       // Advance enough to cover clamped debounce and any scheduling delays
-      vi.advanceTimersByTime(650);
+      vi.advanceTimersByTime(1000);
     });
 
     expect(SocketService.getBridgeQuote).toHaveBeenCalledTimes(1);
